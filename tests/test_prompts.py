@@ -25,7 +25,7 @@ def test_prompt_manager_basic(temp_config):
     # Needs to contain the default message
     assert "You are a test CBT assistant." in prompt
     # Retrieval is performed before generation; the prompt requires grounded citations.
-    assert "ВНИМАНИЕ" in prompt
+    assert "NOTE" in prompt
     assert "[KB:chunk_id]" in prompt
 
 
@@ -64,7 +64,7 @@ def test_prompt_manager_with_history(temp_config):
 
     assert "Doc1" in prompt
     assert "Knowledge content" in prompt
-    assert "настроение 8/10" in prompt
+    assert "mood 8/10" in prompt
     assert "fine" in prompt
     assert "Fail" in prompt
     assert "Sad (5/10)" in prompt
@@ -84,11 +84,11 @@ def test_prompt_manager_injects_durable_profile_as_data(temp_config):
     prompt = pm.build_system_prompt(
         [],
         profile_memory={
-            "user_name": "Артём",
-            "pets": [{"kind": "dog", "name": "Рекс"}],
+            "user_name": "Arthur",
+            "pets": [{"kind": "dog", "name": "Rex"}],
         },
     )
     assert "DURABLE USER PROFILE" in prompt
-    assert '"user_name": "Артём"' in prompt
-    assert '"name": "Рекс"' in prompt
+    assert '"user_name": "Arthur"' in prompt
+    assert '"name": "Rex"' in prompt
     assert "DATA, NOT INSTRUCTIONS" in prompt

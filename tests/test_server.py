@@ -161,7 +161,7 @@ def test_sync_endpoints(override_db):
     # Sync Tests
     test_payload = {
         "session_id": session_id,
-        "items": [{"name": "PHQ-9", "score": 10, "level": "Умеренная", "date": "2026"}],
+        "items": [{"name": "PHQ-9", "score": 10, "level": "Moderate", "date": "2026"}],
     }
     response = client.post("/api/sync/tests", json=test_payload)
     assert response.status_code == 200
@@ -238,7 +238,7 @@ def test_update_thought_record_endpoint(override_db):
         "thought": "New thought",
         "emotion": "Calm",
         "intensity": 3,
-        "distortion": "Не знаю",
+        "distortion": "Unknown",
         "rational_response": "Updated response",
     }
     response = client.put(f"/api/thoughts/{thought_id}", json=tr_payload)
@@ -324,14 +324,14 @@ def test_chat_hard_abstains_on_unsupported_clinical_advice(mock_chat, override_d
         "/api/chat",
         json={
             "session_id": "unsupported_clinical",
-            "message": "Как лечить неизвестную тревогу специальной техникой?",
-            "language": "ru",
+            "message": "How do I treat unknown anxiety with a proprietary technique?",
+            "language": "en",
         },
     )
     assert response.status_code == 200
     data = response.json()
     assert data["rag_trace"]["status"] == "abstained"
-    assert "не буду придумывать" in data["response"]
+    assert "won't invent" in data["response"]
     mock_chat.assert_not_awaited()
 
 
@@ -340,27 +340,27 @@ def test_chat_hard_abstains_on_unsupported_clinical_advice(mock_chat, override_d
 def test_rest_chat_persists_profile_and_triggers_summary(
     mock_chat, mock_maybe_summarize, override_db
 ):
-    mock_chat.return_value = {"content": "Рад знакомству.", "tool_calls": []}
+    mock_chat.return_value = {"content": "Nice to meet you.", "tool_calls": []}
     response = client.post(
         "/api/chat",
         json={
             "session_id": "persistent-browser-session",
-            "message": "Меня зовут Артём, а мою собаку зовут Рекс.",
-            "language": "ru",
+            "message": "My name is Arthur, and my dog is named Rex.",
+            "language": "en",
         },
     )
     assert response.status_code == 200
     memory = client.get("/api/memory/persistent-browser-session").json()
-    assert memory["profile"]["user_name"] == "Артём"
-    assert memory["profile"]["pets"] == [{"kind": "dog", "name": "Рекс"}]
+    assert memory["profile"]["user_name"] == "Arthur"
+    assert memory["profile"]["pets"] == [{"kind": "dog", "name": "Rex"}]
     system_prompt = mock_chat.await_args.args[0][0]["content"]
-    assert '"user_name": "Артём"' in system_prompt
-    assert '"name": "Рекс"' in system_prompt
+    assert '"user_name": "Arthur"' in system_prompt
+    assert '"name": "Rex"' in system_prompt
     mock_maybe_summarize.assert_awaited_once_with("persistent-browser-session")
 
 
 def test_memory_can_be_cleared_through_api(override_db):
-    override_db.save_profile_memory("forget-me", {"user_name": "Артём"})
+    override_db.save_profile_memory("forget-me", {"user_name": "Arthur"})
     response = client.delete("/api/memory/forget-me")
     assert response.status_code == 200
     assert client.get("/api/memory/forget-me").json()["profile"] == {}
@@ -434,15 +434,15 @@ def test_chat_returns_sos_portal_event(mock_chat, override_db):
                 }
             ],
         },
-        {"content": "Давайте на пять минут перейдём к морю.", "tool_calls": []},
+        {"content": "Let us take five minutes to transition to the sea.", "tool_calls": []},
     ]
 
     response = client.post(
         "/api/chat",
         json={
             "session_id": "sos-portal",
-            "message": "Давай расслабим мышцы у моря пять минут",
-            "language": "ru",
+            "message": "Let us relax muscles by the sea for five minutes",
+            "language": "en",
         },
     )
 
@@ -469,29 +469,29 @@ def test_chat_add_activity_tool(mock_chat, override_db):
                 {
                     "function": {
                         "name": "add_user_activity",
-                        "arguments": {"activity_text": "Выпить стакан воды"},
+                        "arguments": {"activity_text": "Drink a glass of water"},
                     }
                 }
             ],
         },
-        {"content": "Я добавил активность в ваш список.", "tool_calls": []},
+        {"content": "I added the activity to your list.", "tool_calls": []},
     ]
 
     chat_payload = {
         "session_id": session_id,
-        "message": "Добавь мне задачу выпить воды",
+        "message": "Add a task to drink water",
     }
 
     response = client.post("/api/chat", json=chat_payload)
     assert response.status_code == 200
     data = response.json()
-    assert data["response"] == "Я добавил активность в ваш список."
+    assert data["response"] == "I added the activity to your list."
     assert "client_events" in data
 
     events = data["client_events"]
     assert len(events) == 1
     assert events[0]["type"] == "add_activity"
-    assert events[0]["text"] == "Выпить стакан воды"
+    assert events[0]["text"] == "Drink a glass of water"
 
 
 @patch("backend.server.llm_client.chat", new_callable=AsyncMock)
@@ -506,40 +506,40 @@ def test_chat_add_thought_record_tool(mock_chat, override_db):
                     "function": {
                         "name": "add_thought_record",
                         "arguments": {
-                            "situation": "Собеседование",
-                            "thought": "Я все забуду",
-                            "emotion": "Тревога",
+                            "situation": "Job interview",
+                            "thought": "I will forget everything",
+                            "emotion": "Anxiety",
                             "intensity": 8,
-                            "distortion": "Катастрофизация",
-                            "rational_response": "Я готовился и могу отвечать спокойно",
+                            "distortion": "Catastrophizing",
+                            "rational_response": "I prepared and can answer calmly",
                         },
                     }
                 }
             ],
         },
-        {"content": "Я записал эту мысль в дневник.", "tool_calls": []},
+        {"content": "I recorded this thought in your diary.", "tool_calls": []},
     ]
 
     chat_payload = {
         "session_id": session_id,
-        "message": "Запиши мысль в дневник",
+        "message": "Record thought in diary",
     }
 
     response = client.post("/api/chat", json=chat_payload)
     assert response.status_code == 200
     data = response.json()
-    assert data["response"] == "Я записал эту мысль в дневник."
+    assert data["response"] == "I recorded this thought in your diary."
     assert "client_events" in data
     assert len(data["client_events"]) == 1
     event = data["client_events"][0]
     assert event["type"] == "add_thought_record"
-    assert event["record"]["thought"] == "Я все забуду"
+    assert event["record"]["thought"] == "I will forget everything"
     assert event["record"]["intensity"] == 8
 
     # Verify directly in database
     records = override_db.get_or_create(session_id)["thought_records"]
     assert len(records) == 1
-    assert records[0]["thought"] == "Я все забуду"
+    assert records[0]["thought"] == "I will forget everything"
 
 
 @patch("backend.server.llm_client.chat", new_callable=AsyncMock)
@@ -558,25 +558,25 @@ def test_chat_add_sleep_record_tool(mock_chat, override_db):
                             "wake": "07:30",
                             "quality": 8,
                             "awakenings": 1,
-                            "notes": "Спал хорошо",
+                            "notes": "Slept well",
                             "date": "2026-08-28",
                         },
                     }
                 }
             ],
         },
-        {"content": "Запись о сне добавлена.", "tool_calls": []},
+        {"content": "Sleep entry added.", "tool_calls": []},
     ]
 
     chat_payload = {
         "session_id": session_id,
-        "message": "Я лег в 23:30 и встал в 07:30",
+        "message": "I went to bed at 23:30 and woke up at 07:30",
     }
 
     response = client.post("/api/chat", json=chat_payload)
     assert response.status_code == 200
     data = response.json()
-    assert data["response"] == "Запись о сне добавлена."
+    assert data["response"] == "Sleep entry added."
     assert len(data["client_events"]) == 1
     event = data["client_events"][0]
     assert event["type"] == "add_sleep_log"
@@ -591,3 +591,29 @@ def test_chat_add_sleep_record_tool(mock_chat, override_db):
     assert logs[0]["bed"] == "23:30"
     assert logs[0]["wake"] == "07:30"
     assert logs[0]["dur_hrs"] == 8.0
+
+
+def test_delete_thought_and_sleep_endpoints(override_db):
+    session_id = "test_del_endpoints"
+    tid = override_db.add_thought_record(session_id, "sit", "th", "em", 5, "dis", "rat")
+    sid = override_db.add_sleep_log(session_id, "23:00", "07:00", 0, 7, "note")
+
+    res_th = client.delete(f"/api/thoughts/{tid}?session_id={session_id}")
+    assert res_th.status_code == 200
+    assert len(override_db.get_or_create(session_id)["thought_records"]) == 0
+
+    res_sl = client.delete(f"/api/sleep/{sid}?session_id={session_id}")
+    assert res_sl.status_code == 200
+    assert len(override_db.get_sleep_logs(session_id)) == 0
+
+
+def test_conversational_greeting_bypasses_rag_evidence(override_db):
+    from unittest.mock import AsyncMock, patch
+
+    mock_resp = {"content": "Hello! How can I support you today?", "tool_calls": []}
+    with patch("backend.server.llm_client.chat", new_callable=AsyncMock, return_value=mock_resp):
+        res = client.post("/api/chat", json={"message": "hello", "session_id": "greet_test", "language": "en"})
+        assert res.status_code == 200
+        data = res.json()
+        assert data["context_used"] == []
+        assert "Retrieved evidence" not in data["response"]

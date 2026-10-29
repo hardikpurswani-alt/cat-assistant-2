@@ -7,6 +7,7 @@ from collections import deque
 from datetime import datetime, timezone
 import hashlib
 import json
+import logging
 import os
 from pathlib import Path
 import re
@@ -14,7 +15,18 @@ import tempfile
 import time
 from typing import Any
 
+try:
+    from dotenv import load_dotenv
+    env_file = Path(__file__).resolve().parent.parent.parent / ".env"
+    if env_file.exists():
+        load_dotenv(env_file, override=False)
+except ImportError:
+    pass
+
+import httpx
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 
 CHUNKING_VERSION = "markdown-hierarchy-v2"
@@ -30,21 +42,39 @@ class SemanticRAG:
     def __init__(
         self,
         kb_dir: Path,
-        ollama_url: str | None = None,
-        embed_model: str = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        gateway_url: str | None = None,
+        embed_model: str | None = None,
         *,
+        api_key: str | None = None,
+        ollama_url: str | None = None,
         cache_path: Path | None = None,
         trace_path: Path | None = None,
-        score_threshold: float = 0.46,
+        score_threshold: float | None = None,
         max_chunk_chars: int = 1600,
         overlap_chars: int = 180,
     ):
         self.kb_dir = Path(kb_dir)
-        self.ollama_url = (ollama_url or "").rstrip("/")
-        self.embed_model = embed_model
+        self.gateway_url = (
+            gateway_url
+            or ollama_url
+            or os.getenv("OPENAI_BASE_URL")
+            or "http://103.73.181.90:4000/v1"
+        ).rstrip("/")
+        self.ollama_url = self.gateway_url
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY") or ""
+        self.embed_model = (
+            embed_model
+            or os.getenv("EMBEDDING_MODEL")
+            or "embed"
+        )
         self.cache_path = Path(cache_path) if cache_path else None
         self.trace_path = Path(trace_path) if trace_path else None
-        self.score_threshold = score_threshold
+        if score_threshold is not None:
+            self.score_threshold = float(score_threshold)
+        elif "RAG_SCORE_THRESHOLD" in os.environ:
+            self.score_threshold = float(os.environ["RAG_SCORE_THRESHOLD"])
+        else:
+            self.score_threshold = 0.48
         self.max_chunk_chars = max_chunk_chars
         self.overlap_chars = overlap_chars
 
@@ -56,7 +86,7 @@ class SemanticRAG:
         self.loaded_from_cache = False
         self._index_lock = asyncio.Lock()
         self._recent_traces: deque[dict[str, Any]] = deque(maxlen=100)
-        self._embedding_engine: Any = None
+        self._query_cache: dict[str, np.ndarray] = {}
 
     async def load_and_embed(self) -> None:
         """Build or restore the complete index, then swap it into service atomically."""
@@ -230,36 +260,86 @@ class SemanticRAG:
             parts.append(current)
         return parts
 
-    def _get_embedding_engine(self) -> Any:
-        if self._embedding_engine is None:
-            try:
-                from fastembed import TextEmbedding
-
-                self._embedding_engine = TextEmbedding(model_name=self.embed_model)
-            except Exception as exc:
-                raise RAGIndexError(
-                    f"Failed to load embedding model {self.embed_model!r} via FastEmbed: {exc}"
-                ) from exc
-        return self._embedding_engine
-
     async def _ensure_model_loaded(self) -> None:
-        loop = asyncio.get_running_loop()
-        await loop.run_in_executor(None, self._get_embedding_engine)
+        """Verify the gateway is reachable and authenticated."""
+        headers = {}
+        api_key = self.api_key or os.getenv("OPENAI_API_KEY") or ""
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                resp = await client.get(f"{self.gateway_url}/models", headers=headers)
+                if resp.status_code == 401:
+                    raise RAGIndexError("Gateway authentication failed: invalid or missing gateway API key.")
+        except RAGIndexError:
+            raise
+        except Exception as exc:
+            logger.debug("Gateway connectivity check: %s", exc)
 
     async def _embed_many(
-        self, texts: list[str], batch_size: int = 32
+        self, texts: list[str], batch_size: int = 15
     ) -> list[list[float]]:
         if not texts:
             return []
-        engine = self._get_embedding_engine()
-        loop = asyncio.get_running_loop()
 
-        def _run_embed() -> list[list[float]]:
-            return [vec.tolist() for vec in engine.embed(texts, batch_size=batch_size)]
+        headers = {"Content-Type": "application/json"}
+        api_key = self.api_key or os.getenv("OPENAI_API_KEY") or ""
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
 
-        return await loop.run_in_executor(None, _run_embed)
+        all_vectors = []
+        max_retries = 6
+
+        async with httpx.AsyncClient(timeout=45.0) as client:
+            for start_idx in range(0, len(texts), batch_size):
+                batch = texts[start_idx : start_idx + batch_size]
+                payload = {"model": self.embed_model, "input": batch}
+
+                for attempt in range(max_retries):
+                    try:
+                        resp = await client.post(
+                            f"{self.gateway_url}/embeddings",
+                            headers=headers,
+                            json=payload,
+                        )
+                        if resp.status_code == 429:
+                            backoff = min(2.0 * (2**attempt), 15.0)
+                            logger.warning(
+                                "Rate limit (429) hit on gateway embeddings. Waiting %.1fs before retry %d/%d...",
+                                backoff,
+                                attempt + 1,
+                                max_retries,
+                            )
+                            await asyncio.sleep(backoff)
+                            continue
+                        resp.raise_for_status()
+                        data = resp.json()
+                        sorted_items = sorted(
+                            data.get("data", []), key=lambda x: x.get("index", 0)
+                        )
+                        batch_vectors = [item["embedding"] for item in sorted_items]
+                        if len(batch_vectors) != len(batch):
+                            raise RAGIndexError(
+                                f"Embedding count mismatch: expected {len(batch)}, got {len(batch_vectors)}"
+                            )
+                        all_vectors.extend(batch_vectors)
+                        break
+                    except (httpx.HTTPError, httpx.TimeoutException) as exc:
+                        if attempt == max_retries - 1:
+                            raise RAGIndexError(f"Failed to fetch embeddings from gateway: {exc}") from exc
+                        backoff = min(1.5 * (2**attempt), 10.0)
+                        await asyncio.sleep(backoff)
+
+                # Brief inter-batch pause to respect RPM limits on multi-batch rebuilds
+                if start_idx + batch_size < len(texts):
+                    await asyncio.sleep(0.5)
+
+        return all_vectors
 
     async def _embed_query(self, query: str) -> np.ndarray:
+        cached = self._query_cache.get(query)
+        if cached is not None:
+            return cached.copy()
         values = await self._embed_many([query], batch_size=1)
         if not values or not values[0]:
             raise RAGIndexError("Embedding service returned an invalid query vector")
@@ -267,7 +347,11 @@ class SemanticRAG:
         if vector.ndim != 1 or not vector.size:
             raise RAGIndexError("Embedding service returned an invalid query vector")
         norm = np.linalg.norm(vector)
-        return vector / norm if norm > 0 else vector
+        normalized = vector / norm if norm > 0 else vector
+        if len(self._query_cache) > 500:
+            self._query_cache.clear()
+        self._query_cache[query] = normalized
+        return normalized
 
     @staticmethod
     def _normalize_matrix(matrix: np.ndarray) -> np.ndarray:
@@ -371,10 +455,12 @@ class SemanticRAG:
         similarities = np.dot(self.vectors, query_vector)
         candidate_count = min(max(top_k * 3, 10), len(self.chunks))
         candidate_indices = np.argsort(similarities)[::-1][:candidate_count]
+        is_cyrillic = any('\u0400' <= char <= '\u04FF' for char in query)
+        effective_threshold = max(self.score_threshold, 0.71) if is_cyrillic else self.score_threshold
         results = [
             {"chunk": self.chunks[int(index)], "score": float(similarities[index])}
             for index in candidate_indices
-            if float(similarities[index]) >= self.score_threshold
+            if float(similarities[index]) >= effective_threshold
         ][:top_k]
 
         trace = {

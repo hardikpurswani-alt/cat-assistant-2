@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the live retrieval benchmark against the configured FastEmbed model."""
+"""Run the live retrieval benchmark against the configured embedding model."""
 
 import argparse
 import asyncio
@@ -11,6 +11,12 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(PROJECT_ROOT / ".env")
+except ImportError:
+    pass
+
 from src.rag.evaluation import score_evaluation  # noqa: E402
 from src.rag.knowledge_base import SemanticRAG  # noqa: E402
 
@@ -18,19 +24,17 @@ from src.rag.knowledge_base import SemanticRAG  # noqa: E402
 async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--top-k", type=int, default=3)
-    parser.add_argument("--threshold", type=float, default=0.46)
+    parser.add_argument("--threshold", type=float, default=0.48)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
     cases = json.loads((PROJECT_ROOT / "evals/rag_retrieval.json").read_text())
     rag = SemanticRAG(
         PROJECT_ROOT / "knowledge_base",
-        embed_model=os.getenv(
-            "RAG_EMBED_MODEL",
-            "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
-        ),
-        cache_path=PROJECT_ROOT / "data/rag_eval_index.npz",
-        trace_path=PROJECT_ROOT / "data/rag_eval_traces.jsonl",
+        gateway_url=os.getenv("OPENAI_BASE_URL", "http://103.73.181.90:4000/v1"),
+        embed_model=os.getenv("EMBEDDING_MODEL", "embed"),
+        cache_path=PROJECT_ROOT / "data/rag_index.npz",
+        trace_path=PROJECT_ROOT / "data/rag_traces.jsonl",
         score_threshold=args.threshold,
     )
     await rag.load_and_embed()

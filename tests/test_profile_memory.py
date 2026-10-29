@@ -8,32 +8,32 @@ from src.utils.db import SQLiteSessionManager
 
 def test_extracts_explicit_names_pets_people_and_preferences():
     updates = extract_profile_updates(
-        "Меня зовут Артём. У меня есть собака Рекс. "
-        "Мою жену зовут Анна. Я люблю долгие прогулки."
+        "My name is Arthur. I have a dog named Rex. "
+        "My wife is named Anna. I love long walks."
     )
-    assert updates["user_name"] == "Артём"
-    assert updates["pets"] == [{"kind": "dog", "name": "Рекс"}]
-    assert updates["people"] == [{"relation": "partner", "name": "Анна"}]
-    assert updates["preferences"] == ["долгие прогулки"]
+    assert updates["user_name"] == "Arthur"
+    assert updates["pets"] == [{"kind": "dog", "name": "Rex"}]
+    assert updates["people"] == [{"relation": "partner", "name": "Anna"}]
+    assert updates["preferences"] == ["long walks"]
     assert has_profile_updates(updates) is True
 
 
 def test_extracts_pet_from_natural_conversation():
     updates = extract_profile_updates(
-        "У меня есть собака Рекс, обычно я с ней гуляю, чтобы успокоиться."
+        "I have a dog named Rex, I usually walk with him to calm down."
     )
-    assert updates["pets"] == [{"kind": "dog", "name": "Рекс"}]
+    assert updates["pets"] == [{"kind": "dog", "name": "Rex"}]
 
 
 def test_profile_merge_updates_name_without_duplicating_facts():
     initial = merge_profiles(
-        {}, extract_profile_updates("Меня зовут Артём. Я люблю чай.")
+        {}, extract_profile_updates("My name is Arthur. I love tea.")
     )
     updated = merge_profiles(
-        initial, extract_profile_updates("Вообще, зови меня Артемий. Я люблю чай.")
+        initial, extract_profile_updates("Actually, call me Art. I love tea.")
     )
-    assert updated["user_name"] == "Артемий"
-    assert updated["preferences"] == ["чай"]
+    assert updated["user_name"] == "Art"
+    assert updated["preferences"] == ["tea"]
 
 
 def test_profile_survives_database_reopen(tmp_path):
@@ -52,10 +52,10 @@ def test_profile_survives_database_reopen(tmp_path):
 
 def test_clear_memory_preserves_messages(tmp_path):
     manager = SQLiteSessionManager(tmp_path / "memory.db")
-    manager.add_message("session", "user", "Меня зовут Артём")
-    manager.save_profile_memory("session", {"user_name": "Артём"})
-    manager.save_session_summary("session", "Пользователя зовут Артём")
+    manager.add_message("session", "user", "My name is Arthur")
+    manager.save_profile_memory("session", {"user_name": "Arthur"})
+    manager.save_session_summary("session", "The user's name is Arthur")
     manager.clear_memory("session")
     assert manager.get_profile_memory("session") == {}
     assert manager.get_session_summary("session") == ""
-    assert manager.get_history("session")[0]["content"] == "Меня зовут Артём"
+    assert manager.get_history("session")[0]["content"] == "My name is Arthur"

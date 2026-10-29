@@ -1,4 +1,5 @@
 const API = window.location.origin;
+window.API = API;
 
 let sessionId = localStorage.getItem('SESSION_ID');
 if (!sessionId) {
@@ -6,7 +7,7 @@ if (!sessionId) {
     localStorage.setItem('SESSION_ID', sessionId);
 }
 const SESSION_ID = sessionId;
-let isProc = false;
+window.SESSION_ID = SESSION_ID;
 
 async function syncData(endpoint, storageKey) {
     let items = JSON.parse(localStorage.getItem(storageKey) || '[]');

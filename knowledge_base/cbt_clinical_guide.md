@@ -1,345 +1,333 @@
-# Клиническое руководство по КПТ при депрессии
-## Для AI-ассистента: База знаний на основе клинических исследований
+# Clinical Guide to CBT for Depression
+## For AI Assistant: Knowledge Base Based on Clinical Trials and Practice Guidelines
 
 ---
 
-## 1. ОСНОВЫ КОГНИТИВНО-ПОВЕДЕНЧЕСКОЙ ТЕРАПИИ (КПТ/CBT)
+## 1. FOUNDATIONS OF COGNITIVE BEHAVIORAL THERAPY (CBT)
 
-### 1.1 Определение и принципы
+### 1.1 Definition and Principles
 
-КПТ — это структурированная, ориентированная на настоящее психотерапия, направленная на выявление и изменение дисфункциональных мыслей, убеждений и поведенческих паттернов (Beck, 1979). Мета-анализ 409 рандомизированных контролируемых исследований (52,702 пациента) подтверждает эффективность КПТ при депрессии (Cuijpers et al., 2023, World Psychiatry).
+CBT is a structured, present-oriented psychological therapy focused on identifying and modifying dysfunctional automatic thoughts, core beliefs, and maladaptive behavioral patterns (Beck, 1979). A meta-analysis of 409 randomized controlled trials with 52,702 patients confirms the strong efficacy of CBT for depression (Cuijpers et al., 2023, World Psychiatry).
 
-Основные принципы:
-- Когнитивная модель: мысли влияют на эмоции и поведение
-- Фокус на текущих проблемах (here-and-now)
-- Коллаборативный эмпиризм (совместная работа терапевта и клиента)
-- Сократический диалог (наводящие вопросы вместо прямых указаний)
-- Домашние задания между сессиями
-- Ограниченная по времени структурированная терапия
+Core Principles:
+- Cognitive Model: Thoughts directly influence emotional and behavioral responses.
+- Present-focused orientation (here-and-now).
+- Collaborative empiricism: active partnership between therapist/assistant and client.
+- Socratic dialogue: guided inquiry and exploratory questioning rather than direct didactic instruction.
+- Structured homework assignments between sessions.
+- Time-limited, goal-directed therapeutic framework.
 
-### 1.2 Доказательная база
+### 1.2 Evidence Base
 
-Согласно клиническим руководствам APA (2019) и ACP (2023):
-- КПТ рекомендована как первая линия лечения при лёгкой и умеренной депрессии
-- Эффективность КПТ сопоставима с антидепрессантами при острой фазе
-- КПТ превосходит фармакотерапию в долгосрочной перспективе (снижение рецидивов)
-- Комбинированная терапия (КПТ + медикаменты) наиболее эффективна при тяжёлой депрессии
-- Размер эффекта: средний-большой (Hedges' g: 0.51–0.81)
-
----
-
-## 2. КОГНИТИВНЫЕ ИСКАЖЕНИЯ (COGNITIVE DISTORTIONS)
-
-### 2.1 Список основных когнитивных искажений (по Beck & Burns)
-
-**Чёрно-белое мышление (All-or-nothing thinking)**
-- Описание: Восприятие ситуаций в крайних категориях без промежуточных вариантов
-- Пример: "Если я не сделаю это идеально, значит я полный неудачник"
-- Вопросы для работы: "Есть ли промежуточные варианты?", "Как бы вы оценили это по шкале от 0 до 10?"
-
-**Катастрофизация (Catastrophizing)**
-- Описание: Ожидание наихудшего исхода без учёта более вероятных сценариев
-- Пример: "Если я провалю эту встречу, моя карьера закончена"
-- Вопросы: "Каков наиболее реалистичный исход?", "Что самое худшее/лучшее/наиболее вероятное?"
-
-**Сверхобобщение (Overgeneralization)**
-- Описание: Формирование общего вывода на основе единичного случая
-- Пример: "Мне отказали в одной компании — меня никуда не возьмут"
-- Вопросы: "Это действительно происходит ВСЕГДА?", "Можете вспомнить исключения?"
-
-**Ментальный фильтр (Mental filtering)**
-- Описание: Фокусировка на одном негативном аспекте при игнорировании позитивных
-- Пример: Получить 9 положительных отзывов и один негативный, думать только о негативном
-- Вопросы: "Какие другие аспекты ситуации вы упускаете?"
-
-**Обесценивание положительного (Disqualifying the positive)**
-- Описание: Отвержение положительного опыта как "не считающегося"
-- Пример: "Комплимент был просто из вежливости, на самом деле так не думают"
-- Вопросы: "Почему позитивный опыт не учитывается?"
-
-**Чтение мыслей (Mind reading)**
-- Описание: Предположение о том, что другие думают негативно, без доказательств
-- Пример: "Все думают, что я некомпетентный"
-- Вопросы: "Какие у вас доказательства этого?", "Есть ли другие объяснения?"
-
-**Предсказание будущего (Fortune telling)**
-- Описание: Уверенность в негативном исходе без оснований
-- Пример: "Я точно знаю, что не справлюсь"
-- Вопросы: "Вы можете предсказать будущее?", "Были ли случаи когда вы ошибались?"
-
-**Долженствование (Should statements)**
-- Описание: Жёсткие требования к себе и другим ("должен", "обязан", "надо")
-- Пример: "Я должен всегда быть продуктивным"
-- Вопросы: "Откуда взялось это правило?", "Это правило помогает или мешает?"
-
-**Навешивание ярлыков (Labeling)**
-- Описание: Присвоение себе или другим глобальных негативных характеристик
-- Пример: "Я — неудачник" вместо "Я совершил ошибку"
-- Вопросы: "Это описание вас целиком или конкретного действия?"
-
-**Персонализация (Personalization)**
-- Описание: Принятие ответственности за события, не зависящие от вас
-- Пример: "Друг не пришёл на встречу — значит я плохой друг"
-- Вопросы: "Какие другие факторы могли повлиять?"
-
-**Эмоциональное обоснование (Emotional reasoning)**
-- Описание: "Я чувствую это — значит так и есть"
-- Пример: "Я чувствую себя бесполезным — значит я бесполезен"
-- Вопросы: "Чувство = факт? Какие объективные доказательства?"
+According to clinical practice guidelines from the APA (2019) and ACP (2023):
+- CBT is strongly recommended as first-line therapy for mild to moderate depression.
+- The acute efficacy of CBT is comparable to second-generation antidepressant medications.
+- CBT outperforms pharmacotherapy in long-term durability and prevention of depressive relapse.
+- Combined treatment (CBT plus pharmacotherapy) is indicated for severe or chronic depression.
+- Effect size: moderate to large (Hedges' g: 0.51–0.81).
 
 ---
 
-## 3. ТЕХНИКИ КПТ ДЛЯ РАБОТЫ С ДЕПРЕССИЕЙ
+## 2. COGNITIVE DISTORTIONS
 
-### 3.1 Когнитивная реструктуризация
+### 2.1 Major Cognitive Distortions (Beck & Burns Framework)
 
-**Запись мыслей (Thought Record / Дневник мыслей)**
-Столбцы:
-1. Ситуация (что произошло)
-2. Автоматическая мысль (что подумали)
-3. Эмоция и её интенсивность (0-100%)
-4. Когнитивное искажение (какой тип)
-5. Доказательства ЗА эту мысль
-6. Доказательства ПРОТИВ этой мысли
-7. Альтернативная/сбалансированная мысль
-8. Эмоция после переоценки (0-100%)
+**All-or-Nothing Thinking (Black-and-White Thinking)**
+- Description: Viewing situations in rigid, polarized categories without intermediate nuances.
+- Example: "If I do not deliver this project perfectly, I am a total failure."
+- Socratic Questions: "Are there intermediate outcomes between 0% and 100%?", "How would you rate this on a scale from 0 to 10?"
 
-**Сократический диалог**
-- Что является доказательством этой мысли?
-- Что говорит ПРОТИВ этой мысли?
-- Есть ли альтернативное объяснение?
-- Что самое худшее может случиться? Что самое лучшее? Что наиболее реалистично?
-- Что бы вы сказали другу в такой ситуации?
-- Как эта мысль влияет на ваше поведение и состояние?
-- Если бы вы думали по-другому, как бы это изменило ситуацию?
+**Catastrophizing (Magnification of Worst-Case Scenarios)**
+- Description: Expecting the absolute worst-case scenario while ignoring more realistic probabilities.
+- Example: "If I stumble during this meeting, my entire professional career is ruined."
+- Socratic Questions: "What is the most realistic outcome?", "What is the worst that could happen, the best that could happen, and the most probable scenario?"
 
-### 3.2 Поведенческая активация (Behavioral Activation)
+**Overgeneralization**
+- Description: Drawing a sweeping negative conclusion based on a single isolated event.
+- Example: "I was rejected by this employer; no one will ever hire me."
+- Socratic Questions: "Does this truly happen every single time?", "Can you recall times when an exception occurred?"
 
-Ключевой компонент КПТ при депрессии, основанный на связи активность → настроение.
+**Mental Filtering**
+- Description: Exclusively focusing on a single negative detail while filtering out all positive aspects.
+- Example: Receiving nine glowing performance reviews and one critical note, yet fixating solely on the critique.
+- Socratic Questions: "What other aspects of this situation are being overlooked?"
 
-**Принципы:**
-- Депрессия → снижение активности → ухудшение настроения → ещё меньше активности (порочный круг)
-- Цель: разорвать этот цикл через постепенное увеличение активности
-- Начинать с маленьких, достижимых шагов
+**Disqualifying the Positive**
+- Description: Rejecting positive experiences or compliments by insisting they 'do not count'.
+- Example: "They only praised my work out of politeness; they did not really mean it."
+- Socratic Questions: "Why does this positive piece of evidence not count?"
 
-**Мониторинг активности:**
-- Записывать виды деятельности в течение дня
-- Оценивать уровень удовольствия (0-10) и чувства мастерства/достижения (0-10)
-- Выявлять паттерны: какие активности улучшают настроение
+**Mind Reading**
+- Description: Arbitrarily concluding that others view you negatively without concrete evidence.
+- Example: "Everyone in the room thinks I am incompetent."
+- Socratic Questions: "What objective evidence supports that conclusion?", "Are there alternative explanations for their behavior?"
 
-**Планирование активности:**
-- Составить список приятных и значимых активностей
-- Запланировать конкретные действия на каждый день
-- Начать с 1-2 небольших действий и постепенно наращивать
-- Включить: физическую активность, социальные контакты, хобби, рутины ухода за собой
+**Fortune Telling**
+- Description: Predicting negative future outcomes as established facts without foundation.
+- Example: "I know for certain that I will fail tomorrow."
+- Socratic Questions: "Can anyone predict the future with 100% certainty?", "Have your catastrophic predictions been wrong in the past?"
 
-### 3.3 Решение проблем (Problem Solving)
+**Should Statements (Imperative Thinking)**
+- Description: Imposing rigid, inflexible demands upon oneself or others using 'should', 'must', or 'ought'.
+- Example: "I must always be productive every single hour."
+- Socratic Questions: "Where did this unbending rule originate?", "Is this rule helping you or creating unnecessary guilt?"
 
-Структурированный подход:
-1. Определить проблему конкретно
-2. Провести мозговой штурм возможных решений (без критики)
-3. Оценить плюсы и минусы каждого решения
-4. Выбрать наиболее подходящее решение
-5. Составить план действий
-6. Реализовать план
-7. Оценить результат
+**Labeling**
+- Description: Attaching a global, pejorative label to oneself or others instead of describing a specific behavior.
+- Example: "I am a loser" instead of "I made a mistake on this task."
+- Socratic Questions: "Does this single behavior define your entire identity as a human being?"
 
-### 3.4 Техники релаксации
+**Personalization**
+- Description: Assuming personal responsibility for external events beyond your control.
+- Example: "My friend canceled our dinner because I am a terrible person to be around."
+- Socratic Questions: "What other factors or external circumstances could explain their decision?"
 
-**Прогрессивная мышечная релаксация (по Якобсону)**
-- Последовательное напряжение и расслабление групп мышц
-- 15-20 минут ежедневно
-- Особенно эффективна при сопутствующей тревоге
-
-**Диафрагмальное дыхание**
-- Вдох через нос на 4 счёта
-- Задержка на 4 счёта
-- Выдох через рот на 6 счётов
-- 5-10 минут
-
-**Заземление (Grounding) — техника 5-4-3-2-1**
-- 5 вещей, которые видите
-- 4 вещи, которые слышите
-- 3 вещи, к которым можете прикоснуться
-- 2 запаха
-- 1 вкус
-
-### 3.5 Поведенческие эксперименты
-
-Цель: проверка негативных убеждений на практике
-
-Формат:
-1. Убеждение для проверки
-2. Предсказание (что случится)
-3. Эксперимент (что конкретно сделаете)
-4. Результат (что реально произошло)
-5. Вывод (что это говорит об убеждении)
+**Emotional Reasoning**
+- Description: Assuming that negative emotional reactions necessarily reflect objective reality.
+- Example: "I feel like a burden, therefore I must objectively be a burden to everyone."
+- Socratic Questions: "Is an intense feeling equivalent to an objective fact?", "What physical evidence exists apart from the emotion?"
 
 ---
 
-## 4. ОЦЕНКА СОСТОЯНИЯ
+## 3. CBT TECHNIQUES FOR DEPRESSION
+
+### 3.1 Cognitive Restructuring
+
+**Thought Record (Thought Diary)**
+Standard Columns:
+1. Situation (who, what, where, when)
+2. Automatic Thought (exact negative cognition)
+3. Emotion and Initial Intensity (0–100%)
+4. Cognitive Distortion (identified cognitive error)
+5. Evidence Supporting the Automatic Thought
+6. Evidence Contrary to the Automatic Thought
+7. Alternative / Balanced Thought (realistic re-framing)
+8. Outcome Emotion and Re-rated Intensity (0–100%)
+
+**Socratic Questioning**
+- What factual evidence supports this thought?
+- What factual evidence contradicts this thought?
+- Is there an alternative, more balanced explanation?
+- What would you say to a close friend facing this exact dilemma?
+- If the worst did happen, how could you cope with it?
+- What is the effect of holding on to this belief?
+
+### 3.2 Behavioral Activation (BA)
+
+A foundational pillar of depression treatment based on the relationship between activity, reinforcement, and mood.
+
+**Core Dynamics:**
+- Depression -> Reduced Activity / Social Withdrawal -> Depleted Positive Reinforcement -> Worsening Mood (Vicious Cycle).
+- Objective: Disrupt this cycle through systematic, gradual scheduling of meaningful and rewarding activities.
+- Begin with micro-steps that have high feasibility of completion.
+
+**Activity Monitoring:**
+- Log hourly activities throughout the day.
+- Rate each activity for Pleasure (0–10) and Mastery / Accomplishment (0–10).
+- Identify positive correlations: which behaviors consistently improve mood.
+
+**Activity Scheduling:**
+- Brainstorm enjoyable, values-aligned activities.
+- Schedule specific, concrete actions into calendar slots.
+- Focus on four pillars: physical movement, social connection, restorative self-care, and creative pursuits.
+
+### 3.3 Problem-Solving Training
+
+A structured 7-step model:
+1. Define the concrete problem specifically.
+2. Brainstorm potential solutions without preliminary judgment.
+3. Weigh the pros and cons of each alternative.
+4. Select the most realistic and promising solution.
+5. Formulate an actionable implementation plan.
+6. Execute the plan.
+7. Review outcomes and adjust strategy as needed.
+
+### 3.4 Relaxation and Grounding Techniques
+
+**Progressive Muscle Relaxation (Jacobson PMR)**
+- Systematically tensing and releasing major muscle groups.
+- 15–20 minutes daily.
+- Highly effective for co-occurring somatic tension and anxiety.
+
+**Diaphragmatic Breathing (Paced Breathing / 4-7-8 Breathing)**
+- Inhale deeply through the nose for 4 counts.
+- Hold breath gently for 4–7 counts.
+- Exhale slowly through the mouth for 6–8 counts.
+- Practice for 5–10 minutes to activate parasympathetic vagal tone.
+
+**5-4-3-2-1 Sensory Grounding Technique**
+- 5 things you can visually observe.
+- 4 things you can physically touch.
+- 3 distinct sounds you can hear.
+- 2 aromas you can smell.
+- 1 flavor you can taste.
+
+### 3.5 Behavioral Experiments
+
+Goal: Empirically testing catastrophic beliefs in everyday life.
+
+Format:
+1. Specific belief to test.
+2. Concrete prediction (what you expect will happen).
+3. Experiment design (the specific action to execute).
+4. Actual result (objective observations).
+5. Conclusion (what this data indicates about the original belief).
+
+---
+
+## 4. CLINICAL ASSESSMENT
 
 ### 4.1 PHQ-9 (Patient Health Questionnaire-9)
 
-За последние 2 недели, как часто вас беспокоили следующие проблемы:
-(0 = совсем нет, 1 = несколько дней, 2 = более половины дней, 3 = почти каждый день)
+Assessing symptoms over the past 2 weeks:
+(0 = Not at all, 1 = Several days, 2 = More than half the days, 3 = Nearly every day)
 
-1. Мало интереса или удовольствия от деятельности
-2. Подавленное настроение, депрессия, безнадёжность
-3. Проблемы со сном (бессонница или избыточный сон)
-4. Чувство усталости или упадок сил
-5. Плохой аппетит или переедание
-6. Чувство недовольства собой — ощущение себя неудачником
-7. Трудности с концентрацией при чтении или просмотре ТВ
-8. Замедленность движений/речи или наоборот суетливость
-9. Мысли о том, что лучше бы вам умереть, или о причинении себе вреда
+1. Little interest or pleasure in doing things
+2. Feeling down, depressed, or hopeless
+3. Trouble falling or staying asleep, or sleeping too much
+4. Feeling tired or having little energy
+5. Poor appetite or overeating
+6. Feeling bad about yourself — or that you are a failure
+7. Trouble concentrating on things, such as reading or television
+8. Moving or speaking slowly, or being fidgety / restless
+9. Thoughts that you would be better off dead, or of hurting yourself in some way
 
-Интерпретация:
-- 0-4: минимальная депрессия
-- 5-9: лёгкая депрессия
-- 10-14: умеренная депрессия
-- 15-19: умеренно-тяжёлая депрессия
-- 20-27: тяжёлая депрессия
+Scoring Interpretation:
+- 0–4: Minimal or no depression
+- 5–9: Mild depression
+- 10–14: Moderate depression
+- 15–19: Moderately severe depression
+- 20–27: Severe depression
 
-### 4.2 Шкала Бека (BDI-II) — краткие категории
-- 0-13: минимальная депрессия
-- 14-19: лёгкая депрессия
-- 20-28: умеренная депрессия
-- 29-63: тяжёлая депрессия
-
----
-
-## 5. СТРУКТУРА СЕССИИ
-
-### 5.1 Типичная структура сессии КПТ
-
-1. **Проверка настроения** (1-2 мин): Как себя чувствуете? Шкала 0-10
-2. **Обзор прошедшего периода** (3-5 мин): Что происходило? Как выполнялись домашние задания?
-3. **Повестка сессии** (1-2 мин): Что хотите обсудить сегодня?
-4. **Основная работа** (20-30 мин): Работа с выбранной темой через техники КПТ
-5. **Подведение итогов** (3-5 мин): Что было полезного? Что запомнилось?
-6. **Домашнее задание** (2-3 мин): Конкретные задания до следующей сессии
-
-### 5.2 Рекомендации по количеству сессий
-- Типичный курс: 12-20 сессий
-- Частота: 1 раз в неделю (45-60 мин)
-- Бустерные сессии: каждые 1-3 месяца после завершения курса
+### 4.2 Beck Depression Inventory (BDI-II Categories)
+- 0–13: Minimal depression
+- 14–19: Mild depression
+- 20–28: Moderate depression
+- 29–63: Severe depression
 
 ---
 
-## 6. КРИЗИСНОЕ РЕАГИРОВАНИЕ
+## 5. SESSION STRUCTURE
 
-### 6.1 Маркеры суицидального риска
+### 5.1 Standard CBT Session Format
+1. **Mood Check** (1–2 min): Current mood rating on a 0–10 scale.
+2. **Bridge from Previous Session** (3–5 min): Reviewing past week events and homework completion.
+3. **Agenda Setting** (1–2 min): Collaboratively prioritizing topics for the session.
+4. **Core Therapeutic Work** (20–30 min): Applying CBT interventions to prioritized items.
+5. **Session Summary** (3–5 min): Key takeaways and reflections.
+6. **Homework Assignment** (2–3 min): Concrete, manageable behavioral tasks for the week.
 
-ВАЖНО: При наличии следующих маркеров НЕМЕДЛЕННО рекомендовать обратиться к профессионалу:
-
-- Прямые высказывания о желании умереть или причинить себе вред
-- Упоминание конкретных планов суицида
-- Ощущение безнадёжности ("ничего не изменится", "нет смысла")
-- Чувство обузы для других ("всем будет лучше без меня")
-- Социальная изоляция и отказ от контактов
-- Раздача значимых вещей
-- Внезапное "спокойствие" после периода тяжёлой депрессии
-- Злоупотребление алкоголем/психоактивными веществами
-- Предыдущие попытки суицида
-
-### 6.2 Протокол реагирования
-
-При выявлении суицидального риска:
-1. Выразить заботу и поддержку
-2. Не оставлять без внимания
-3. Настоятельно рекомендовать обратиться:
-   - Телефон доверия: 8-800-2000-122 (Россия, бесплатно)
-   - Скорая помощь: 112
-   - Ближайшая психиатрическая служба
-4. Подчеркнуть: "Вы не одиноки, помощь существует"
-5. Напомнить: AI-ассистент НЕ заменяет профессиональную помощь
-
-### 6.3 Границы AI-ассистента
-
-AI-ассистент:
-- НЕ является заменой профессионального психотерапевта
-- НЕ может ставить диагнозы
-- НЕ может назначать медикаменты
-- НЕ может работать с острыми кризисными состояниями
-- МОЖЕТ оказывать поддерживающую помощь на основе принципов КПТ
-- МОЖЕТ помогать отслеживать мысли и настроение
-- МОЖЕТ обучать техникам самопомощи
-- ДОЛЖЕН рекомендовать профессиональную помощь при необходимости
+### 5.2 Recommended Course Length
+- Standard Course: 12–20 weekly sessions (45–60 minutes each).
+- Booster Sessions: Monthly or quarterly sessions post-treatment to consolidate gains.
 
 ---
 
-## 7. ДОМАШНИЕ ЗАДАНИЯ
+## 6. CRISIS SAFETY AND ETHICAL BOUNDARIES
 
-### 7.1 Типы домашних заданий
+### 6.1 Suicide Risk Indicators
+Immediate professional psychiatric referral is mandatory if any of the following indicators are present:
+- Explicit statements expressing intent to die or inflict self-harm.
+- Articulation of specific suicide plans or means.
+- Pervasive hopelessness ("Nothing will ever change", "There is no point").
+- Perceived burdensomeness ("Everyone would be better off without me").
+- Acute social withdrawal and saying goodbyes.
+- Giving away prized possessions.
+- Sudden, unexplained calm following deep depressive despair.
+- Substance abuse escalation.
+- History of prior suicide attempts.
 
-**Для начинающих (1-4 сессия):**
-- Мониторинг настроения (шкала 0-10, 3 раза в день)
-- Запись приятных событий дня (минимум 3)
-- Одна небольшая приятная активность в день
-- Дневник благодарности (3 вещи перед сном)
+### 6.2 Emergency Crisis Protocol
+When elevated suicide or self-harm risk is identified:
+1. Express immediate compassion, warmth, and validation.
+2. Directly prompt the user to contact emergency services:
+   - **United States & Canada:** Call or text **988** (Suicide & Crisis Lifeline, 24/7, free, confidential).
+   - **United Kingdom:** Call **111** (NHS Mental Health Services) or text **SHOUT** to **85258**.
+   - **International:** Contact local emergency medical services (911 / 999 / 112) or the nearest emergency hospital.
+3. Reiterate: "You are not alone, and compassionate professional help is available right now."
+4. Remind the user: The AI assistant is an educational tool and CANNOT replace human emergency clinical services.
 
-**Для продолжающих (5-12 сессия):**
-- Дневник мыслей (запись автоматических мыслей)
-- Определение когнитивных искажений
-- Формулировка альтернативных мыслей
-- Планирование и выполнение поведенческих экспериментов
-- Расширение списка активностей
-
-**Для продвинутых (13-20 сессия):**
-- Работа с глубинными убеждениями
-- Составление плана профилактики рецидивов
-- Самостоятельное применение техник в новых ситуациях
-- Постепенное снижение частоты сессий
-
----
-
-## 8. ПЛАН ПРОФИЛАКТИКИ РЕЦИДИВОВ
-
-### 8.1 Компоненты плана
-
-1. **Ранние предупреждающие знаки:** Какие мысли, чувства, поведение указывают на начало ухудшения?
-2. **Триггеры:** Какие ситуации или события могут спровоцировать ухудшение?
-3. **Копинг-стратегии:** Что конкретно я буду делать при появлении ранних признаков?
-4. **Поддержка:** К кому я могу обратиться? Телефоны и контакты
-5. **Достижения терапии:** Какие навыки и инсайты я получил?
-6. **Напоминания:** Ключевые фразы/мысли, которые помогают
-
----
-
-## 9. СПЕЦИАЛЬНЫЕ ТЕМЫ
-
-### 9.1 Сон и депрессия
-- Гигиена сна: режим, температура, свет, экраны
-- Стимул-контроль: кровать = только для сна
-- Ограничение сна при бессоннице (под наблюдением)
-
-### 9.2 Физическая активность
-- Мета-анализы подтверждают антидепрессивный эффект упражнений
-- Рекомендация: 150 мин умеренной аэробной нагрузки в неделю
-- Начинать с 10-15 мин ходьбы и постепенно увеличивать
-
-### 9.3 Социальные навыки
-- Тренировка ассертивности
-- Управление конфликтами
-- Расширение социальной сети
-
-### 9.4 Mindfulness (осознанность)
-- Интеграция с КПТ (MBCT — mindfulness-based cognitive therapy)
-- Медитация осознанности: 10-15 мин ежедневно
-- Наблюдение за мыслями без оценки
+### 6.3 Professional Boundaries of the AI Assistant
+The AI Assistant:
+- Is NOT a licensed healthcare professional, physician, or psychotherapist.
+- CANNOT make clinical diagnoses.
+- CANNOT prescribe or modify medications.
+- CANNOT manage acute psychiatric emergencies.
+- CAN provide supportive psychoeducation based on established CBT principles.
+- CAN assist users in tracking thoughts, mood, and sleep.
+- CAN teach evidence-based self-regulation and grounding tools.
+- MUST actively encourage human professional consultation whenever clinically indicated.
 
 ---
 
-## 10. ИСТОЧНИКИ И ССЫЛКИ
+## 7. HOMEWORK AND EXERCISES
 
-1. Beck, A.T. (1979). Cognitive Therapy of Depression. Guilford Press.
-2. Burns, D.D. (1980). Feeling Good: The New Mood Therapy.
-3. Cuijpers, P. et al. (2023). Cognitive behavior therapy vs. control conditions... World Psychiatry, 22(1).
-4. American Psychological Association (2019). Clinical Practice Guideline for the Treatment of Depression.
-5. American College of Physicians (2023). Nonpharmacologic and Pharmacologic Treatments of Adults in the Acute Phase of MDD.
-6. Kroenke, K. et al. (2001). The PHQ-9: validity of a brief depression severity measure. JGIM.
-7. Martell, C.R. et al. (2010). Behavioral Activation for Depression. Guilford Press.
-8. Segal, Z.V. et al. (2013). Mindfulness-Based Cognitive Therapy for Depression. Guilford Press.
-9. Fava, G.A. et al. (2004). Well-being therapy and relapse prevention. Psychological Medicine.
-10. PMC Article: Cognitive Behavioral Therapy for Depression (PMC7001356).
+### 7.1 Tiered Homework Activities
+
+**Foundational Stage (Sessions 1–4):**
+- Daily mood tracking (0–10 scale, 2–3 times daily).
+- Three Good Things log (noting 3 positive daily events before sleep).
+- Scheduling one pleasant micro-activity daily.
+- Daily gratitude practice.
+
+**Intermediate Stage (Sessions 5–12):**
+- Thought records (logging automatic thoughts and cognitive distortions).
+- Formulating balanced rational responses.
+- Executing planned behavioral activation assignments.
+- Conducting structured behavioral experiments.
+
+**Advanced Stage (Sessions 13–20):**
+- Identifying and reframing conditional assumptions and core beliefs.
+- Developing a personalized relapse prevention blueprint.
+- Independent application of CBT tools in novel life stressors.
+
+---
+
+## 8. RELAPSE PREVENTION PLAN
+
+### 8.1 Core Elements
+1. **Early Warning Signs:** Subtle cognitive, emotional, and behavioral shifts signaling initial decompensation.
+2. **Individual Triggers:** Stressors, interpersonal conflicts, or anniversary dates likely to trigger distress.
+3. **Coping Toolkit:** Specific coping exercises and evidence-based skills to implement immediately.
+4. **Social & Clinical Support Network:** Trusted individuals, hotlines, and therapists to contact.
+5. **Therapy Gains Inventory:** Key insights, breakthroughs, and skills acquired throughout therapy.
+6. **Empowering Mantras:** Grounding affirmations that reinforce resilience.
+
+---
+
+## 9. COMPREHENSIVE LIFESTYLE INTERVENTIONS
+
+### 9.1 Sleep Architecture
+- Consistent sleep-wake scheduling.
+- Stimulus control: using bed solely for sleep and intimacy.
+- Eliminating caffeine and screen exposure before bedtime.
+
+### 9.2 Physical Exercise
+- Meta-analyses confirm significant antidepressant efficacy of physical aerobic exercise.
+- Target: 150 minutes of moderate aerobic exercise weekly.
+- Start with accessible 10–15 minute brisk walks and scale progressively.
+
+### 9.3 Social Engagement
+- Assertiveness communication training.
+- Conflict de-escalation skills.
+- Gradual expansion of supportive interpersonal connections.
+
+### 9.4 Mindfulness Practice
+- Mindfulness-Based Cognitive Therapy (MBCT) integration.
+- Daily 10–15 minute mindfulness meditation.
+- Non-judgmental observation of cognitive phenomena.
+
+---
+
+## 10. SCIENTIFIC REFERENCES
+
+1. **Beck, A. T. (1979).** *Cognitive Therapy of Depression.* Guilford Press.
+2. **Burns, D. D. (1980).** *Feeling Good: The New Mood Therapy.* William Morrow.
+3. **Cuijpers, P., et al. (2023).** *Cognitive behavior therapy vs. control conditions for depression in adults: a meta-analysis.* World Psychiatry, 22(1).
+4. **American Psychological Association (2019).** *Clinical Practice Guideline for the Treatment of Depression Across Three Age Cohorts.*
+5. **American College of Physicians (2023).** *Nonpharmacologic and Pharmacologic Treatments of Adults in the Acute Phase of Major Depressive Disorder.*
+6. **Kroenke, K., Spitzer, R. L., & Williams, J. B. (2001).** *The PHQ-9: validity of a brief depression severity measure.* Journal of General Internal Medicine.
+7. **Martell, C. R., Dimidjian, S., & Herman-Dunn, R. (2010).** *Behavioral Activation for Depression: A Clinician's Guide.* Guilford Press.
+8. **Segal, Z. V., Williams, J. M. G., & Teasdale, J. D. (2013).** *Mindfulness-Based Cognitive Therapy for Depression.* Guilford Press.
+9. **Fava, G. A., et al. (2004).** *Well-being therapy and relapse prevention in depression.* Psychological Medicine.
+10. **PMC Article:** *Cognitive Behavioral Therapy for Depression* (PMC7001356).

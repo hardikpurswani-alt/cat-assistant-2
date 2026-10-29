@@ -1,148 +1,8 @@
-const UI_TRANSLATIONS = {
-    ru: {
-        document_title: 'КПТ Ассистент',
-        app_title: 'КПТ Ассистент',
-        sos_button: 'SOS',
-        sidebar_thoughts: 'Дневник мыслей',
-        sidebar_sleep: 'Журнал сна',
-        sidebar_assessment: 'Самооценка',
-        sidebar_calendar: 'Календарь записей',
-        sidebar_dashboard: 'Дашборд прогресса',
-        sidebar_articles: 'Библиотека статей',
-        sidebar_videos: 'Видео-библиотека',
-        sidebar_reminders: 'Напоминания',
-        sidebar_settings: 'Настройки',
-        sidebar_download: 'Скачать выписку',
-        tts_title: 'Озвучка ассистента',
-        mic_title: 'Голосовой ввод',
-        status_connecting: 'Подключение...',
-        status_offline: 'Ollama offline',
-        status_backend_down: 'Бекенд недоступен',
-        input_placeholder: 'Как я могу помочь вам сегодня?',
-        input_placeholder_idle: 'Задайте вопрос...',
-        input_placeholder_listening: 'Слушаю...',
-        input_placeholder_mic_denied: 'Нет доступа к микрофону',
-        input_placeholder_mic_error: 'Не удалось запустить голосовой ввод',
-        input_placeholder_mic_unsupported: 'Голосовой ввод не поддерживается в этом браузере',
-        assistant_disclaimer: 'Ассистент может ошибаться. При остром состоянии обратитесь к специалисту.',
-        welcome_morning: 'Доброе утро',
-        welcome_day: 'Добрый день',
-        welcome_evening: 'Добрый вечер',
-        welcome_night: 'Доброй ночи',
-        assessment_title: 'Самооценка',
-        assessment_phq_title: 'Депрессия (PHQ-9)',
-        assessment_phq_desc: 'Скрининг выраженности симптомов депрессии и снижения настроения',
-        assessment_gad_title: 'Тревожность (GAD-7)',
-        assessment_gad_desc: 'Оценка общего уровня тревоги и беспокойства',
-        assessment_esteem_title: 'Самооценка (Розенберг)',
-        assessment_esteem_desc: 'Оценка отношения к себе, самоуважения и внутренней опоры',
-        mood_modal_title: 'Настроение',
-        mood_log_button: 'Записать состояние',
-        thought_modal_title: 'Мысли и действия',
-        thought_tab_diary: 'Дневник мыслей',
-        thought_tab_gratitude: 'Благодарность',
-        thought_tab_rhythm: 'Ритм дня',
-        thought_modal_hint: 'Запишите ситуацию, мысль и более бережный взгляд на неё.',
-        thought_label_situation: 'Ситуация (Что произошло?)',
-        thought_label_thought: 'Автоматическая мысль (О чем подумали?)',
-        thought_label_emotion: 'Эмоция',
-        thought_placeholder_emotion: 'Например: тревога',
-        thought_label_intensity: 'Сила (0-10)',
-        thought_label_distortion: 'Когнитивное искажение',
-        distortion_catastrophizing: 'Катастрофизация',
-        distortion_mind_reading: 'Чтение мыслей',
-        distortion_fortune_telling: 'Предсказание будущего',
-        distortion_overgeneralization: 'Сверхобобщение',
-        distortion_black_white: 'Чёрно-белое мышление',
-        distortion_discounting_positive: 'Обесценивание позитивного',
-        distortion_personalization: 'Персонализация',
-        distortion_unsure: 'Не знаю',
-        thought_label_response: 'Рациональный ответ',
-        gratitude_prompt: 'Запишите 3 вещи, за которые вы благодарны сегодня — большие или маленькие.',
-        gratitude_label: 'За что я благодарен(а)?',
-        gratitude_placeholder: '1. \n2. \n3. ',
-        thought_save: 'Сохранить мысль',
-        rhythm_mood_after: 'Как настроение после?',
-        skip: 'Пропустить',
-        phq_modal_title: 'PHQ-9 — Скрининг депрессии',
-        phq_modal_desc: 'На протяжении последних двух недель, как часто вас беспокоили следующие проблемы?',
-        gad_modal_title: 'GAD-7 — Скрининг тревожности',
-        gad_modal_desc: 'За последние две недели, как часто вас беспокоили следующие проблемы?',
-        esteem_modal_title: 'Самооценка — шкала Розенберга',
-        esteem_modal_desc: 'Насколько вы согласны со следующими утверждениями о себе?',
-        get_result: 'Получить результат',
-        assessment_dashboard_title: 'Самооценка (PHQ-9 / GAD-7 / Розенберг)',
-        calendar_legend_thoughts: 'Мысли',
-        calendar_legend_mood: 'Настроение',
-        calendar_legend_sleep: 'Сон',
-        calendar_legend_activities: 'Активности',
-        calendar_legend_assessment: 'Самооценка',
-        calendar_pick_day: 'Выберите день',
-        dashboard_title: 'Дашборд прогресса',
-        dashboard_insights: 'Наблюдения',
-        refresh: 'обновить',
-        loading: 'Загрузка…',
-        dashboard_mood_14: 'Настроение за последние 14 дней',
-        dashboard_sleep_7: 'Качество сна (7 дней)',
-        history_title: 'Дневник мыслей',
-        new_entry: 'Новая запись',
-        sleep_history_title: 'Журнал сна',
-        sleep_add_title: 'Добавить запись о сне',
-        sleep_bedtime: 'Лёг спать',
-        sleep_wake: 'Встал',
-        sleep_awake_count: 'Сколько раз просыпался за ночь',
-        sleep_quality: 'Качество сна (0 — ужасно, 10 — отлично)',
-        sleep_notes: 'Заметки (сны, причины плохого сна)',
-        sleep_notes_placeholder: 'Что могло повлиять на сон?',
-        save_entry: 'Сохранить запись',
-        sos_title: 'Экстренная помощь (SOS)',
-        sos_tab_breathing: 'Дыхание',
-        sos_tab_grounding: 'Заземление',
-        sos_tab_muscles: 'Мышцы',
-        sos_tab_stop: 'СТОП',
-        start_exercise: 'Начать упражнение',
-        settings_title: 'Настройки',
-        language_title: 'Язык',
-        language_ru: 'Русский',
-        language_en: 'English',
-        ollama_model_title: 'Модель Ollama',
-        ollama_model_label: 'Модель для чата',
-        ollama_model_loading: 'Загрузка моделей…',
-        ollama_model_empty: 'На сервере Ollama нет установленных моделей',
-        ollama_model_embedding_only: 'только embeddings',
-        ollama_model_unavailable: 'Текущая модель недоступна на сервере',
-        ollama_model_load_error: 'Не удалось получить список моделей с сервера Ollama',
-        ollama_model_save_error: 'Не удалось переключить модель',
-        ollama_model_saved: 'Выбрана модель: {model}',
-        tts_settings_title: 'Microsoft TTS',
-        tts_voice_ru_label: 'Русский голос',
-        tts_voice_en_label: 'English voice',
-        tts_preview: 'Прослушать',
-        reminders_title: 'Напоминания',
-        reminders_desc: 'Браузерные уведомления напомнят записать настроение или практику. Страница должна быть открыта в браузере.',
-        reminders_morning: 'Утреннее',
-        reminders_evening: 'Вечернее',
-        save: 'Сохранить',
-        article_library_title: 'Библиотека статей',
-        article_library_subtitle: 'Подборка статей о депрессии, КПТ и доказательных подходах к самопомощи.',
-        video_library_title: 'Видео-библиотека',
-        video_library_subtitle: 'Отобранные материалы от специалистов: механизмы депрессии, тревоги и полезные практики.',
-        back_to_list: 'Назад к списку',
-        download_title: 'Скачать выписку',
-        download_desc: 'Выберите формат экспорта данных',
-        download_pdf_desc: 'Красивый отчёт\nс графиками',
-        download_txt_desc: 'Текстовый файл\nсо всеми данными',
-        skip_arrow: 'Пропустить →',
-        done_arrow: 'Готово →',
-        breathe_phase: 'Дыхание',
-        cycle_one: 'Цикл 1',
-        follow_circle: 'Следуйте за кругом',
-        sos_sound_on: 'Включить фоновый звук',
-        sos_sound_off: 'Выключить фоновый звук'
-    },
-    en: {
+const UI_TRANSLATIONS_COMMON = {
         document_title: 'CBT Assistant',
         app_title: 'CBT Assistant',
+        new_chat: 'New Chat',
+        restart_chat: 'Restart Chat',
         sos_button: 'SOS',
         sidebar_thoughts: 'Thought Diary',
         sidebar_sleep: 'Sleep Journal',
@@ -244,7 +104,6 @@ const UI_TRANSLATIONS = {
         start_exercise: 'Start exercise',
         settings_title: 'Settings',
         language_title: 'Language',
-        language_ru: 'Russian',
         language_en: 'English',
         ollama_model_title: 'Ollama model',
         ollama_model_label: 'Chat model',
@@ -256,8 +115,7 @@ const UI_TRANSLATIONS = {
         ollama_model_save_error: 'Could not switch the model',
         ollama_model_saved: 'Selected model: {model}',
         tts_settings_title: 'Microsoft TTS',
-        tts_voice_ru_label: 'Russian voice',
-        tts_voice_en_label: 'English voice',
+        tts_voice_en_label: 'Voice',
         tts_preview: 'Preview',
         reminders_title: 'Reminders',
         reminders_desc: 'Browser notifications can remind you to log your mood or do a practice. Keep this page open in your browser.',
@@ -280,7 +138,12 @@ const UI_TRANSLATIONS = {
         follow_circle: 'Follow the circle',
         sos_sound_on: 'Turn ambient sound on',
         sos_sound_off: 'Turn ambient sound off'
-    }
+};
+
+
+const UI_TRANSLATIONS = {
+    ru: UI_TRANSLATIONS_COMMON,
+    en: UI_TRANSLATIONS_COMMON
 };
 
 function getCurrentLanguage() {
@@ -289,7 +152,7 @@ function getCurrentLanguage() {
 window.getCurrentLanguage = getCurrentLanguage;
 
 function getCurrentLocale() {
-    return getCurrentLanguage() === 'en' ? 'en-US' : 'ru-RU';
+    return 'en-US';
 }
 window.getCurrentLocale = getCurrentLocale;
 
@@ -305,127 +168,42 @@ function t(key) {
 window.t = t;
 
 function updateLanguageButtons() {
-    const lang = getCurrentLanguage();
-    document.getElementById('settingsLangRu')?.classList.toggle('active', lang === 'ru');
-    document.getElementById('settingsLangEn')?.classList.toggle('active', lang === 'en');
+    document.getElementById('settingsLangEn')?.classList.add('active');
 }
 
 const TTS_VOICE_OPTIONS = {
-    ru: [
-        { value: 'ru-RU-SvetlanaNeural', label: 'Svetlana' },
-        { value: 'ru-RU-DmitryNeural', label: 'Dmitry' }
-    ],
     en: [
-        { value: 'en-US-JennyNeural', label: 'Jenny' },
-        { value: 'en-US-GuyNeural', label: 'Guy' }
+        { value: 'en-US-JennyNeural', label: 'Jenny (Female)' },
+        { value: 'en-US-GuyNeural', label: 'Guy (Male)' },
+        { value: 'en-US-AriaNeural', label: 'Aria (Female)' }
     ]
 };
 
 function getTtsSettings() {
     const raw = JSON.parse(localStorage.getItem('ttsSettings') || '{}');
     return {
-        ruVoice: raw.ruVoice || 'ru-RU-SvetlanaNeural',
         enVoice: raw.enVoice || 'en-US-JennyNeural'
     };
 }
 
 function getPreferredTtsVoice(language) {
     const settings = getTtsSettings();
-    return language === 'en' ? settings.enVoice : settings.ruVoice;
+    return settings.enVoice || 'en-US-JennyNeural';
 }
 
 function populateTtsVoiceControls() {
     const settings = getTtsSettings();
-    [
-        ['ttsVoiceRu', 'ru', settings.ruVoice],
-        ['ttsVoiceEn', 'en', settings.enVoice]
-    ].forEach(function ([id, lang, selected]) {
-        const select = document.getElementById(id);
-        if (!select) return;
-        select.innerHTML = TTS_VOICE_OPTIONS[lang]
-            .map(function (voice) {
-                return '<option value="' + voice.value + '"' + (voice.value === selected ? ' selected' : '') + '>' + voice.label + '</option>';
-            })
-            .join('');
-    });
+    const select = document.getElementById('ttsVoiceEn');
+    if (!select) return;
+    select.innerHTML = (TTS_VOICE_OPTIONS.en || [])
+        .map(function (voice) {
+            return '<option value="' + voice.value + '"' + (voice.value === settings.enVoice ? ' selected' : '') + '>' + voice.label + '</option>';
+        })
+        .join('');
 }
 window.populateTtsVoiceControls = populateTtsVoiceControls;
 
-const QUICK_SUGGESTIONS = {
-    ru: [
-        {
-            id: 'ddMood',
-            icon: 'smile-plus',
-            label: 'Настроение',
-            items: [
-                { type: 'mood', score: 10, icon: 'laugh', label: 'Отлично (10)' },
-                { type: 'mood', score: 8, icon: 'smile', label: 'Хорошо (8)' },
-                { type: 'mood', score: 5, icon: 'meh', label: 'Нормально (5)' },
-                { type: 'mood', score: 3, icon: 'annoyed', label: 'Плохо (3)' },
-                { type: 'mood', score: 1, icon: 'frown', label: 'Ужасно (1)' }
-            ]
-        },
-        {
-            id: 'ddSad',
-            icon: 'frown',
-            label: 'Грусть',
-            items: [
-                { text: 'Мне одиноко и тоскливо', label: 'Мне одиноко и тоскливо' },
-                { text: 'Чувствую безысходность', label: 'Чувствую безысходность' },
-                { text: 'Хочется плакать без причины', label: 'Хочется плакать без причины' },
-                { text: 'Всё кажется бессмысленным', label: 'Всё кажется бессмысленным' },
-                { text: 'Кажется, я в тупике', label: 'Кажется, я в тупике' }
-            ]
-        },
-        {
-            id: 'ddAnxious',
-            icon: 'wind',
-            label: 'Тревога',
-            items: [
-                { text: 'Я предчувствую что-то плохое', label: 'Предчувствую что-то плохое' },
-                { text: 'Не могу перестать беспокоиться', label: 'Не могу перестать беспокоиться' },
-                { text: 'У меня физические симптомы паники', label: 'Физические симптомы паники' },
-                { text: 'Страх перед предстоящим событием', label: 'Страх перед событием' },
-                { text: 'Много мыслей, не могу сосредоточиться', label: 'Много мыслей, не могу сосредоточиться' }
-            ]
-        },
-        {
-            id: 'ddAngry',
-            icon: 'flame',
-            label: 'Злость',
-            items: [
-                { text: 'Меня всё раздражает', label: 'Меня всё раздражает' },
-                { text: 'Я злюсь на конкретного человека', label: 'Злюсь на конкретного человека' },
-                { text: 'Не могу сдержать агрессию', label: 'Не могу сдержать агрессию' },
-                { text: 'Чувствую несправедливость', label: 'Чувствую несправедливость' },
-                { text: 'Сложно понять свои эмоции', label: 'Сложно понять свои эмоции' }
-            ]
-        },
-        {
-            id: 'ddTired',
-            icon: 'battery-low',
-            label: 'Усталость',
-            items: [
-                { text: 'Сил нет совсем, даже на простые дела', label: 'Сил нет совсем' },
-                { text: 'Чувствую эмоциональное выгорание', label: 'Эмоциональное выгорание' },
-                { text: 'Прокрастинирую и не могу начать', label: 'Прокрастинирую' },
-                { text: 'Плохо сплю и не высыпаюсь', label: 'Плохо сплю' },
-                { text: 'Не знаю, какое решение принять', label: 'Не знаю, какое решение принять' }
-            ]
-        },
-        {
-            id: 'ddCalm',
-            icon: 'sun',
-            label: 'Спокойствие',
-            items: [
-                { text: 'Сегодня отличный день!', label: 'Сегодня отличный день!' },
-                { text: 'Удалось справиться с трудной задачей', label: 'Справился с трудной задачей' },
-                { text: 'Хочу закрепить хорошее состояние', label: 'Закрепить хорошее состояние' },
-                { text: 'Я благодарен за то, что сейчас имею', label: 'Чувствую благодарность' }
-            ]
-        }
-    ],
-    en: [
+const QUICK_SUGGESTIONS_COMMON = [
         {
             id: 'ddMood',
             icon: 'smile-plus',
@@ -497,9 +275,12 @@ const QUICK_SUGGESTIONS = {
                 { text: 'I feel grateful for what I have right now', label: 'I feel grateful' }
             ]
         }
-    ]
-};
+];
 
+const QUICK_SUGGESTIONS = {
+    ru: QUICK_SUGGESTIONS_COMMON,
+    en: QUICK_SUGGESTIONS_COMMON
+};
 function renderQuickSuggestions() {
     const wrap = document.getElementById('quickSuggestions');
     if (!wrap) return;
@@ -554,7 +335,7 @@ function applyTranslations() {
         el.innerHTML = t(el.dataset.i18nHtml).replace(/\n/g, '<br>');
     });
     updateLanguageButtons();
-    if (rec) rec.lang = getCurrentLanguage() === 'en' ? 'en-US' : 'ru-RU';
+    if (rec) rec.lang = 'en-US';
     updateWelcomeMsg();
     if (typeof window.refreshLocalizedTests === 'function') window.refreshLocalizedTests();
     if (typeof window.refreshLocalizedCBT === 'function') window.refreshLocalizedCBT();
@@ -584,13 +365,31 @@ async function checkH() {
         let r = await fetch(API + '/api/health').then(r => r.json());
         let d = document.getElementById('dotStatus');
         let statusEl = document.getElementById('txtStatus');
-        if (r.ollama_connected) {
-            d.className = 'status-dot online';
-            statusEl.innerText = r.model;
+        const isOnline = Boolean(r.status === 'ok' || r.gateway_connected || r.ollama_connected);
+        if (isOnline) {
+            if (d) d.className = 'status-dot online';
+            if (statusEl) {
+                statusEl.removeAttribute('data-i18n');
+                statusEl.innerText = r.model || 'qwen-7b';
+            }
+        } else {
+            if (d) d.className = 'status-dot';
+            if (statusEl) {
+                statusEl.removeAttribute('data-i18n');
+                statusEl.innerText = t('status_offline');
+            }
         }
-        else { d.className = 'status-dot'; statusEl.innerText = t('status_offline'); }
-    } catch (e) { document.getElementById('txtStatus').innerText = t('status_backend_down'); }
+    } catch (e) {
+        let d = document.getElementById('dotStatus');
+        let statusEl = document.getElementById('txtStatus');
+        if (d) d.className = 'status-dot';
+        if (statusEl) {
+            statusEl.removeAttribute('data-i18n');
+            statusEl.innerText = t('status_backend_down');
+        }
+    }
 }
+window.checkH = checkH;
 
 function toggleSuggestMenu(id) {
     document.querySelectorAll('.suggest-dropdown.open').forEach(el => {
@@ -718,7 +517,7 @@ async function toggleMic() {
     setMicUi(true, 'input_placeholder_listening');
 
     try {
-        rec.lang = getCurrentLanguage() === 'en' ? 'en-US' : 'ru-RU';
+        rec.lang = 'en-US';
 
         // WebKit requires SpeechRecognition.start() to stay inside the
         // original click gesture. Awaiting getUserMedia first makes Safari
@@ -773,7 +572,7 @@ function speakWithBrowserTts(text, language) {
     if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return false;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = language === 'en' ? 'en-US' : 'ru-RU';
+    utterance.lang = 'en-US';
     const languagePrefix = utterance.lang.slice(0, 2).toLowerCase();
     const voice = window.speechSynthesis.getVoices().find(function (candidate) {
         return (candidate.lang || '').toLowerCase().startsWith(languagePrefix);
@@ -827,7 +626,7 @@ async function playRemoteTts(text, language, voice) {
 
 function sanitizeTextForSpeech(text) {
     return (text || '')
-        .replace(/(?:^|\n)\s*(?:Найденная опора|Retrieved evidence)\s*:\s*(?:\[KB:[^\]]+\](?:\s*,\s*)?)+\s*$/gmi, ' ')
+        .replace(/(?:^|\n)\s*(?:Retrieved evidence)\s*:\s*(?:\[KB:[^\]]+\](?:\s*,\s*)?)+\s*$/gmi, ' ')
         .replace(/\[KB:[^\]]+\]/gi, ' ')
         .replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/gi, '$1')
         .replace(/https?:\/\/\S+/gi, ' ')
@@ -861,19 +660,16 @@ async function playAssistantSpeech(text, language) {
 }
 window.playAssistantSpeech = playAssistantSpeech;
 
-async function previewTtsVoice(language) {
-    const isEnglish = language === 'en';
-    const text = isEnglish
-        ? 'This is how the selected Microsoft voice sounds.'
-        : 'Так звучит выбранный голос Microsoft.';
-    const select = document.getElementById(isEnglish ? 'ttsVoiceEn' : 'ttsVoiceRu');
-    const voice = select ? select.value : getPreferredTtsVoice(language);
+async function previewTtsVoice(language = 'en') {
+    const text = 'This is how the selected Microsoft voice sounds.';
+    const select = document.getElementById('ttsVoiceEn');
+    const voice = select ? select.value : getPreferredTtsVoice('en');
     try {
-        await playRemoteTts(text, language, voice);
+        await playRemoteTts(text, 'en', voice);
     } catch (err) {
         if (err.name !== 'AbortError') {
             console.error('Microsoft TTS preview failed', err);
-            speakWithBrowserTts(text, language);
+            speakWithBrowserTts(text, 'en');
         }
     }
 }
@@ -887,7 +683,7 @@ function toggleTTS() {
         btn.style.color = 'var(--accent)';
         btn.setAttribute('aria-pressed', 'true');
         btn.innerHTML = '<i data-lucide="volume-2" style="width:18px;"></i>';
-        speakWithBrowserTts(getCurrentLanguage() === 'en' ? 'Voice on' : 'Голос включен', getCurrentLanguage());
+        speakWithBrowserTts('Voice enabled', 'en');
     } else {
         btn.style.color = '';
         btn.setAttribute('aria-pressed', 'false');
@@ -898,114 +694,7 @@ function toggleTTS() {
 }
 
 function getLocalizedUiContent() {
-    const lang = getCurrentLanguage();
-    return {
-        ru: {
-            sosHints: [
-                'Паника, учащённое сердцебиение — быстро снижает пульс',
-                '',
-                '',
-                ''
-            ],
-            breathingPane: {
-                title: 'Дыхательные практики',
-                desc: 'Выберите ритм дыхания, который лучше всего подходит вашему состоянию прямо сейчас.'
-            },
-            breatheTypes: [
-                {
-                    desc: 'Снижает пульс и останавливает панику.',
-                    bgImage: 'img/bg/forest.png',
-                    cardTitle: 'Квадрат 4-4-4-4',
-                    cardDesc: 'Снижает пульс, останавливает панику',
-                    steps: [
-                        { text: 'Вдох...', dur: 4000, scale: '1.5', bg: 'var(--accent-light)', color: 'var(--accent)' },
-                        { text: 'Задержка', dur: 4000, scale: '1.5', bg: 'var(--accent-light)', color: 'var(--accent)' },
-                        { text: 'Выдох...', dur: 4000, scale: '1', bg: 'var(--border)', color: 'var(--text)' },
-                        { text: 'Задержка', dur: 4000, scale: '1', bg: 'var(--border)', color: 'var(--text)' }
-                    ]
-                },
-                {
-                    desc: 'Техника для снижения тревоги и быстрого засыпания.',
-                    bgImage: 'img/bg/stars.png',
-                    cardTitle: '4-7-8',
-                    cardDesc: 'Снижает тревогу, помогает заснуть',
-                    steps: [
-                        { text: 'Вдох...', dur: 4000, scale: '1.5', bg: 'var(--accent-light)', color: 'var(--accent)' },
-                        { text: 'Задержка...', dur: 7000, scale: '1.5', bg: 'var(--accent-light)', color: 'var(--accent)' },
-                        { text: 'Выдох...', dur: 8000, scale: '1', bg: 'var(--border)', color: 'var(--text)' }
-                    ]
-                },
-                {
-                    desc: 'Выдох длиннее вдоха — включает парасимпатическую нервную систему.',
-                    bgImage: 'img/bg/ocean.png',
-                    cardTitle: 'Успокаивающее 4-6',
-                    cardDesc: 'Включает парасимпатическую систему',
-                    steps: [
-                        { text: 'Вдох...', dur: 4000, scale: '1.5', bg: 'var(--accent-light)', color: 'var(--accent)' },
-                        { text: 'Выдох...', dur: 6000, scale: '1', bg: 'var(--border)', color: 'var(--text)' }
-                    ]
-                }
-            ],
-            breatheTips: [
-                'Дышите через нос для максимального эффекта',
-                'Сфокусируйтесь на ощущениях в теле',
-                'Представьте, как напряжение покидает вас с выдохом',
-                'Закройте глаза для более глубокого расслабления',
-                'Каждый цикл снижает уровень кортизола',
-                'Не торопитесь — ваш ритм идеален',
-                'Медленное дыхание активирует блуждающий нерв',
-                'Вы делаете важное для своего здоровья'
-            ],
-            groundingPane: {
-                title: 'Заземление 5-4-3-2-1',
-                desc: 'Пошаговая техника — помогает вернуться в «здесь и сейчас» при тревоге или панике.',
-                items: ['Вещей, которые вы видите', 'Предмета, которых касаетесь', 'Звука, которые слышите', 'Запаха, которые чувствуете', 'Хорошая вещь о себе']
-            },
-            pmrPane: {
-                title: 'Мышечная релаксация',
-                desc: 'Напрягайте и расслабляйте группы мышц — снижает физическое напряжение и тревогу.',
-                items: ['Лицо — сожмите и расслабьте', 'Плечи и шея', 'Руки и кисти', 'Живот и грудь', 'Ноги и стопы']
-            },
-            stopPane: {
-                title: 'Техника СТОП',
-                desc: 'Быстрый 4-шаговый алгоритм — останавливает спираль тревожных мыслей.',
-                items: ['Стоп — остановитесь', 'Тело — сделайте глубокий вдох', 'Осмотрись — наблюдайте без оценки', 'Продолжай — действуйте осознанно']
-            },
-            groundSteps: [
-                { num: '5', sense: 'Зрение', text: 'Назовите 5 вещей, которые вы видите вокруг' },
-                { num: '4', sense: 'Осязание', text: 'Дотроньтесь до 4 предметов рядом с вами' },
-                { num: '3', sense: 'Слух', text: 'Услышьте 3 звука прямо сейчас' },
-                { num: '2', sense: 'Обоняние', text: 'Почувствуйте 2 запаха или вспомните их' },
-                { num: '1', sense: 'Вы сами', text: 'Назовите 1 хорошую вещь о себе' }
-            ],
-            groundDone: { sense: 'Готово', text: 'Вы вернулись в «здесь и сейчас». Молодец!', button: 'Закрыть' },
-            pmrSteps: [
-                { num: '1', muscle: 'Лицо', tenseText: 'Сожмите лицо: зажмурьтесь, нахмурьтесь, сожмите челюсть', relaxText: 'Медленно расслабьте все мышцы лица… почувствуйте тепло' },
-                { num: '2', muscle: 'Плечи и шея', tenseText: 'Поднимите плечи к ушам, напрягите шею', relaxText: 'Опустите плечи… почувствуйте как уходит напряжение' },
-                { num: '3', muscle: 'Руки и кисти', tenseText: 'Сожмите кулаки и напрягите предплечья', relaxText: 'Разожмите кулаки… расправьте пальцы' },
-                { num: '4', muscle: 'Живот и грудь', tenseText: 'Напрягите пресс и грудь, как будто ждёте удар', relaxText: 'Расслабьте живот… дышите свободно' },
-                { num: '5', muscle: 'Ноги и стопы', tenseText: 'Вытяните ноги, напрягите бёдра и икры', relaxText: 'Расслабьте ноги… почувствуйте тяжесть и тепло' }
-            ],
-            pmrPhaseTense: 'Напрягите',
-            pmrPhaseRelax: 'Расслабьте',
-            pmrDone: 'Готово',
-            pmrDoneText: 'Всё тело расслаблено. Молодец!',
-            pmrClose: 'Закрыть',
-            stopSteps: [
-                { letter: 'С', word: 'Стоп', text: 'Скажите себе «Стоп». Мысленно или вслух. Остановите поток мыслей.' },
-                { letter: 'Т', word: 'Тело', text: 'Сделайте глубокий вдох через нос на 4 счёта. Медленный выдох через рот на 6.' },
-                { letter: 'О', word: 'Осмотрись', text: 'Наблюдайте свои мысли и ощущения со стороны — без оценки и критики.' },
-                { letter: 'П', word: 'Продолжай', text: 'Теперь действуйте осознанно. Что важно прямо сейчас?' }
-            ],
-            stopDone: { word: 'Готово', text: 'Вы вернули контроль. Действуйте осознанно!', button: 'Закрыть' },
-            notifications: {
-                title: 'КПТ Ассистент',
-                morning: '🌅 Доброе утро! Как вы себя чувствуете? Запишите настроение.',
-                evening: '🌙 Добрый вечер! Время записать благодарность или мысли дня.'
-            },
-            aiBreathingStarted: '🌬️ Я запустил(а) для вас Дыхательную практику. Следуйте инструкциям на экране.'
-        },
-        en: {
+    const commonContent = {
             sosHints: [
                 '',
                 '',
@@ -1109,8 +798,8 @@ function getLocalizedUiContent() {
                 evening: '🌙 Good evening. It may be a good time to record gratitude or thoughts from the day.'
             },
             aiBreathingStarted: '🌬️ I started a breathing practice for you. Follow the instructions on the screen.'
-        }
-    }[lang] || null;
+    };
+    return commonContent;
 }
 
 sosHints = window.sosHints || [];
@@ -1205,22 +894,22 @@ const SOS_SCENES = Object.freeze({
     air: {
         image: 'img/bg/forest.png',
         audio: SOS_AUDIO_TRACKS.breathing,
-        label: { ru: 'Воздух', en: 'Air' }
+        label: { ru: 'Air', en: 'Air' }
     },
     field: {
         image: 'img/bg/sos-grounding-field.png',
         audio: SOS_AUDIO_TRACKS.grounding,
-        label: { ru: 'Поле', en: 'Field' }
+        label: { ru: 'Field', en: 'Field' }
     },
     sea: {
         image: 'img/bg/sos-muscle-relaxation-sea.png',
         audio: SOS_AUDIO_TRACKS.pmr,
-        label: { ru: 'Море', en: 'Sea' }
+        label: { ru: 'Sea', en: 'Sea' }
     },
     night_forest: {
         image: 'img/bg/stars.png',
         audio: SOS_AUDIO_TRACKS.stop,
-        label: { ru: 'Ночной лес', en: 'Night forest' }
+        label: { ru: 'Night forest', en: 'Night forest' }
     }
 });
 const SOS_AUDIO_VOLUME = 0.28;
@@ -1570,7 +1259,7 @@ function runBreatheStep() {
     // Cycle counter update
     if (stepInCycle === 0 && breatheStepIdx > 0) {
         _breatheCycleNum++;
-        if (cycleEl) cycleEl.innerText = (getCurrentLanguage() === 'en' ? 'Cycle ' : 'Цикл ') + _breatheCycleNum;
+        if (cycleEl) cycleEl.innerText = 'Cycle ' + _breatheCycleNum;
         showBreatheTip();
     }
 
@@ -1652,7 +1341,7 @@ function renderGroundStep() {
     if (senseEl) { senseEl.innerText = step.sense; senseEl.style.animation = 'none'; senseEl.offsetHeight; senseEl.style.animation = ''; }
     if (instrEl) { instrEl.innerText = step.text; instrEl.style.animation = 'none'; instrEl.offsetHeight; instrEl.style.animation = ''; }
     if (btn) {
-        btn.innerText = (groundStepIdx < 4) ? t('done_arrow') : (getCurrentLanguage() === 'en' ? 'Finish' : 'Завершить');
+        btn.innerText = (groundStepIdx < 4) ? t('done_arrow') : 'Complete';
         btn.onclick = groundNext;
     }
     if (scene) scene.classList.remove('ground-complete');
@@ -1868,7 +1557,7 @@ function renderStopStep() {
     if (letterEl) { letterEl.innerText = step.letter; letterEl.style.animation = 'none'; letterEl.offsetHeight; letterEl.style.animation = ''; }
     if (wordEl) { wordEl.innerText = step.word; wordEl.style.animation = 'none'; wordEl.offsetHeight; wordEl.style.animation = ''; }
     if (instrEl) { instrEl.innerText = step.text; instrEl.style.animation = 'none'; instrEl.offsetHeight; instrEl.style.animation = ''; }
-    if (btn) { btn.innerText = (stopStepIdx < 3) ? t('done_arrow') : (getCurrentLanguage() === 'en' ? 'Finish' : 'Завершить'); btn.onclick = stopNext; }
+    if (btn) { btn.innerText = (stopStepIdx < 3) ? t('done_arrow') : 'Complete'; btn.onclick = stopNext; }
     if (scene) scene.classList.remove('stop-complete');
 
     dots.forEach(function (d, i) {
@@ -2024,7 +1713,6 @@ async function saveNotifSettings() {
         eveningTime: document.getElementById('notifEveningTime').value,
     };
     const ttsSettings = {
-        ruVoice: document.getElementById('ttsVoiceRu')?.value || 'ru-RU-SvetlanaNeural',
         enVoice: document.getElementById('ttsVoiceEn')?.value || 'en-US-JennyNeural'
     };
     localStorage.setItem('notifSettings', JSON.stringify(s));
@@ -2104,202 +1792,6 @@ window.startBreathingFromAI = startBreathingFromAI;
 refreshLocalizedExercises();
 
 // --- Article Library ---
-const ARTICLE_CATALOG = [
-    {
-        kicker: 'Статья 1',
-        title: 'Что такое депрессия — данные ВОЗ и NIMH',
-        excerpt: 'Базовый обзор депрессии: распространённость, факторы риска, подходы к лечению и практические шаги поддержки.',
-        sources: ['WHO', 'NIMH'],
-        body: [
-            'По данным ВОЗ, депрессия остаётся одним из самых распространённых психических расстройств в мире и затрагивает около 5,7% взрослого населения планеты. Женщины сталкиваются с ней чаще мужчин.',
-            'ВОЗ подчёркивает, что депрессия возникает не по одной причине, а на фоне сложного взаимодействия социальных, психологических и биологических факторов. Риск повышается после тяжёлых жизненных событий: потери работы, утраты близких, травматического опыта.',
-            'National Institute of Mental Health указывает, что при более лёгких формах депрессии первым шагом обычно становится психотерапия. Если только терапия не даёт достаточного эффекта, к ней позже могут добавляться медикаменты. При умеренной и тяжёлой депрессии лекарства, как правило, подключают сразу.',
-            'ВОЗ отдельно отмечает, что существуют эффективные методы помощи при лёгкой, умеренной и тяжёлой депрессии, а часть кратких психологических интервенций может применяться даже специалистами без глубокой психотерапевтической подготовки.',
-            'Ключевые публикации: WHO Comprehensive Mental Health Action Plan 2013–2030; NIMH Depression Publication (NIH); Global Burden of Disease Study 2021.'
-        ],
-        bullets: [
-            'Выделяйте хотя бы 30 минут в день на физическую активность, даже если это просто ходьба.',
-            'Старайтесь держать регулярный режим сна и питания.',
-            'Не изолируйтесь: поддерживайте контакт с близкими и говорите о своём состоянии.',
-            'Избегайте алкоголя, никотина и запрещённых веществ.',
-            'По возможности отложите крупные жизненные решения до стабилизации состояния.'
-        ]
-    },
-    {
-        kicker: 'Статья 2',
-        title: 'Когнитивная терапия депрессии — наследие Аарона Бека',
-        excerpt: 'Как Аарон Бек заложил основу КПТ и почему работа с автоматическими мыслями меняет течение депрессии.',
-        sources: ['Beck Institute', 'PMC', 'StatPearls'],
-        body: [
-            'Аарон Темкин Бек, американский психиатр и профессор Университета Пенсильвании, считается «отцом когнитивной терапии». В 1960-х годах он разработал подход, который позже стал когнитивно-поведенческой терапией.',
-            'Работая с депрессивными пациентами, Бек заметил, что в основе их эмоционального состояния часто лежат устойчивые негативные убеждения о потере, неудаче и собственной несостоятельности. Эти убеждения проявляются через автоматические мысли, возникающие быстро и воспринимаемые как факты.',
-            'Одно из ключевых понятий Бека — когнитивная триада депрессии: негативный взгляд на себя, на мир и на будущее. Когда человек смотрит на всё через эту схему, его настроение и поведение начинают поддерживать депрессивный цикл.',
-            'В 1977 году было опубликовано одно из первых крупных клинических исследований, где когнитивная терапия сравнивалась с антидепрессантами. Это стало важной точкой для признания разговорной терапии как доказательного метода лечения депрессии.',
-            'Ключевые публикации: Beck, A.T. et al. (1979). Cognitive Therapy of Depression; Rush, A.J., Beck, A.T. et al. (1977). Cognitive Therapy and Research, 1, 17–37.'
-        ],
-        bullets: [
-            'Замечайте автоматические негативные мысли, а не принимайте их сразу за истину.',
-            'Проверяйте мысль вопросами: какие есть факты за и против?',
-            'Ищите когнитивные искажения: катастрофизацию, сверхобобщение, чтение мыслей.',
-            'Формулируйте более сбалансированную альтернативу вместо жёсткого самокритичного вывода.'
-        ]
-    },
-    {
-        kicker: 'Статья 3',
-        title: 'Выученная беспомощность и «выученный оптимизм» — Мартин Селигман',
-        excerpt: 'Почему чувство «от меня ничего не зависит» связано с депрессией и как работает более реалистичный атрибутивный стиль.',
-        sources: ['PMC', 'Positive Psychology Center'],
-        body: [
-            'Мартин Селигман вместе со Стивеном Майером в 1967 году описал феномен выученной беспомощности. Они показали, что при повторяющихся неконтролируемых негативных событиях человек или животное могут «обучиться» убеждению, что их действия ничего не меняют.',
-            'Селигман рассматривал выученную беспомощность как лабораторную модель клинической депрессии. Особенно важным оказалось то, как человек объясняет себе плохие события.',
-            'Пессимистический атрибутивный стиль трактует неудачи как постоянные, личные и всеобъемлющие. Оптимистический стиль видит их как временные, ограниченные и не определяющие всю личность. Именно этот сдвиг объяснения помогает снижать уязвимость к депрессии.',
-            'Идея выученного оптимизма позже оформилась в практику оспаривания пессимистических убеждений. В книге Learned Optimism Селигман предложил технику ABC: Adversity, Belief, Consequence — событие, убеждение, последствие.',
-            'Ключевые публикации: Seligman, M.E.P. & Maier, S.F. (1967). Journal of Experimental Psychology, 74, 1–9; Seligman, M.E.P. (1990). Learned Optimism; Abramson, L.Y., Seligman, M.E.P. & Teasdale, J.D. (1978). Reformulated Learned Helplessness.'
-        ],
-        bullets: [
-            'Замечайте, как вы объясняете себе неудачу.',
-            'Спросите себя: это точно навсегда, везде и только из-за меня?',
-            'Ищите более ограниченное и реалистичное объяснение события.',
-            'Отделяйте факт неприятности от глобального вывода о собственной ценности.'
-        ]
-    },
-    {
-        kicker: 'Статья 4',
-        title: 'Физическая активность как лечение депрессии — мета-анализы',
-        excerpt: 'Что показывают крупные мета-анализы: ходьба, бег, йога и силовые тренировки реально уменьшают симптомы депрессии.',
-        sources: ['JAMA Psychiatry', 'BMJ', 'American Journal of Psychiatry'],
-        body: [
-            'Мета-анализ Pearce et al. в JAMA Psychiatry включил 15 проспективных исследований и более 2 миллионов человеко-лет наблюдений. Люди, выполнявшие рекомендованный объём физической активности, имели на 25% ниже риск развития депрессии по сравнению с малоактивными.',
-            'Даже половина от рекомендованного объёма активности была связана с заметной пользой: риск снижался примерно на 18%. Это важно, потому что вход в движение может начинаться не с «идеального режима», а с очень малого шага.',
-            'Сетевой мета-анализ Noetel et al. в BMJ в 2024 году показал, что ходьба, бег трусцой, йога и силовые тренировки дают умеренное снижение симптомов депрессии по сравнению с обычным лечением. Авторы рассматривают эти формы нагрузки как полноценный элемент помощи наряду с психотерапией и медикаментами.',
-            'Предполагаемые механизмы включают усиление нейрогенеза, влияние на гиппокамп, снижение воспалительных маркеров и активацию систем, связанных с естественной регуляцией стресса и удовольствия.',
-            'Ключевые публикации: Pearce, M. et al. (2022). JAMA Psychiatry, 79(6), 550–559; Noetel, M. et al. (2024). BMJ, 384, e075847; Schuch, F.B. et al. (2018). American Journal of Psychiatry, 175(7), 631–648.'
-        ],
-        bullets: [
-            'Начинайте с малого: даже 15 минут ходьбы в день уже полезны.',
-            'Постепенно наращивайте активность до 150 минут умеренной нагрузки в неделю.',
-            'Выбирайте формат, который реально переносим и приятен: ходьба, йога, плавание, силовые тренировки.',
-            'Смотрите на движение как на лечение, а не как на экзамен на силу воли.'
-        ]
-    },
-    {
-        kicker: 'Статья 5',
-        title: 'Майндфулнесс-когнитивная терапия (MBCT) — профилактика рецидивов депрессии',
-        excerpt: 'Почему MBCT снижает риск новых эпизодов депрессии и как идея «мысли — это не факты» помогает выходить из руминации.',
-        sources: ['Segal, Williams & Teasdale', 'PMC', 'NICE'],
-        body: [
-            'MBCT была разработана Зинделем Сигалом, Марком Уильямсом и Джоном Тисдейлом при поддержке Джона Кабат-Зинна. Подход сочетает практики осознанности и когнитивную терапию для профилактики рецидивов депрессии.',
-            'Ключевая идея MBCT — помочь человеку замечать ухудшение настроения раньше и не сливаться автоматически с привычными депрессивными паттернами мышления. Осознанность даёт позицию наблюдателя, а когнитивная часть помогает по-новому относиться к мыслям.',
-            'Мета-анализы показывают, что у людей с тремя и более депрессивными эпизодами в прошлом MBCT может заметно снижать риск рецидива по сравнению с обычным лечением. NICE в Великобритании включал MBCT в рекомендации как метод профилактики повторных эпизодов.',
-            'Классическая программа длится 8 недель и включает групповые встречи, домашнюю практику, сканирование тела, сидячую медитацию, мягкую йогу и обучение распознаванию ранних сигналов ухудшения настроения.',
-            'Ключевой принцип MBCT звучит просто: мысли — это не факты. Когда человек учится видеть мысль как ментальное событие, а не как приказ или доказательство, круг руминации ослабевает.',
-            'Ключевые публикации: Segal, Z.V., Williams, J.M.G., & Teasdale, J.D. (2002). Mindfulness-Based Cognitive Therapy for Depression; Teasdale, J.D. et al. (2000). Journal of Consulting and Clinical Psychology, 68, 615–623; Kabat-Zinn, J. (1990). Full Catastrophe Living.'
-        ],
-        bullets: [
-            'Отслеживайте ранние сигналы ухудшения настроения до сильного провала.',
-            'Практикуйте короткие моменты осознанности, а не только длинные медитации.',
-            'Тренируйте позицию наблюдения: мысль пришла, но это ещё не факт.',
-            'Возвращайте внимание в тело, дыхание и текущий момент, когда начинается руминация.'
-        ]
-    },
-    {
-        kicker: 'Статья 6',
-        title: 'Сон и депрессия — двусторонняя связь',
-        excerpt: 'Почему бессонница может быть не только симптомом депрессии, но и фактором, который повышает риск нового эпизода.',
-        sources: ['Neuroscience Research', 'Journal of Clinical Sleep Medicine', 'PMC'],
-        body: [
-            'Нарушения сна считаются одним из самых частых симптомов депрессии, но современные данные показывают, что связь идёт в обе стороны. У людей с депрессией часто наблюдаются изменения архитектуры сна, включая сокращение латентности REM-фазы и снижение дельта-мощности в фазе медленного сна.',
-            'Недостаток сна сам по себе создаёт физиологический и психологический стресс, который ухудшает эмоциональную регуляцию и повышает риск психических расстройств. Поэтому бессонницу всё чаще рассматривают не только как следствие депрессии, но и как её предиктор.',
-            'Лонгитюдные исследования показывают, что бессонница является независимым фактором риска для развития новых и повторных эпизодов депрессии у людей разного возраста. Это важно для профилактики: сон может быть ранним сигналом ухудшения состояния.',
-            'Систематические обзоры подтверждают двустороннюю связь между бессонницей, тревогой и депрессией. Один из обсуждаемых механизмов связан с воспалительным путём: нарушения сна активируют симпатическую нервную систему и усиливают провоспалительные процессы.',
-            'Ключевые публикации: Yasugaki, S. et al. (2023). Neuroscience Research, 211, 57–64; Fang, H. et al. (2019). J Clin Sleep Med, 15(3), 405–411; Baglioni, C. et al. (2011). J Affect Disord, 135(1-3), 10–19.'
-        ],
-        bullets: [
-            'Поддерживайте стабильное время отхода ко сну и пробуждения.',
-            'Уберите экраны хотя бы за час до сна.',
-            'Следите за бессонницей как за важным маркером состояния, а не как за мелочью.',
-            'При сочетании депрессии и инсомнии учитывайте CBT-I как терапию первой линии.'
-        ]
-    },
-    {
-        kicker: 'Статья 7',
-        title: 'Социальные связи и одиночество — Джулианна Холт-Ланстад',
-        excerpt: 'Почему одиночество связано не только с настроением, но и с долгосрочным риском депрессии и ухудшением здоровья.',
-        sources: ['World Psychiatry', 'Perspectives on Psychological Science', 'Harvard T.H. Chan School'],
-        body: [
-            'Джулианна Холт-Ланстад, профессор психологии и нейронауки Университета Бригама Янга, посвятила значительную часть исследований влиянию социальной изоляции и одиночества на психическое и физическое здоровье.',
-            'Современные данные показывают устойчивую связь между социальной изоляцией, чувством одиночества и депрессией на разных этапах жизни. Чем выше уровень качественной социальной связанности, тем ниже риск выраженных депрессивных симптомов.',
-            'В обзоре 2024 года в World Psychiatry был показан важный результат: у людей, которые часто испытывают одиночество, вероятность развития новой депрессии более чем вдвое выше по сравнению с теми, кто редко или никогда не чувствует себя одиноким.',
-            'Мета-аналитические работы Холт-Ланстад и коллег также показали, что социальная изоляция, одиночество и проживание в одиночку связаны с повышением риска преждевременной смерти. При этом прочные социальные связи, наоборот, заметно повышают шансы на выживание.',
-            'Ключевые публикации: Holt-Lunstad, J. (2024). World Psychiatry, 23(3), 312–332; Holt-Lunstad, J. et al. (2015). Perspectives on Psychological Science, 10(2), 227–237; US Surgeon General\'s Advisory (2023).'
-        ],
-        bullets: [
-            'Поддерживайте регулярный контакт хотя бы с одним близким человеком.',
-            'Ищите групповые активности: волонтёрство, хобби, спорт, клубы по интересам.',
-            'Ставьте акцент на качество связи, а не на количество контактов.',
-            'Относитесь к социальной изоляции как к фактору риска, а не просто к особенности характера.'
-        ]
-    },
-    {
-        kicker: 'Статья 8',
-        title: 'Питание и депрессия — исследование SMILES',
-        excerpt: 'Как первое крупное РКИ показало, что улучшение рациона может заметно ослаблять симптомы клинической депрессии.',
-        sources: ['BMC Medicine', 'Food & Mood Centre'],
-        body: [
-            'Феличе Джака, профессор Университета Дикина и основательница Food & Mood Centre, стала одним из ключевых исследователей в области нутрициональной психиатрии. Исследование SMILES было первым рандомизированным контролируемым испытанием, специально созданным для проверки того, может ли улучшение питания помогать в лечении клинической депрессии.',
-            'В течение 12 недель участники с умеренной и тяжёлой депрессией получали либо поддержку по модифицированной средиземноморской диете, либо социальную поддержку. Группа с диетической поддержкой показала более выраженное улучшение симптомов, а часть участников достигла полной ремиссии.',
-            'Подход SMILES делал акцент на овощах, фруктах, цельнозерновых продуктах, бобовых, орехах, оливковом масле extra virgin, рыбе и умеренном количестве нежирного мяса. Одновременно ограничивались ультраобработанные продукты, сладости и рафинированные углеводы.',
-            'Особенно важно, что участники, которые сильнее всего улучшили рацион, получили и наибольшее снижение депрессивных симптомов. Позже результаты получили поддержку в последующих исследованиях, включая HELFIMED и AMMEND.',
-            'Ключевые публикации: Jacka, F.N. et al. (2017). BMC Medicine, 15, 23; Parletta, N. et al. (2019). Nutritional Neuroscience; Bayes, J. et al. (2022). American Journal of Clinical Nutrition.'
-        ],
-        bullets: [
-            'Смещайте рацион в сторону овощей, фруктов, бобовых и цельнозерновых.',
-            'Добавляйте рыбу, орехи и оливковое масло как более устойчивую основу питания.',
-            'Сокращайте долю ультраобработанной пищи и избытка сахара.',
-            'Смотрите на питание как на поддерживающий элемент лечения, а не как на магическое решение.'
-        ]
-    },
-    {
-        kicker: 'Статья 9',
-        title: 'Ось «кишечник — мозг» и депрессия — новый рубеж науки',
-        excerpt: 'Что известно о связи микробиоты, воспаления, нейромедиаторов и депрессивных симптомов.',
-        sources: ['Nature Communications', 'University College Cork', 'Frontiers in Microbiology'],
-        body: [
-            'Ось «микробиота — кишечник — мозг» стала одним из самых быстрорастущих направлений в исследовании депрессии. Крупные когортные исследования показали связь между составом кишечной микробиоты и выраженностью депрессивных симптомов.',
-            'В одном из заметных исследований, основанном на выборках из Роттердама и Амстердама, была обнаружена связь ряда микробных таксонов с депрессивными симптомами. Эти микроорганизмы вовлечены в метаболические пути, связанные с глутаматом, бутиратом, серотонином и ГАМК.',
-            'Джон Крайан и его коллеги показали, что микробные сообщества у людей с депрессией отличаются от таковых у здоровых людей. В экспериментальных моделях перенос такой микробиоты влиял на поведение животных и на метаболизм триптофана, предшественника серотонина.',
-            'Хотя это направление ещё развивается, уже ясно, что кишечная микробиота влияет на мозг через иммунные, метаболические и нейромедиаторные механизмы. При этом питание снова оказывается важным звеном, потому что влияет и на воспаление, и на состав микробиоты.',
-            'Ключевые публикации: Radjabzadeh, D. et al. (2022). Nature Communications, 13, 7128; Cryan, J. & Dinan, T. (2012). Nature Reviews Neuroscience, 13, 701–712; Bizzozero-Peroni, B. et al. (2025).'
-        ],
-        bullets: [
-            'Увеличивайте долю клетчатки: овощи, бобовые, цельнозерновые.',
-            'Добавляйте ферментированные продукты, если они вам подходят.',
-            'Ограничивайте ультраобработанную пищу и избыток сахара.',
-            'Рассматривайте пробиотики как возможное дополнение, а не замену основному лечению.'
-        ]
-    },
-    {
-        kicker: 'Статья 10',
-        title: 'Новейшие методы лечения — кетамин, ТМС и цифровые интервенции',
-        excerpt: 'Краткий обзор современных подходов для случаев, когда стандартное лечение помогает недостаточно быстро или недостаточно сильно.',
-        sources: ['NIMH', 'Clinical Pharmacology & Therapeutics', 'APA'],
-        body: [
-            'Для людей с резистентной депрессией, когда стандартные антидепрессанты помогают недостаточно, используются новые подходы. Один из самых заметных — кетамин и его форма эскетамин, который может давать быстрый эффект в течение часов, а не недель.',
-            'Эскетамин одобрен FDA для резистентной депрессии в форме назального спрея и применяется под наблюдением медицинского персонала. Это не домашняя стратегия самопомощи, а специализированное медицинское лечение.',
-            'Другой важный вектор — методы нейростимуляции, включая транскраниальную магнитную стимуляцию. Исследования показывают, что методы этого класса могут быть полезны при тяжёлой депрессии и в ряде случаев дают меньше побочных эффектов, чем более старые подходы.',
-            'Отдельно развиваются цифровые интервенции: онлайн-программы когнитивной терапии, телездоровье и цифровые дополнения к психотерапии. Они не заменяют всю помощь, но могут расширять доступ к лечению и поддерживать человека между сессиями.',
-            'Рекомендации APA подчёркивают, что лечение депрессии должно подбираться индивидуально. Если в течение 6–8 недель ответ на фармакотерапию остаётся недостаточным, план лечения нужно пересматривать вместе со специалистом.',
-            'Ключевые публикации: Raja, S.M. et al. (2024). Clinical Pharmacology & Therapeutics, 116(5), 1314–1324; APA Clinical Practice Guideline (2019); NIMH Brain Stimulation Therapies overview.'
-        ],
-        bullets: [
-            'При тяжёлой или резистентной депрессии обсуждайте варианты лечения только со специалистом.',
-            'Не ждите месяцами без пересмотра схемы, если ответа на лечение нет.',
-            'Рассматривайте цифровые интервенции как дополнение к терапии, а не как полную замену.',
-            'Сохраняйте индивидуальный подход: один и тот же метод подходит не всем.'
-        ]
-    }
-];
-
 const ARTICLE_CATALOG_EN = [
     {
         kicker: 'Article 1',
@@ -2495,8 +1987,10 @@ const ARTICLE_CATALOG_EN = [
     }
 ];
 
+const ARTICLE_CATALOG = ARTICLE_CATALOG_EN;
+
 function getArticleCatalog() {
-    return getCurrentLanguage() === 'en' ? ARTICLE_CATALOG_EN : ARTICLE_CATALOG;
+    return ARTICLE_CATALOG_EN;
 }
 
 function escapeHtml(value) {
@@ -2578,17 +2072,6 @@ function closeArticleReader() {
 window.closeArticleReader = closeArticleReader;
 
 // --- Video Library ---
-const VIDEO_CATALOG = [
-    { title: 'Почему вас мучает тревога?', title_en: 'Why Anxiety Feels So Overwhelming', author: 'Правое полушарие Интроверта', id: 'WB662esfVpk', duration: '12:18' },
-    { title: 'КПТ самостоятельно! | Как работает терапия', title_en: 'CBT on Your Own: How Therapy Works', author: 'Психолог Шастин Егор', id: 'sfRyNk0oouE', duration: '20:53' },
-    { title: 'Что такое КПТ? (ABC модель)', title_en: 'What CBT Is (ABC Model)', author: 'ПостПсихология', id: 'rm0tH1oVIXg', duration: '46:23' },
-    { title: 'Релаксация по Джекобсону (Практика)', title_en: 'Jacobson Relaxation (Practice)', author: 'Александр Усольцев', id: '_4XzfyFxDTg', duration: '6:00' },
-    { title: 'Тревога vs Тревожность (Научпок)', title_en: 'Anxiety vs Anxiousness', author: 'Научпок', id: 'TTCVrYONffw', duration: '6:00' },
-    { title: 'Психотерапия при панических атаках', title_en: 'Psychotherapy for Panic Attacks', author: 'Клиника Доктор САН', id: 'Hh-pud7_Uug', duration: '16:12' },
-    { title: 'Медитация осознанности Mindfulness', title_en: 'Mindfulness Meditation', author: 'toki well-being', id: 'Juo-8PtSaLI', duration: '12:36' },
-    { title: 'Техники против катастрофизации', title_en: 'Techniques Against Catastrophizing', author: 'initium - психологи', id: 'WDTl4qtw94Q', duration: '16:41' }
-];
-
 const VIDEO_CATALOG_EN = [
     { title: 'What Is Depression?', author: 'TED-Ed', id: 'z-IR48Mb3W0', duration: '4:29' },
     { title: 'How Does Cognitive Behavioral Therapy Work?', author: 'Psych Hub', id: 'ZdyOwZ4_RnI', duration: '4:55' },
@@ -2600,12 +2083,10 @@ const VIDEO_CATALOG_EN = [
     { title: 'Catastrophizing: How to Stop Making Yourself More Anxious', author: 'Therapy in a Nutshell', id: 'bS2LPNlO07s', duration: '17:22' }
 ];
 
+const VIDEO_CATALOG = VIDEO_CATALOG_EN;
+
 function getVideoCatalog() {
-    if (getCurrentLanguage() === 'en') return VIDEO_CATALOG_EN;
-    return VIDEO_CATALOG.map((video) => ({
-        ...video,
-        title: video.title
-    }));
+    return VIDEO_CATALOG_EN;
 }
 
 function openVideoLibrary() {

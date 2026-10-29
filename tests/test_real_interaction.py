@@ -16,13 +16,13 @@ async def main():
                 {
                     "name": "GAD-7",
                     "score": 15,
-                    "level": "Тяжелая тревога",
+                    "level": "Severe anxiety",
                     "date": "2026-03-03",
                 },
                 {
                     "name": "PHQ-9",
                     "score": 12,
-                    "level": "Умеренная депрессия",
+                    "level": "Moderate depression",
                     "date": "2026-03-03",
                 },
             ],
@@ -59,7 +59,7 @@ async def main():
 
         # 3. Chat Request
         print("\n--- 2. Sending Chat Request ---")
-        chat_msg = "Привет. Я почти не сплю последние дни, очень тревожно по ночам. Как мое состояние по последним тестам, и есть ли какие-то доказательные протоколы, которые мне помогут?"
+        chat_msg = "Hello. I have barely slept the last few days and feel very anxious at night. What does my recent assessment data show, and are there evidence-based protocols that can help me?"
         print(f"User: {chat_msg}")
 
         chat_data = {"session_id": SESSION_ID, "message": chat_msg}

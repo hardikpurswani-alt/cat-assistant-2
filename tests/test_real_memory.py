@@ -1,39 +1,50 @@
 import pytest
 import os
+from pathlib import Path
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+except ImportError:
+    pass
+
 from src.utils.db import SQLiteSessionManager
-from src.llm.ollama_client import OllamaClient
+from src.llm.gateway_client import GatewayClient
 from src.memory.summarizer import MemorySummarizer
 
 
 # Skipped by default in CI unless running explicitly locally
 @pytest.mark.asyncio
 async def test_real_memory_summarization(tmp_path):
-    # Determine base URL
-    ollama_url = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
-    model_name = os.getenv("OLLAMA_MODEL", "qwen3.5:9b")
+    gateway_url = os.getenv("OPENAI_BASE_URL", "http://103.73.181.90:4000/v1")
+    model_name = os.getenv("LLM_MODEL", "qwen-7b")
+    api_key = os.getenv("OPENAI_API_KEY", "")
 
-    # Check if Ollama is accessible
+    if not api_key:
+        pytest.skip("No gateway API key configured")
+
+    # Check if Gateway is accessible
     import httpx
 
+    headers = {"Authorization": f"Bearer {api_key}"}
     try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.get(f"{ollama_url}/api/tags")
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            resp = await client.get(f"{gateway_url}/models", headers=headers)
             if resp.status_code != 200:
-                pytest.skip("Ollama is not responding")
+                pytest.skip("AI Gateway is not responding")
             available_models = {
-                model.get("name") for model in resp.json().get("models", [])
+                model.get("id") for model in resp.json().get("data", [])
             }
             if model_name not in available_models:
                 pytest.skip(f"Configured live-test model {model_name} is not installed")
     except Exception:
-        pytest.skip("Ollama is not accessible")
+        pytest.skip("AI Gateway is not accessible")
 
     # Set up DB path
     db_file = tmp_path / "test_real_memory.db"
     db_manager = SQLiteSessionManager(db_file)
 
-    # Init client, using a fast model if available or fallback
-    llm_client = OllamaClient(ollama_url, model=model_name)
+    # Init client
+    llm_client = GatewayClient(base_url=gateway_url, api_key=api_key, model=model_name)
 
     # Init summarizer with low threshold to quickly trigger
     summarizer = MemorySummarizer(db_manager, llm_client)
@@ -45,17 +56,17 @@ async def test_real_memory_summarization(tmp_path):
     db_manager.add_message(
         session_id,
         "user",
-        "Я очень переживаю из-за предстоящего собеседования на работу.",
+        "I am very worried about an upcoming job interview.",
     )
     db_manager.add_message(
         session_id,
         "assistant",
-        "Это нормально испытывать волнение перед интервью. Вы пробовали подготовить ответы на частые вопросы?",
+        "It is normal to feel nervous before an interview. Have you tried preparing answers to common questions?",
     )
     db_manager.add_message(
         session_id,
         "user",
-        "Да, но у меня начинается паника и я забываю всё. У меня есть собака Рекс, обычно я с ней гуляю, чтобы успокоиться.",
+        "Yes, but I start to panic and forget everything. I have a dog named Rex, and I usually walk him to calm down.",
     )
 
     # Trigger summarizer manually
@@ -68,7 +79,7 @@ async def test_real_memory_summarization(tmp_path):
     assert summary is not None
     assert summary != ""
     assert len(summary) > 20
-    assert "Рекс" in summary
+    assert "Rex" in summary
 
     # Since LLM output varies, we just print it. When pytest runs, we'll see it in stdout if we use -s.
     print(f"\n[LLM Generated Summary]:\n{summary}\n")
@@ -77,9 +88,9 @@ async def test_real_memory_summarization(tmp_path):
     db_manager.add_message(
         session_id,
         "assistant",
-        "Прогулка с Рексом - отличный способ. Давайте попробуем дыхательную технику: вдох на 4 счета, выдох на 4 счета.",
+        "Walking with Rex is a great strategy. Let us try a breathing technique: inhale for 4 counts, exhale for 4 counts.",
     )
-    db_manager.add_message(session_id, "user", "Окей, вроде стало легче.")
+    db_manager.add_message(session_id, "user", "Okay, that feels a bit lighter.")
 
     await summarizer._process_summarization(session_id)
 
@@ -87,6 +98,6 @@ async def test_real_memory_summarization(tmp_path):
     assert new_summary is not None
     assert len(new_summary) > 20
     assert new_summary != summary  # should be updated with new context
-    assert "Рекс" in new_summary
+    assert "Rex" in new_summary
 
     print(f"\n[Updated LLM Generated Summary]:\n{new_summary}\n")

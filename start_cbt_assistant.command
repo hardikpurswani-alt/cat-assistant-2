@@ -12,8 +12,6 @@ LOG_DIR="$PROJECT_DIR/logs"
 APP_PORT="8000"
 APP_URL="http://localhost:$APP_PORT"
 HEALTH_URL="$APP_URL/api/health"
-OLLAMA_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
-CHAT_MODEL="${CBT_ASSISTANT_CHAT_MODEL:-qwen3.5:9b}"
 NO_PAUSE="${CBT_ASSISTANT_NO_PAUSE:-0}"
 
 export PATH="$BOOTSTRAP_BIN:/opt/homebrew/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
@@ -191,7 +189,7 @@ open_browser_when_ready() {
 
     printf '\n[CBT Assistant] The server did not pass its health check within 120 seconds.\n' >&2
     if command -v osascript >/dev/null 2>&1; then
-        osascript -e 'display alert "CBT Assistant" message "Сервер не запустился за 120 секунд. Проверьте вывод Terminal." as critical' >/dev/null 2>&1 || true
+        osascript -e 'display alert "CBT Assistant" message "Server failed to start within 120 seconds. Check Terminal output." as critical' >/dev/null 2>&1 || true
     fi
 }
 
@@ -204,24 +202,12 @@ main() {
     command -v curl >/dev/null 2>&1 || fail "curl is required for first-run downloads."
     command -v lsof >/dev/null 2>&1 || fail "lsof is required to manage port $APP_PORT."
 
-    local macos_major
-    macos_major="$(sw_vers -productVersion | cut -d. -f1)"
-    case "$macos_major" in
-        *[!0-9]*|'') fail "Could not determine the macOS version." ;;
-    esac
-    [ "$macos_major" -ge 14 ] || fail "Ollama requires macOS 14 Sonoma or newer."
-
     printf '\n\033[1;35mCBT ASSISTANT\033[0m\n'
-    printf 'Local AI CBT companion · automatic macOS setup\n'
+    printf 'AI CBT companion · Hackathon AI Gateway\n'
 
     ensure_uv
     ensure_python_environment
-    ensure_ollama
-    ensure_model "$CHAT_MODEL"
     release_app_port
-
-    export OLLAMA_BASE_URL="$OLLAMA_URL"
-    export OLLAMA_MODEL="$CHAT_MODEL"
 
     log "Starting CBT Assistant..."
     open_browser_when_ready &

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
     checkH();
+    setInterval(checkH, 10000);
     updateWelcomeMsg();
     const msgInp = document.getElementById('msgInput');
     msgInp.addEventListener('input', function () {
@@ -34,4 +35,5 @@ document.addEventListener('DOMContentLoaded', () => {
     lucide.createIcons();
     updateWelcomeMsg();
     if (window.applyTranslations) window.applyTranslations();
+    if (typeof loadChatHistory === 'function') loadChatHistory();
 });

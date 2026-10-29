@@ -14,11 +14,11 @@ EMPTY_PROFILE: dict[str, Any] = {
     "important_facts": [],
 }
 
-_NAME = r"([A-Za-zА-Яа-яЁё][A-Za-zА-Яа-яЁё'’-]{1,30}(?:\s+[A-Za-zА-Яа-яЁё][A-Za-zА-Яа-яЁё'’-]{1,30}){0,2})"
+_NAME = r"([A-Za-z][A-Za-z'’-]{1,30}(?:\s+[A-Za-z][A-Za-z'’-]{1,30}){0,2})"
 _CAPITALIZED_NAME = (
-    r"([A-ZА-ЯЁ][A-Za-zА-Яа-яЁё'’-]{1,30}(?:\s+[A-ZА-ЯЁ][A-Za-zА-Яа-яЁё'’-]{1,30})?)"
+    r"([A-Z][A-Za-z'’-]{1,30}(?:\s+[A-Z][A-Za-z'’-]{1,30})?)"
 )
-_NAME_STOP_WORDS = {"and", "but", "i", "my", "и", "но", "я", "мой", "моя", "мне"}
+_NAME_STOP_WORDS = {"and", "but", "i", "my", "me"}
 
 
 def empty_profile() -> dict[str, Any]:
@@ -55,23 +55,19 @@ def extract_profile_updates(text: str) -> dict[str, Any]:
     updates = empty_profile()
     updates["user_name"] = _first_match(
         [
-            rf"(?:меня\s+зовут|мо[её]\s+имя|зови\s+меня)\s+{_NAME}",
             rf"(?:my\s+name\s+is|call\s+me)\s+{_NAME}",
         ],
         text,
     )
 
     pet_kinds = {
-        "собака": ("dog", r"собак(?:а|у|и|ой)?|п[её]с|пса|щенок"),
-        "кошка": ("cat", r"кот(?:а|у|ом)?|кошк(?:а|у|и|ой)?|кот[её]нок"),
         "dog": ("dog", r"dog|puppy"),
         "cat": ("cat", r"cat|kitten"),
     }
     seen_pet_names: set[tuple[str, str]] = set()
     for _label, (kind, kind_pattern) in pet_kinds.items():
         patterns = [
-            rf"(?:{kind_pattern})[^.!?\n]{{0,20}}?(?:зовут|по\s+имени|is\s+named|named)\s+{_NAME}",
-            rf"(?:у\s+меня\s+(?:есть\s+)?)?(?:{kind_pattern})\s+{_CAPITALIZED_NAME}",
+            rf"(?:{kind_pattern})[^.!?\n]{{0,20}}?(?:is\s+named|named)\s+{_NAME}",
             rf"(?:my\s+)?(?:{kind_pattern})\s+(?:is\s+)?{_CAPITALIZED_NAME}",
         ]
         name = _first_match(patterns, text)
@@ -81,18 +77,18 @@ def extract_profile_updates(text: str) -> dict[str, Any]:
             seen_pet_names.add(key)
 
     relations = {
-        "partner": r"мужа|муж|жену|жена|партн[её]ра|партн[её]рша|husband|wife|partner",
-        "mother": r"маму|мама|мать|mother|mom",
-        "father": r"папу|папа|отца|father|dad",
-        "brother": r"брата|брат|brother",
-        "sister": r"сестру|сестра|sister",
-        "friend": r"друга|друг|подругу|подруга|friend",
+        "partner": r"husband|wife|partner|spouse",
+        "mother": r"mother|mom",
+        "father": r"father|dad",
+        "brother": r"brother",
+        "sister": r"sister",
+        "friend": r"friend",
     }
     for relation, relation_pattern in relations.items():
         name = _first_match(
             [
-                rf"(?:мой|моя|моего|мою|my)?\s*(?:{relation_pattern})[^.!?\n]{{0,12}}?(?:зовут|is\s+named|named)\s+{_NAME}",
-                rf"(?:мой|моя|моего|мою|my)\s+(?:{relation_pattern})\s*[-—:]?\s*{_CAPITALIZED_NAME}",
+                rf"(?:my)?\s*(?:{relation_pattern})[^.!?\n]{{0,12}}?(?:is\s+named|named)\s+{_NAME}",
+                rf"(?:my)\s+(?:{relation_pattern})\s*[-—:]?\s*{_CAPITALIZED_NAME}",
             ],
             text,
         )
@@ -100,7 +96,6 @@ def extract_profile_updates(text: str) -> dict[str, Any]:
             updates["people"].append({"relation": relation, "name": name})
 
     preference_patterns = [
-        r"(?:я\s+предпочитаю|мне\s+нравится|я\s+люблю)\s+([^.!?\n]{2,120})",
         r"(?:i\s+prefer|i\s+like|i\s+love)\s+([^.!?\n]{2,120})",
     ]
     for pattern in preference_patterns:
@@ -110,9 +105,9 @@ def extract_profile_updates(text: str) -> dict[str, Any]:
                 updates["preferences"].append(value)
 
     fact_patterns = [
-        r"(?:я\s+живу\s+в|i\s+live\s+in)\s+([^.!?\n]{2,100})",
-        r"(?:я\s+работаю|i\s+work)\s+([^.!?\n]{2,100})",
-        r"(?:для\s+меня\s+важно|мне\s+важно|it\s+is\s+important\s+to\s+me)\s+([^.!?\n]{2,120})",
+        r"(?:i\s+live\s+in)\s+([^.!?\n]{2,100})",
+        r"(?:i\s+work\s+as|i\s+work\s+at|i\s+work)\s+([^.!?\n]{2,100})",
+        r"(?:it\s+is\s+important\s+to\s+me)\s+([^.!?\n]{2,120})",
     ]
     for pattern in fact_patterns:
         for match in re.finditer(pattern, text, flags=re.IGNORECASE):

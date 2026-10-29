@@ -1,6 +1,7 @@
 import yaml
 import json
 from pathlib import Path
+from pydantic import BaseModel
 
 
 class PromptManager:
@@ -29,9 +30,9 @@ class PromptManager:
 
         # Long-Term Memory (Summary) Context
         if summary:
-            base_prompt += "\n--- ДОЛГОСРОЧНАЯ ПАМЯТЬ О ПАЦИЕНТЕ (РЕЗЮМЕ) ---\n"
+            base_prompt += "\n--- LONG-TERM PATIENT MEMORY (SUMMARY) ---\n"
             base_prompt += summary + "\n"
-            base_prompt += "--- КОНЕЦ РЕЗЮМЕ ---\n"
+            base_prompt += "--- END SUMMARY ---\n"
 
         if profile_memory:
             base_prompt += (
@@ -75,29 +76,29 @@ class PromptManager:
         # Mood Context
         if mood_history:
             recent = mood_history[-5:]
-            base_prompt += "\n--- ИСТОРИЯ НАСТРОЕНИЯ ПОЛЬЗОВАТЕЛЯ ---\n"
+            base_prompt += "\n--- USER MOOD HISTORY ---\n"
             for entry in recent:
-                base_prompt += f"- {entry['timestamp']}: настроение {entry['score']}/10"
+                base_prompt += f"- {entry['timestamp']}: mood {entry['score']}/10"
                 if entry.get("note"):
                     base_prompt += f" ({entry['note']})"
                 base_prompt += "\n"
-            base_prompt += "--- КОНЕЦ ИСТОРИИ НАСТРОЕНИЯ ---\n"
+            base_prompt += "--- END MOOD HISTORY ---\n"
 
         # Thought Records Context
         if thought_records:
             recent_thoughts = thought_records[-3:]
-            base_prompt += "\n--- НЕДАВНИЕ ЗАПИСИ ДНЕВНИКА МЫСЛЕЙ ---\n"
+            base_prompt += "\n--- RECENT THOUGHT DIARY ENTRIES ---\n"
             for entry in recent_thoughts:
                 base_prompt += f"[{entry['timestamp']}]\n"
-                base_prompt += f"Ситуация: {entry['situation']}\n"
-                base_prompt += f"Мысль: {entry['thought']}\n"
-                base_prompt += f"Эмоция: {entry['emotion']} ({entry['intensity']}/10)\n"
-                base_prompt += f"Искажение: {entry['distortion']}\n"
-                base_prompt += f"Рациональный ответ: {entry['rational_response']}\n\n"
-            base_prompt += "--- КОНЕЦ ЗАПИСЕЙ ---\n"
+                base_prompt += f"Situation: {entry['situation']}\n"
+                base_prompt += f"Thought: {entry['thought']}\n"
+                base_prompt += f"Emotion: {entry['emotion']} ({entry['intensity']}/10)\n"
+                base_prompt += f"Distortion: {entry['distortion']}\n"
+                base_prompt += f"Rational Response: {entry['rational_response']}\n\n"
+            base_prompt += "--- END ENTRIES ---\n"
 
         base_prompt += """
-Помни: Твоя цель — оказать сочувственную поддержку, помогая развивать более здоровые мыслительные паттерны и стратегии совладания. Всегда ставь безопасность на первое место.
-ВНИМАНИЕ: Релевантные материалы уже найдены системой до генерации ответа. Не утверждай, что источник использован, если рядом нет точной ссылки вида [KB:chunk_id]. Если релевантных материалов нет, не выдумывай технику или клиническое обоснование.
+Remember: Your goal is to provide compassionate, empathetic support while helping the user develop healthier thought patterns and coping strategies. Always prioritize emotional safety.
+NOTE: Relevant evidence has been retrieved prior to response generation. Only claim clinical support if cited with the exact inline label [KB:chunk_id]. If no relevant evidence was found, do not invent clinical assertions or protocols.
 """
         return base_prompt

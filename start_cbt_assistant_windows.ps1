@@ -15,8 +15,6 @@ $LogDir = Join-Path $ProjectDir "logs"
 $AppPort = 8000
 $AppUrl = "http://127.0.0.1:$AppPort"
 $HealthUrl = "$AppUrl/api/health"
-$OllamaUrl = if ($env:OLLAMA_BASE_URL) { $env:OLLAMA_BASE_URL.TrimEnd("/") } else { "http://127.0.0.1:11434" }
-$ChatModel = if ($env:CBT_ASSISTANT_CHAT_MODEL) { $env:CBT_ASSISTANT_CHAT_MODEL } else { "qwen3.5:9b" }
 
 function Write-Step {
     param([Parameter(Mandatory = $true)][string]$Message)
@@ -233,9 +231,6 @@ function Stop-AppPortListener {
 }
 
 function Start-CbtAssistant {
-    $env:OLLAMA_BASE_URL = $OllamaUrl
-    $env:OLLAMA_MODEL = $ChatModel
-
     Write-Step "Starting CBT Assistant..."
     $serverProcess = Start-Process -FilePath $VenvPython -ArgumentList @("`"$ServerFile`"") -WorkingDirectory $ProjectDir -NoNewWindow -PassThru
 
@@ -261,11 +256,6 @@ try {
         throw "This launcher supports Windows only."
     }
 
-    $windowsVersion = [System.Environment]::OSVersion.Version
-    if ($windowsVersion.Major -lt 10 -or ($windowsVersion.Major -eq 10 -and $windowsVersion.Build -lt 19045)) {
-        throw "Ollama requires Windows 10 22H2 (build 19045) or newer."
-    }
-
     if (-not (Test-Path -LiteralPath $ServerFile -PathType Leaf)) {
         throw "Missing backend\server.py in $ProjectDir."
     }
@@ -277,10 +267,6 @@ try {
 
     $uvExe = Install-Uv
     Initialize-PythonEnvironment -UvExe $uvExe
-
-    $ollamaExe = Install-Ollama
-    Start-OllamaIfNeeded -OllamaExe $ollamaExe
-    Install-OllamaModel -OllamaExe $ollamaExe -ModelName $ChatModel
 
     Stop-AppPortListener
     Start-CbtAssistant

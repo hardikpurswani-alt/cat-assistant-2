@@ -65,7 +65,7 @@ The model can call application functions when relevant:
 | Maximum generated tokens | `1024` | `num_predict` sent to Ollama |
 | Temperature | `0.7` | Chat sampling value |
 | Top-p | `0.9` | Chat sampling value |
-| Interface language | English | Russian is available in Settings |
+| Interface language | English | English only |
 | Data file | `data/cbt_sessions.db` | Local SQLite application storage |
 
 Example manual model override:
@@ -88,6 +88,6 @@ Change `RAG_EMBED_MODEL` or `config/model_config.yaml` to use another embedding 
 - `src/utils/db.py` — SQLite schema and persistence.
 - `config/prompts.yaml` — assistant behavior, safety instructions, and tool guidance.
 - `config/model_config.yaml` — default models and generation settings.
-- `frontend/` — English and Russian browser interface.
+- `frontend/` — Pure English browser interface.
 - `knowledge_base/` — local CBT material used for retrieval.
 - `tests/` — database, prompt, RAG, memory, API, and interaction checks.

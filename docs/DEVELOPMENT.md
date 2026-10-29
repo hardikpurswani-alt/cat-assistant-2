@@ -37,7 +37,7 @@ Run the versioned retrieval cases with FastEmbed:
 python scripts/evaluate_rag.py --top-k 3 --threshold 0.46 --output data/rag_eval_report.json
 ```
 
-The cases are stored in `evals/rag_retrieval.json`. The checked-in baseline (`evals/rag_baseline.json`) contains 18 Russian, English, and off-topic cases. With `paraphrase-multilingual-mpnet-base-v2`, it records Recall@3 `0.8571`, MRR `0.7024`, and abstention accuracy `1.0`.
+The cases are stored in `evals/rag_retrieval.json`. The checked-in baseline (`evals/rag_baseline.json`) contains 18 English clinical and out-of-scope cases. With `paraphrase-multilingual-mpnet-base-v2`, it records Recall@3 `0.8571`, MRR `0.7024`, and abstention accuracy `1.0`.
 
 This small regression set measures retrieval behavior, not clinical correctness. Re-run it after changing the embedding model, relevance threshold, chunking logic, or knowledge content.
 

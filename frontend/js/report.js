@@ -4,11 +4,36 @@
 
 function downloadAsTXT() {
     closeModal('downloadModal');
-    window.open(API + '/api/report/' + SESSION_ID, '_blank');
+    const baseApi = window.API || (typeof API !== 'undefined' ? API : window.location.origin);
+    const sid = window.SESSION_ID || (typeof SESSION_ID !== 'undefined' ? SESSION_ID : localStorage.getItem('SESSION_ID') || '');
+    const url = baseApi + '/api/report/' + sid;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cbt-report-${sid || 'summary'}.txt`;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+        if (a.parentNode) document.body.removeChild(a);
+    }, 1000);
 }
 
 async function downloadAsPDF() {
     closeModal('downloadModal');
+
+    // Immediately open target window in synchronous user click handler to avoid popup blockers
+    let win = null;
+    try {
+        win = window.open('about:blank', '_blank');
+        if (win && win.document) {
+            win.document.write('<!DOCTYPE html><html><head><title>Generating CBT Summary...</title><style>body{font-family:system-ui,-apple-system,sans-serif;display:flex;align-items:center;justify-content:center;height:80vh;color:#444;background:#f8f7f5;margin:0;}</style></head><body><div style="text-align:center;padding:24px;"><h2>Generating CBT Summary Report...</h2><p style="color:#777;">Collecting diary entries, assessments, and mood tracking data...</p></div></body></html>');
+        }
+    } catch (e) {
+        console.warn('Direct popup creation intercepted:', e);
+    }
+
+    const baseApi = window.API || (typeof API !== 'undefined' ? API : window.location.origin);
+    const sid = window.SESSION_ID || (typeof SESSION_ID !== 'undefined' ? SESSION_ID : localStorage.getItem('SESSION_ID') || '');
 
     // Collect all data
     const moodLog = JSON.parse(localStorage.getItem('moodLog') || '[]');
@@ -19,7 +44,7 @@ async function downloadAsPDF() {
 
     let thoughts = [];
     try {
-        const res = await fetch(API + '/api/thoughts/' + SESSION_ID).then(r => r.json());
+        const res = await fetch(baseApi + '/api/thoughts/' + sid).then(r => r.json());
         thoughts = res.thought_records || [];
     } catch (_) { }
 
@@ -38,7 +63,7 @@ async function downloadAsPDF() {
     const moodRecent = [...moodLog].sort((a, b) => new Date(a.date) - new Date(b.date)).slice(-14);
     const moodLabels = moodRecent.map(e => {
         const d = new Date(e.date);
-        return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+        return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
     });
     const moodScores = moodRecent.map(e => e.score);
 
@@ -46,7 +71,7 @@ async function downloadAsPDF() {
     const sleepRecent = [...sleepLog].sort((a, b) => new Date(a.isoDate || 0) - new Date(b.isoDate || 0)).slice(-7);
     const sleepLabels = sleepRecent.map(e => {
         const d = new Date(e.isoDate || Date.now());
-        return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
+        return d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
     });
     const sleepHours = sleepRecent.map(e => parseFloat(e.durHrs || e.hours || 0));
     const sleepQuality = sleepRecent.map(e => parseFloat(e.quality || 0));
@@ -54,15 +79,15 @@ async function downloadAsPDF() {
     // Thought records (last 10)
     const thoughtsHTML = thoughts.slice(-10).reverse().map(r => {
         const d = new Date(r.timestamp);
-        const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' }) +
-            ' · ' + d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const dateStr = d.toLocaleDateString('en-US', { day: 'numeric', month: 'long' }) +
+            ' · ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
         return `
             <div class="thought-card">
                 <div class="thought-date">${dateStr}</div>
-                ${r.situation ? `<div class="field"><span class="label">Ситуация</span><span class="value">${r.situation}</span></div>` : ''}
-                ${r.thought ? `<div class="field"><span class="label">Мысль</span><span class="value">${r.thought}</span></div>` : ''}
-                ${r.emotion ? `<div class="field"><span class="label">Эмоция</span><span class="value">${r.emotion}${r.intensity ? ' · ' + r.intensity + '/10' : ''}</span></div>` : ''}
-                ${r.rational_response ? `<div class="field"><span class="label">Рациональный ответ</span><span class="value">${r.rational_response}</span></div>` : ''}
+                ${r.situation ? `<div class="field"><span class="label">Situation</span><span class="value">${r.situation}</span></div>` : ''}
+                ${r.thought ? `<div class="field"><span class="label">Thought</span><span class="value">${r.thought}</span></div>` : ''}
+                ${r.emotion ? `<div class="field"><span class="label">Emotion</span><span class="value">${r.emotion}${r.intensity ? ' · ' + r.intensity + '/10' : ''}</span></div>` : ''}
+                ${r.rational_response ? `<div class="field"><span class="label">Rational Response</span><span class="value">${r.rational_response}</span></div>` : ''}
                 ${r.distortion ? `<div class="distortion-tag">${r.distortion}</div>` : ''}
             </div>`;
     }).join('');
@@ -74,23 +99,23 @@ async function downloadAsPDF() {
         .slice(0, 10)
         .map(e => {
             const d = new Date(e.date);
-            const dateStr = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-            return `<tr><td>${e.type}</td><td>${dateStr}</td><td><strong>${e.score}</strong></td><td>${e.interpretation || '—'}</td></tr>`;
+            const dateStr = d.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+            return `<tr><td>${e.type}</td><td>${dateStr}</td><td><strong>${e.score}</strong></td><td>${e.interpretation || e.level || '—'}</td></tr>`;
         }).join('');
 
     // Activities
     const actRows = activities.slice(-15).map(a =>
-        `<tr><td>${a.text || a.activity_text || '—'}</td><td>${a.done ? '✓ Выполнено' : '○ В плане'}</td></tr>`
+        `<tr><td>${a.text || a.activity_text || '—'}</td><td>${a.done ? '✓ Completed' : '○ Planned'}</td></tr>`
     ).join('');
 
     const now = new Date();
-    const reportDate = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    const reportDate = now.toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
 
     const html = `<!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>КПТ-выписка · ${reportDate}</title>
+<title>CBT Discharge Summary · ${reportDate}</title>
 <script src="/vendor/chart.min.js"><\/script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -155,12 +180,12 @@ async function downloadAsPDF() {
   <!-- Header -->
   <div class="report-header">
     <div>
-      <div class="report-title">КПТ-выписка</div>
-      <div class="report-subtitle">Дневник мыслей · Настроение · Сон · Активности</div>
+      <div class="report-title">CBT Summary Report</div>
+      <div class="report-subtitle">Thought Diary · Mood · Sleep · Activities</div>
     </div>
     <div class="report-date">
       <div>${reportDate}</div>
-      <div class="report-badge">Автоматический отчёт</div>
+      <div class="report-badge">Automated Summary</div>
     </div>
   </div>
 
@@ -168,48 +193,48 @@ async function downloadAsPDF() {
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-val">${avgMood ?? '—'}</div>
-      <div class="stat-label">Среднее настроение (14 д.)</div>
+      <div class="stat-label">Average Mood (14d)</div>
     </div>
     <div class="stat-card" style="border-left-color:#38bdf8;">
-      <div class="stat-val">${avgSleep ? avgSleep + 'ч' : '—'}</div>
-      <div class="stat-label">Среднее время сна (7 д.)</div>
+      <div class="stat-val">${avgSleep ? avgSleep + 'h' : '—'}</div>
+      <div class="stat-label">Average Sleep (7d)</div>
     </div>
     <div class="stat-card" style="border-left-color:#10b981;">
       <div class="stat-val">${doneActs}</div>
-      <div class="stat-label">Активностей выполнено</div>
+      <div class="stat-label">Activities Completed</div>
     </div>
     <div class="stat-card" style="border-left-color:${lastPHQ ? '#f59e0b' : '#ccc'};">
       <div class="stat-val">${lastPHQ ? lastPHQ.score : '—'}</div>
-      <div class="stat-label">PHQ-9 (последний)</div>
+      <div class="stat-label">Latest PHQ-9</div>
     </div>
   </div>
 
   <!-- Mood Chart -->
   ${moodScores.length >= 2 ? `
   <div class="section">
-    <div class="section-title">Настроение — последние ${moodScores.length} записей</div>
+    <div class="section-title">Mood — Recent ${moodScores.length} Entries</div>
     <div class="chart-wrap"><canvas id="moodChart"></canvas></div>
   </div>` : ''}
 
   <!-- Sleep Chart -->
   ${sleepHours.length >= 2 ? `
   <div class="section">
-    <div class="section-title">Сон — последние ${sleepHours.length} дней</div>
+    <div class="section-title">Sleep — Recent ${sleepHours.length} Days</div>
     <div class="chart-wrap"><canvas id="sleepChart"></canvas></div>
   </div>` : ''}
 
   <!-- Thought diary -->
   <div class="section">
-    <div class="section-title">Дневник мыслей (последние ${Math.min(thoughts.length, 10)} записей)</div>
-    ${thoughtsHTML || '<div class="empty">Записей нет</div>'}
+    <div class="section-title">Thought Diary (Recent ${Math.min(thoughts.length, 10)} Entries)</div>
+    ${thoughtsHTML || '<div class="empty">No entries recorded</div>'}
   </div>
 
   <!-- Tests -->
   ${testRows ? `
   <div class="section">
-    <div class="section-title">Результаты тестов</div>
+    <div class="section-title">Assessment Results</div>
     <table>
-      <thead><tr><th>Тест</th><th>Дата</th><th>Балл</th><th>Интерпретация</th></tr></thead>
+      <thead><tr><th>Test</th><th>Date</th><th>Score</th><th>Interpretation</th></tr></thead>
       <tbody>${testRows}</tbody>
     </table>
   </div>` : ''}
@@ -217,23 +242,23 @@ async function downloadAsPDF() {
   <!-- Activities -->
   ${actRows ? `
   <div class="section">
-    <div class="section-title">Активности</div>
+    <div class="section-title">Activities</div>
     <table>
-      <thead><tr><th>Задача</th><th>Статус</th></tr></thead>
+      <thead><tr><th>Task</th><th>Status</th></tr></thead>
       <tbody>${actRows}</tbody>
     </table>
   </div>` : ''}
 
   <div class="report-footer">
-    Сформировано КПТ-ассистентом · Не является медицинским заключением
+    Generated by CBT Assistant · Educational tool, not a medical diagnosis
   </div>
 
   <!-- Print button (hidden in print) -->
   <div class="no-print" style="text-align:center;margin-top:28px;">
     <button onclick="window.print()" style="background:#797298;color:#fff;border:none;border-radius:24px;padding:12px 32px;font-size:14px;cursor:pointer;font-family:inherit;">
-      ↓ Сохранить как PDF
+      ↓ Save as PDF
     </button>
-    <p style="color:#aaa;font-size:11px;margin-top:8px;">Выберите «Сохранить как PDF» в диалоге печати</p>
+    <p style="color:#aaa;font-size:11px;margin-top:8px;">Select "Save as PDF" in the print dialog</p>
   </div>
 </div>
 
@@ -251,7 +276,7 @@ window.addEventListener('load', () => {
       data: {
         labels: MOOD_LABELS,
         datasets: [{
-          label: 'Настроение',
+          label: 'Mood',
           data: MOOD_SCORES,
           borderColor: '#797298',
           backgroundColor: 'rgba(121,114,152,0.12)',
@@ -278,16 +303,16 @@ window.addEventListener('load', () => {
       data: {
         labels: SLEEP_LABELS,
         datasets: [
-          { label: 'Часы сна', data: SLEEP_HOURS, backgroundColor: 'rgba(56,189,248,0.7)', borderRadius: 6, yAxisID: 'y' },
-          { label: 'Качество', data: SLEEP_QUALITY, type: 'line', borderColor: '#f59e0b', pointBackgroundColor: '#f59e0b', borderWidth: 2, pointRadius: 3, tension: 0.4, yAxisID: 'y2' }
+          { label: 'Sleep Hours', data: SLEEP_HOURS, backgroundColor: 'rgba(56,189,248,0.7)', borderRadius: 6, yAxisID: 'y' },
+          { label: 'Sleep Quality', data: SLEEP_QUALITY, type: 'line', borderColor: '#f59e0b', pointBackgroundColor: '#f59e0b', borderWidth: 2, pointRadius: 3, tension: 0.4, yAxisID: 'y2' }
         ]
       },
       options: {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 12 } } },
         scales: {
-          y:  { min: 0, max: 12, grid: { color: '#f0eef8' }, ticks: { font: { size: 11 } }, title: { display: true, text: 'Часы', font: { size: 10 } } },
-          y2: { min: 0, max: 10, position: 'right', grid: { display: false }, ticks: { font: { size: 11 } }, title: { display: true, text: 'Качество', font: { size: 10 } } },
+          y:  { min: 0, max: 12, grid: { color: '#f0eef8' }, ticks: { font: { size: 11 } }, title: { display: true, text: 'Hours', font: { size: 10 } } },
+          y2: { min: 0, max: 10, position: 'right', grid: { display: false }, ticks: { font: { size: 11 } }, title: { display: true, text: 'Quality', font: { size: 10 } } },
           x: { grid: { display: false }, ticks: { font: { size: 11 } } }
         }
       }
@@ -298,9 +323,33 @@ window.addEventListener('load', () => {
 </body>
 </html>`;
 
-    const win = window.open('', '_blank');
-    win.document.write(html);
-    win.document.close();
+    if (win && !win.closed) {
+        try {
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+            return;
+        } catch (e) {
+            console.warn('Writing to pre-opened window failed:', e);
+        }
+    }
+
+    // Fallback if popup blocker intercepted win or if writing failed:
+    try {
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            if (a.parentNode) document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+        }, 15000);
+    } catch (err) {
+        console.error('Failed to render report window/blob:', err);
+    }
 }
 
 window.downloadAsPDF = downloadAsPDF;

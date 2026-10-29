@@ -1,116 +1,5 @@
-const CBT_I18N = {
-    ru: {
-        moodSaving: 'Записываем...',
-        moodSaved: 'Записано ✓',
-        moodButton: 'Записать состояние',
-        moodLastEntry: 'Последняя запись',
-        moodLoggedThanks: 'Спасибо! Оценка записана ✓',
-        moodMessageMap: { 1: 'ужасно 😭', 3: 'плохо 😟', 5: 'нормально 😐', 8: 'хорошо 🙂', 10: 'отлично 😁' },
-        moodMessageDefault: 'нормально',
-        thoughtModalTitle: 'Мысли и действия',
-        thoughtHint: 'Запишите ситуацию, мысль и более бережный взгляд на неё.',
-        thoughtSave: 'Сохранить мысль',
-        gratitudeSave: 'Сохранить благодарность',
-        entrySave: 'Сохранить запись',
-        save_entry: 'Сохранить запись',
-        saving: 'Сохраняем...',
-        gratitudeEmotion: 'благодарность',
-        gratitudeSaved: '🙏 Запись благодарности сохранена. Это отличная практика!',
-        thoughtSaved: 'Запись в дневник добавлена. Формулируя дальнейшие ответы, я учту вашу новую мысль.',
-        saveError: 'Ошибка при сохранении.',
-        loading: 'Загрузка...',
-        noThoughtEntries: 'Пока нет записей',
-        noThoughtEntriesSub: 'Дневник мыслей помогает замечать паттерны мышления и менять отношение к ним',
-        searchPlaceholder: '🔍 Поиск...',
-        loadHistoryError: 'Ошибка загрузки истории',
-        selectEntry: 'Выберите запись',
-        gratitudeTag: 'Благодарность',
-        rhythmTag: 'Ритм дня',
-        rhythmSummary: 'Шагов: {total} · Выполнено: {done}',
-        fieldSituation: 'Ситуация',
-        fieldAutomaticThought: 'Автоматическая мысль',
-        fieldEmotion: 'Эмоция',
-        fieldBalancedResponse: 'Рациональный ответ',
-        today: 'Сегодня',
-        yesterday: 'Вчера',
-        thisWeek: 'На этой неделе',
-        noDescription: 'Без описания',
-        testOpenMsg: '📋 Я открыл(а) для вас опросник {test}. Прохождение займет пару минут.',
-        noSleepEntries: 'Пока нет записей о сне',
-        noSleepEntriesSub: 'Отслеживайте сон, чтобы понять как он влияет на ваше настроение и самочувствие',
-        sleep_add_title: 'Добавить запись о сне',
-        duration: 'Длительность',
-        quality: 'Качество',
-        sleepSchedule: 'График сна',
-        awakenings: 'Пробуждения за ночь',
-        timesCount: '{count} раз',
-        notes: 'Заметки',
-        sleepEntrySaved: 'Запись о сне сохранена.',
-        slotMorning: 'Старт дня',
-        slotBody: 'Для тела',
-        slotJoy: 'Для души',
-        earlier: 'Ранее',
-        moodAfter: 'Настроение',
-        edit: 'Редактировать',
-        delete: 'Удалить',
-        forExample: 'Например: ',
-        save: 'Сохранить',
-        saveChanges: 'Сохранить изменения',
-        entryUpdated: 'Запись обновлена.',
-        sleepEntryUpdated: 'Запись о сне обновлена.',
-        activityUpdated: 'Активность обновлена.',
-        editThoughtTitle: 'Редактировать запись',
-        editGratitudeTitle: 'Редактировать благодарность',
-        editSleepTitle: 'Редактировать запись о сне',
-        editActivityPrompt: 'Измените текст активности',
-        extra: 'Дополнительно',
-        customStepPlaceholder: 'Ваш дополнительный шаг...',
-        addCustomStep: 'Добавить свой шаг',
-        stepsFilled: 'Заполнено шагов: <b>{total}</b>. Выполнено: <b>{done}</b>.',
-        excellentDay: 'Отличный день! Вы выполнили все шаги.',
-        addedToRhythm: 'Я добавил задачу в ваш {link}: <b>{text}</b>',
-        rhythmLink: 'Ритм дня',
-        months: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'],
-        daysShort: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-        thoughtDiaryDot: 'Дневник мыслей',
-        moodTrackerDot: 'Трекер настроения',
-        sleepDot: 'Сон',
-        activitiesDot: 'Активности',
-        testsDot: 'Тесты',
-        thoughtSection: 'Дневник мыслей',
-        moodSection: 'Настроение',
-        moodScore: 'Оценка: {score}/5',
-        sleepSection: 'Дневник сна',
-        bedtime: 'Отбой',
-        wakeup: 'Подъём',
-        sleepDurationQuality: 'Продолжительность: <b>{hours} ч.</b>, Качество: <b>{quality}/10</b>',
-        activitiesSection: 'Активности',
-        testsSection: 'Результаты тестов',
-        points: 'баллов',
-        noRecordsDay: 'В этот день нет записей',
-        analyzing: 'Анализирую данные…',
-        noInsights: 'Нет наблюдений.',
-        insightsUnavailable: 'Не удалось получить наблюдения прямо сейчас.',
-        avgMood14: 'Ср. настроение (14 д.)',
-        avgSleep: 'Ср. время сна',
-        activitiesDone: 'Активностей выполнено',
-        trackedDays: 'Дней отслеживания',
-        moodLabel: 'Настроение (1-10)',
-        moodTooltip: 'Настроение: {value}/10',
-        notEnoughMoodData: 'Недостаточно данных. Запишите хотя бы 2 записи настроения.',
-        sleepDurationHours: 'Длительность сна (часы)',
-        sleepQualityShort: 'Качество (1-10)',
-        noSleepData: 'Нет данных о сне',
-        trendImproved: '↓ улучшение',
-        trendWorse: '↑ ухудшение',
-        trendNoChange: '→ без изменений',
-        trendDrop: '↓ снижение',
-        phqTitle: 'PHQ-9 (депрессия)',
-        gadTitle: 'GAD-7 (тревога)',
-        esteemTitle: 'Розенберг (самооценка)',
-        noTestsYet: 'Пройдите PHQ-9, GAD-7 или шкалу самооценки, чтобы отслеживать динамику.'
-    },
-    en: {
+const CBT_I18N_COMMON = {
+
         moodSaving: 'Saving...',
         moodSaved: 'Saved ✓',
         moodButton: 'Save mood',
@@ -220,7 +109,11 @@ const CBT_I18N = {
         gadTitle: 'GAD-7 (anxiety)',
         esteemTitle: 'Rosenberg (self-esteem)',
         noTestsYet: 'Take PHQ-9, GAD-7, or the self-esteem scale to track changes over time.'
-    }
+};
+
+const CBT_I18N = {
+    ru: CBT_I18N_COMMON,
+    en: CBT_I18N_COMMON
 };
 
 function cbtLang() {
@@ -248,19 +141,26 @@ function inlineJsString(value) {
     return String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
-async function logMood() {
-    let s = document.getElementById('moodSlider').value;
-    let btn = event.target;
-    btn.innerText = cbtText('moodSaving');
-    await fetch(API + '/api/mood', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ score: parseInt(s), session_id: SESSION_ID }) });
+async function logMood(e) {
+    let s = document.getElementById('moodSlider')?.value || 5;
+    let btn = (e && e.target) || (typeof event !== 'undefined' && event ? event.target : null) || document.querySelector('#moodModal .btn-primary');
+    if (btn) btn.innerText = cbtText('moodSaving');
+    try {
+        await fetch(API + '/api/mood', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ score: parseInt(s), session_id: SESSION_ID }) });
+    } catch (err) {
+        console.warn('Backend mood sync failed, preserving local log:', err);
+    }
     // Save locally for dashboard
     let ml = JSON.parse(localStorage.getItem('moodLog') || '[]');
     ml.push({ score: parseInt(s), date: new Date().toISOString() });
     if (ml.length > 90) ml = ml.slice(-90);
     localStorage.setItem('moodLog', JSON.stringify(ml));
-    btn.innerText = cbtText('moodSaved');
-    setTimeout(() => btn.innerText = cbtText('moodButton'), 2000);
-    document.getElementById('moodHistory').innerText = `${cbtText('moodLastEntry')}: ${s}/10`;
+    if (btn) {
+        btn.innerText = cbtText('moodSaved');
+        setTimeout(() => btn.innerText = cbtText('moodButton'), 2000);
+    }
+    const histEl = document.getElementById('moodHistory');
+    if (histEl) histEl.innerText = `${cbtText('moodLastEntry')}: ${s}/10`;
 }
 
 async function logMoodFromWelcome(score) {
@@ -284,9 +184,7 @@ async function logMoodFromWelcome(score) {
     try {
         await fetch(API + '/api/mood', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ score: score, session_id: SESSION_ID }) });
         let emojis = cbtText('moodMessageMap');
-        let msg = cbtLang() === 'en'
-            ? `I would rate my mood right now as ${emojis[score] || cbtText('moodMessageDefault')} (${score}/10).`
-            : `Я оцениваю свое настроение сейчас как ${emojis[score] || cbtText('moodMessageDefault')} (${score}/10).`;
+        let msg = `I would rate my mood right now as ${emojis[score] || cbtText('moodMessageDefault')} (${score}/10).`;
 
         // Populate input and send
         let inp = document.getElementById('msgInput');
@@ -362,7 +260,7 @@ function cleanupLegacyRhythmIntro() {
     Array.from(rhythmSection.children).forEach(function (child) {
         if (child.id === 'actSlots' || child.id === 'actStats') return;
         var text = (child.textContent || '').replace(/\s+/g, ' ').trim();
-        if (text.indexOf('Правило трёх шагов') !== -1) {
+        if (text.indexOf('Three Steps Rule') !== -1) {
             child.remove();
         }
     });
@@ -447,7 +345,11 @@ async function submitThought(e) {
             : savedType === 'gratitude'
             ? cbtText('gratitudeSaved')
             : cbtText('thoughtSaved');
-        addMsg('assistant', msg);
+        if (typeof addMsg === 'function') {
+            addMsg('assistant', msg);
+        } else if (window.addMsg) {
+            window.addMsg('assistant', msg);
+        }
     } catch (err) { alert(cbtText('saveError')); }
     b.disabled = false;
     updateThoughtFormMode();
@@ -480,6 +382,29 @@ function editThoughtRecord(id) {
     openModal('thoughtModal');
 }
 window.editThoughtRecord = editThoughtRecord;
+
+async function deleteThoughtRecord(id) {
+    const confirmMsg = 'Delete this thought diary entry?';
+    if (!confirm(confirmMsg)) return;
+    try {
+        const res = await fetch(`${API}/api/thoughts/${id}?session_id=${encodeURIComponent(SESSION_ID)}`, {
+            method: 'DELETE'
+        });
+        if (!res.ok) throw new Error('Delete failed');
+        window._histRecs = (window._histRecs || []).filter(item => item.id !== id);
+        const listItemsEl = document.getElementById('histListItems');
+        if (listItemsEl && window._histRecs.length > 0) {
+            listItemsEl.innerHTML = _renderHistList(window._histRecs, 0);
+            selectHistItem(0);
+        } else {
+            openThoughtHistoryModal();
+        }
+        if (window.lucide) lucide.createIcons();
+    } catch (err) {
+        alert('Failed to delete entry');
+    }
+}
+window.deleteThoughtRecord = deleteThoughtRecord;
 
 async function openThoughtHistoryModal() {
     openModal('histModal');
@@ -596,6 +521,11 @@ function _renderHistList(recs, selectedIdx) {
                         title="${cbtText('edit')}"
                         style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--gray);padding:4px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
                         <i data-lucide="pencil" style="width:14px;"></i>
+                   </button>
+                   <button onclick="event.stopPropagation(); deleteThoughtRecord(${r.id})"
+                        title="Delete"
+                        style="background:none;border:none;cursor:pointer;color:var(--danger, #ef4444);padding:4px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <i data-lucide="trash-2" style="width:14px;"></i>
                    </button>`
                 : '';
             html += `
@@ -625,9 +555,12 @@ function _renderHistDetail(r) {
             <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${dateStr}</span>
         </div>`;
     const editAction = r.id && r.entryType !== 'rhythm'
-        ? `<div style="display:flex;justify-content:flex-end;margin-top:12px;">
+        ? `<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;">
             <button onclick="editThoughtRecord(${r.id})" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:12px;">
                 <i data-lucide="pencil" style="width:13px;"></i>${cbtText('edit')}
+            </button>
+            <button onclick="deleteThoughtRecord(${r.id})" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--panel);color:var(--danger, #ef4444);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:12px;">
+                <i data-lucide="trash-2" style="width:13px;"></i>Delete
             </button>
         </div>`
         : '';
@@ -733,63 +666,115 @@ window.openTestFromAI = openTestFromAI;
 /* PHQ-9 */
 const ASSESSMENT_I18N = {
     ru: {
-        phqQuestions: [
-            'Отсутствие интереса или удовольствия от дел, которые раньше нравились',
-            'Подавленное настроение, ощущение безнадёжности или депрессии',
-            'Нарушения сна (трудно заснуть, частые пробуждения или, наоборот, слишком много сплю)',
-            'Усталость или ощущение нехватки сил',
-            'Плохой аппетит или переедание',
-            'Ощущение себя неудачником или чувство вины',
-            'Трудности с концентрацией внимания (чтение, телевизор, работа)',
-            'Заметно замедленные движения или речь — или, наоборот, суетливость и трудно успокоиться',
-            'Мысли о том, что лучше было бы умереть, или желание причинить себе вред'
-        ],
-        phqOptions: ['Совсем нет', 'Несколько дней', 'Больше половины дней', 'Почти каждый день'],
-        phqDiscuss: 'Обсудить результат с ассистентом',
-        phqLevels: [
-            ['Минимальная или отсутствующая', 'Ваши результаты указывают на отсутствие значимых признаков депрессии. Продолжайте заботиться о себе.'],
-            ['Лёгкая депрессия', 'Возможны признаки лёгкой депрессии. Обратите внимание на сон, активность и социальные связи. Поговорите с ассистентом о своём состоянии.'],
-            ['Умеренная депрессия', 'Результаты указывают на умеренную депрессию. Рекомендуется обратиться к специалисту для дополнительной оценки.'],
-            ['Умеренно-тяжёлая депрессия', 'Признаки выраженной депрессии. Настоятельно рекомендуется консультация врача или психотерапевта.'],
-            ['Тяжёлая депрессия', 'Тяжёлая депрессия. Пожалуйста, обратитесь к специалисту как можно скорее. Горячая линия: 8-800-333-44-34.']
-        ],
-        gadQuestions: [
-            'Нервозность, тревожность или ощущение напряжения',
-            'Невозможность остановить или контролировать беспокойство',
-            'Чрезмерное беспокойство о разных вещах',
-            'Трудности с расслаблением',
-            'Такое беспокойство, что трудно усидеть на месте',
-            'Лёгкая раздражительность или нервозность',
-            'Страх, что может случиться что-то плохое'
-        ],
-        gadOptions: ['Совсем нет', 'Несколько дней', 'Больше половины дней', 'Почти каждый день'],
-        gadDiscuss: 'Обсудить с ассистентом',
-        gadLevels: [
-            ['Минимальная тревожность', 'Признаки тревоги минимальны или отсутствуют. Продолжайте придерживаться здоровых привычек.'],
-            ['Лёгкая тревожность', 'Слабая тревога. Попробуйте дыхательные упражнения, ограничьте кофеин и стрессовые ситуации.'],
-            ['Умеренная тревожность', 'Умеренная тревога. Рекомендуется обратиться к специалисту. КПТ-техники могут существенно помочь.'],
-            ['Тяжёлая тревожность', 'Выраженная тревога. Пожалуйста, обратитесь к врачу или психотерапевту. Горячая линия: 8-800-333-44-34.']
-        ],
-        esteemQuestions: [
-            'Я чувствую, что у меня есть хорошие качества.',
-            'Иногда мне кажется, что я вообще ни на что не годен(на).',
-            'Я способен(на) делать что-то не хуже большинства других людей.',
-            'Мне кажется, что мне нечем особенно гордиться.',
-            'В целом я отношусь к себе положительно.',
-            'Иногда я чувствую себя бесполезным(ой).',
-            'Я чувствую, что достоин(на) уважения не меньше других.',
-            'Мне хотелось бы больше уважать себя.',
-            'Я склонен(на) считать себя неудачником(цей).',
-            'Я считаю, что я ценный человек, по крайней мере не меньше других.'
-        ],
-        esteemOptions: ['Полностью согласен(на)', 'Скорее согласен(на)', 'Скорее не согласен(на)', 'Совсем не согласен(на)'],
-        esteemDiscuss: 'Обсудить с ассистентом',
-        esteemLevels: [
-            ['Устойчивая самооценка', 'У вас достаточно устойчивая опора на себя. Сохраняйте уважительное отношение к себе и замечайте свои сильные стороны.'],
-            ['Умеренная самооценка', 'Самооценка в целом сохранна, но в стрессовых ситуациях может заметно проседать. Полезно отслеживать самокритику и поддерживать более реалистичный внутренний диалог.'],
-            ['Сниженная самооценка', 'Есть признаки сниженной самооценки. Полезно работать с автоматическими мыслями о собственной несостоятельности и не сводить ошибки к оценке всей личности.'],
-            ['Выраженно сниженная самооценка', 'Самооценка сейчас сильно проседает. Это часто связано с депрессивными мыслями и жёсткой самокритикой. Лучше обсудить это со специалистом и не оставаться с этим одному.']
-        ]
+        moodSaving: 'Saving...',
+        moodSaved: 'Saved ✓',
+        moodButton: 'Save mood',
+        moodLastEntry: 'Last entry',
+        moodLoggedThanks: 'Thanks. Your mood was saved ✓',
+        moodMessageMap: { 1: 'awful 😭', 3: 'bad 😟', 5: 'okay 😐', 8: 'good 🙂', 10: 'excellent 😁' },
+        moodMessageDefault: 'okay',
+        thoughtModalTitle: 'Thoughts and Actions',
+        thoughtHint: 'Write down the situation, the thought, and a gentler response to it.',
+        thoughtSave: 'Save thought',
+        gratitudeSave: 'Save gratitude',
+        entrySave: 'Save entry',
+        save_entry: 'Save entry',
+        saving: 'Saving...',
+        gratitudeEmotion: 'gratitude',
+        gratitudeSaved: '🙏 Your gratitude entry was saved. This is a strong practice.',
+        thoughtSaved: 'Your diary entry was saved. I will take this thought into account in future responses.',
+        saveError: 'Could not save the entry.',
+        loading: 'Loading...',
+        noThoughtEntries: 'No entries yet',
+        noThoughtEntriesSub: 'A thought diary helps you notice thinking patterns and change how you relate to them',
+        searchPlaceholder: '🔍 Search...',
+        loadHistoryError: 'Could not load history',
+        selectEntry: 'Select an entry',
+        gratitudeTag: 'Gratitude',
+        rhythmTag: 'Daily Rhythm',
+        rhythmSummary: 'Steps: {total} · Completed: {done}',
+        fieldSituation: 'Situation',
+        fieldAutomaticThought: 'Automatic thought',
+        fieldEmotion: 'Emotion',
+        fieldBalancedResponse: 'Balanced response',
+        today: 'Today',
+        yesterday: 'Yesterday',
+        thisWeek: 'This week',
+        noDescription: 'No description',
+        testOpenMsg: '📋 I opened the {test} questionnaire for you. It only takes a couple of minutes.',
+        noSleepEntries: 'No sleep entries yet',
+        noSleepEntriesSub: 'Track your sleep to see how it affects your mood and wellbeing',
+        sleep_add_title: 'Add a sleep entry',
+        duration: 'Duration',
+        quality: 'Quality',
+        sleepSchedule: 'Sleep schedule',
+        awakenings: 'Night awakenings',
+        timesCount: '{count} times',
+        notes: 'Notes',
+        sleepEntrySaved: 'Sleep entry saved.',
+        slotMorning: 'Start of day',
+        slotBody: 'For the body',
+        slotJoy: 'For the soul',
+        earlier: 'Earlier',
+        moodAfter: 'Mood',
+        edit: 'Edit',
+        delete: 'Delete',
+        forExample: 'For example: ',
+        save: 'Save',
+        saveChanges: 'Save changes',
+        entryUpdated: 'Entry updated.',
+        sleepEntryUpdated: 'Sleep entry updated.',
+        activityUpdated: 'Activity updated.',
+        editThoughtTitle: 'Edit entry',
+        editGratitudeTitle: 'Edit gratitude',
+        editSleepTitle: 'Edit sleep entry',
+        editActivityPrompt: 'Edit activity text',
+        extra: 'Extra',
+        customStepPlaceholder: 'Your extra step...',
+        addCustomStep: 'Add your own step',
+        stepsFilled: 'Filled steps: <b>{total}</b>. Completed: <b>{done}</b>.',
+        excellentDay: 'Excellent day. You completed all your steps.',
+        addedToRhythm: 'I added a task to your {link}: <b>{text}</b>',
+        rhythmLink: 'Daily Rhythm',
+        months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        daysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        thoughtDiaryDot: 'Thought diary',
+        moodTrackerDot: 'Mood tracker',
+        sleepDot: 'Sleep',
+        activitiesDot: 'Activities',
+        testsDot: 'Tests',
+        thoughtSection: 'Thought Diary',
+        moodSection: 'Mood',
+        moodScore: 'Score: {score}/5',
+        sleepSection: 'Sleep Journal',
+        bedtime: 'Bedtime',
+        wakeup: 'Wake time',
+        sleepDurationQuality: 'Duration: <b>{hours} h</b>, Quality: <b>{quality}/10</b>',
+        activitiesSection: 'Activities',
+        testsSection: 'Test results',
+        points: 'points',
+        noRecordsDay: 'No records for this day',
+        analyzing: 'Analyzing your data…',
+        noInsights: 'No insights yet.',
+        insightsUnavailable: 'Could not fetch insights right now.',
+        avgMood14: 'Avg mood (14 d)',
+        avgSleep: 'Avg sleep time',
+        activitiesDone: 'Activities completed',
+        trackedDays: 'Tracked days',
+        moodLabel: 'Mood (1-10)',
+        moodTooltip: 'Mood: {value}/10',
+        notEnoughMoodData: 'Not enough data yet. Log at least 2 mood entries.',
+        sleepDurationHours: 'Sleep duration (hours)',
+        sleepQualityShort: 'Quality (1-10)',
+        noSleepData: 'No sleep data',
+        trendImproved: '↓ improved',
+        trendWorse: '↑ worsened',
+        trendNoChange: '→ no change',
+        trendDrop: '↓ lower',
+        phqTitle: 'PHQ-9 (depression)',
+        gadTitle: 'GAD-7 (anxiety)',
+        esteemTitle: 'Rosenberg (self-esteem)',
+        noTestsYet: 'Take PHQ-9, GAD-7, or the self-esteem scale to track changes over time.'
     },
     en: {
         phqQuestions: [
@@ -877,7 +862,7 @@ function initPHQ() {
     });
 }
 
-document.getElementById('phqModal').addEventListener('click', (e) => {
+document.getElementById('phqModal')?.addEventListener('click', (e) => {
     if (e.target === document.getElementById('phqModal')) return;
     initPHQ();
 });
@@ -885,11 +870,25 @@ document.querySelector('[onclick*="phqModal"]')?.addEventListener('click', initP
 
 function submitPHQ(e) {
     e.preventDefault();
+    const questions = assessmentText('phqQuestions');
+    let unanswered = [];
+    questions.forEach((_, i) => {
+        let val = document.querySelector(`input[name="phq${i}"]:checked`);
+        if (!val) unanswered.push(i + 1);
+    });
+    if (unanswered.length > 0) {
+        alert(`Please answer all questions before submitting. Unanswered: #${unanswered.join(', #')}`);
+        return;
+    }
+
     let total = 0;
-    assessmentText('phqQuestions').forEach((_, i) => {
+    questions.forEach((_, i) => {
         let val = document.querySelector(`input[name="phq${i}"]:checked`);
         if (val) total += parseInt(val.value);
     });
+
+    let q9Val = parseInt(document.querySelector(`input[name="phq8"]:checked`)?.value || 0);
+
     let level, color, advice;
     const levels = assessmentText('phqLevels');
     if (total <= 4) { [level, advice] = levels[0]; color = 'var(--success)'; }
@@ -898,17 +897,34 @@ function submitPHQ(e) {
     else if (total <= 19) { [level, advice] = levels[3]; color = 'var(--danger)'; }
     else { [level, advice] = levels[4]; color = 'var(--danger)'; }
 
+    let crisisHtml = '';
+    if (q9Val > 0) {
+        const crisisTitle = 'Important Safety Notice';
+        const crisisText = 'You indicated thoughts of self-harm or that you would be better off dead. You are not alone, and compassionate professional help is available 24/7:';
+        const hotline = 'Crisis line: 988 (US/CA) or local emergency services';
+        const sosBtnText = 'Open SOS Grounding Tools';
+        crisisHtml = `
+            <div style="background:rgba(239,68,68,0.12); border:1px solid var(--danger, #ef4444); border-radius:12px; padding:14px; margin-bottom:16px; text-align:left;">
+                <div style="font-weight:700; color:var(--danger, #ef4444); font-size:14px; margin-bottom:6px;">⚠️ ${crisisTitle}</div>
+                <p style="font-size:12px; color:var(--text); line-height:1.5; margin-bottom:8px;">${crisisText}</p>
+                <div style="font-size:13px; font-weight:600; color:var(--danger, #ef4444); margin-bottom:10px;">${hotline}</div>
+                <button type="button" onclick="openModal('sosModal')" style="padding:6px 14px; border-radius:8px; background:var(--danger, #ef4444); color:#fff; border:none; cursor:pointer; font-size:12px; font-weight:600;">${sosBtnText}</button>
+            </div>
+        `;
+    }
+
     let r = document.getElementById('phqResult');
     r.style.display = 'block';
     r.innerHTML = `
-                <div style="font-size: 36px; font-weight: 700; color: ${color}; margin-bottom: 4px;">${total} / 27</div>
-                <div style="font-size: 15px; font-weight: 600; color: ${color}; margin-bottom: 12px;">${level}</div>
-                <p style="font-size: 13px; color: var(--gray); line-height: 1.6;">${advice}</p>
-                <button onclick="sendQuick('${inlineJsString(cbtLang() === 'en' ? `My PHQ-9 score is ${total} (${level}). Help me understand what to do next.` : `Мой PHQ-9 показал ${total} баллов (${level}). Помоги мне понять, что с этим делать.`)}')" 
-                  style="margin-top:16px; padding:10px 16px; border-radius:8px; border: 1px solid var(--border); background:transparent; cursor:pointer; font-size:13px; color: var(--text);">
-                  ${assessmentText('phqDiscuss')}
-                </button>
-            `;
+        ${crisisHtml}
+        <div style="font-size: 36px; font-weight: 700; color: ${color}; margin-bottom: 4px;">${total} / 27</div>
+        <div style="font-size: 15px; font-weight: 600; color: ${color}; margin-bottom: 12px;">${level}</div>
+        <p style="font-size: 13px; color: var(--gray); line-height: 1.6;">${advice}</p>
+        <button onclick="sendQuick('${inlineJsString(`My PHQ-9 score is ${total} (${level}). Help me understand what to do next.`)}')" 
+          style="margin-top:16px; padding:10px 16px; border-radius:8px; border: 1px solid var(--border); background:transparent; cursor:pointer; font-size:13px; color: var(--text);">
+          ${assessmentText('phqDiscuss')}
+        </button>
+    `;
     r.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     // Save PHQ result for dashboard
     let phqHist = JSON.parse(localStorage.getItem('phqHistory') || '[]');
@@ -934,12 +950,23 @@ function initGAD() {
         c.appendChild(div);
     });
 }
-document.getElementById('gadModal').addEventListener('click', () => initGAD());
+document.getElementById('gadModal')?.addEventListener('click', () => initGAD());
 
 function submitGAD(e) {
     e.preventDefault();
+    const questions = assessmentText('gadQuestions');
+    let unanswered = [];
+    questions.forEach((_, i) => {
+        let v = document.querySelector(`input[name="gad${i}"]:checked`);
+        if (!v) unanswered.push(i + 1);
+    });
+    if (unanswered.length > 0) {
+        alert(`Please answer all questions before submitting. Unanswered: #${unanswered.join(', #')}`);
+        return;
+    }
+
     let total = 0;
-    assessmentText('gadQuestions').forEach((_, i) => {
+    questions.forEach((_, i) => {
         let v = document.querySelector(`input[name="gad${i}"]:checked`);
         if (v) total += parseInt(v.value);
     });
@@ -955,7 +982,7 @@ function submitGAD(e) {
                 <div style="font-size:36px;font-weight:700;color:${color};margin-bottom:4px;">${total} / 21</div>
                 <div style="font-size:15px;font-weight:600;color:${color};margin-bottom:12px;">${level}</div>
                 <p style="font-size:13px;color:var(--gray);line-height:1.6;">${advice}</p>
-                <button onclick="sendQuick('${inlineJsString(cbtLang() === 'en' ? `My GAD-7 score is ${total} (${level}). How can I cope with this?` : `Мой GAD-7 показал ${total} баллов (${level}). Как мне справиться с этим?`)}')"
+                <button onclick="sendQuick('${inlineJsString(`My GAD-7 score is ${total} (${level}). How can I cope with this?`)}')"
                   style="margin-top:16px;padding:10px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:13px;color:var(--text);">
                   ${assessmentText('gadDiscuss')}
                 </button>`;
@@ -986,13 +1013,24 @@ function initEsteem() {
         c.appendChild(div);
     });
 }
-document.getElementById('esteemModal').addEventListener('click', () => initEsteem());
+document.getElementById('esteemModal')?.addEventListener('click', () => initEsteem());
 document.querySelector('[onclick*="esteemModal"]')?.addEventListener('click', initEsteem);
 
 function submitEsteem(e) {
     e.preventDefault();
+    const questions = assessmentText('esteemQuestions');
+    let unanswered = [];
+    questions.forEach((_, i) => {
+        let v = document.querySelector(`input[name="esteem${i}"]:checked`);
+        if (!v) unanswered.push(i + 1);
+    });
+    if (unanswered.length > 0) {
+        alert(`Please answer all questions before submitting. Unanswered: #${unanswered.join(', #')}`);
+        return;
+    }
+
     let total = 0;
-    assessmentText('esteemQuestions').forEach((_, i) => {
+    questions.forEach((_, i) => {
         let v = document.querySelector(`input[name="esteem${i}"]:checked`);
         if (!v) return;
         let score = parseInt(v.value);
@@ -1013,7 +1051,7 @@ function submitEsteem(e) {
                 <div style="font-size:36px;font-weight:700;color:${color};margin-bottom:4px;">${total} / 30</div>
                 <div style="font-size:15px;font-weight:600;color:${color};margin-bottom:12px;">${level}</div>
                 <p style="font-size:13px;color:var(--gray);line-height:1.6;">${advice}</p>
-                <button onclick="sendQuick('${inlineJsString(cbtLang() === 'en' ? `My Rosenberg self-esteem score is ${total} (${level}). Help me understand how to improve this.` : `Моя самооценка по шкале Розенберга показала ${total} баллов (${level}). Помоги мне понять, как это улучшать.`)}')"
+                <button onclick="sendQuick('${inlineJsString(`My Rosenberg self-esteem score is ${total} (${level}). Help me understand how to improve this.`)}')"
                   style="margin-top:16px;padding:10px 16px;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;font-size:13px;color:var(--text);">
                   ${assessmentText('esteemDiscuss')}
                 </button>`;
@@ -1139,7 +1177,12 @@ function submitSleep(e) {
     persistSleepLog();
     closeModal('sleepModal');
     openSleepHistoryModal();
-    addMsg('assistant', wasEditing ? cbtText('sleepEntryUpdated') : cbtText('sleepEntrySaved'));
+    const sleepNotice = wasEditing ? cbtText('sleepEntryUpdated') : cbtText('sleepEntrySaved');
+    if (typeof addMsg === 'function') {
+        addMsg('assistant', sleepNotice);
+    } else if (window.addMsg) {
+        window.addMsg('assistant', sleepNotice);
+    }
 }
 
 function openSleepHistoryModal() {
@@ -1197,7 +1240,7 @@ function _renderSleepHistList(recs, selectedIdx) {
                     onclick="selectSleepHistItem(${i})">
                     <div style="font-size:11px;color:var(--gray);margin-bottom:6px;">${dateStr}</div>
                     <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:4px;">
-                        ${r.durHrs}${cbtLang() === 'en' ? 'h' : 'ч'} <span style="color:var(--gray);">·</span> <i data-lucide="star" style="width:12px;color:var(--accent);fill:var(--accent);"></i> ${r.qual}/10
+                        ${r.durHrs}h <span style="color:var(--gray);">·</span> <i data-lucide="star" style="width:12px;color:var(--accent);fill:var(--accent);"></i> ${r.qual}/10
                     </div>
                 </div>`;
         });
@@ -1210,9 +1253,12 @@ function _renderSleepHistDetail(r) {
     const d = r.isoDate ? new Date(r.isoDate) : new Date();
     const dateStr = d.toLocaleDateString(cbtLocale(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     const editAction = r.id
-        ? `<div style="display:flex;justify-content:flex-end;margin-bottom:12px;">
+        ? `<div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:12px;">
             <button onclick="editSleepEntry('${inlineJsString(r.id)}')" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:12px;">
                 <i data-lucide="pencil" style="width:13px;"></i>${cbtText('edit')}
+            </button>
+            <button onclick="deleteSleepEntry('${inlineJsString(r.id)}')" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--panel);color:var(--danger, #ef4444);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:12px;">
+                <i data-lucide="trash-2" style="width:13px;"></i>Delete
             </button>
         </div>`
         : '';
@@ -1227,7 +1273,7 @@ function _renderSleepHistDetail(r) {
         
         <div style="display:flex;gap:12px;margin-bottom:24px;">
             <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
-                <div style="font-size:24px;font-weight:700;color:var(--accent);">${r.durHrs}${cbtLang() === 'en' ? 'h' : 'ч'}</div>
+                <div style="font-size:24px;font-weight:700;color:var(--accent);">${r.durHrs}h</div>
                 <div style="font-size:11px;color:var(--gray);">${cbtText('duration')}</div>
             </div>
             <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;">
@@ -1256,6 +1302,15 @@ function editSleepEntry(entryId) {
     openSleepEntryModal(entryId);
 }
 
+function deleteSleepEntry(entryId) {
+    const confirmMsg = 'Delete this sleep log entry?';
+    if (!confirm(confirmMsg)) return;
+    sleepLog = sleepLog.filter(item => item.id !== entryId);
+    persistSleepLog();
+    window._sleepHistRecs = sleepLog;
+    openSleepHistoryModal();
+}
+
 function selectSleepHistItem(idx) {
     document.querySelectorAll('[data-sleep-hist-idx]').forEach(el => {
         el.classList.toggle('selected', parseInt(el.dataset.sleepHistIdx) === idx);
@@ -1270,6 +1325,7 @@ function selectSleepHistItem(idx) {
 window.openSleepHistoryModal = openSleepHistoryModal;
 window.selectSleepHistItem = selectSleepHistItem;
 window.editSleepEntry = editSleepEntry;
+window.deleteSleepEntry = deleteSleepEntry;
 
 
 /* ── Activity Planner ── */
@@ -1284,9 +1340,9 @@ function persistActivities() {
 }
 
 const RHYTHM_SLOTS = [
-    { id: 'morning', icon: 'sunrise', title: 'Старт дня', color: '#f59e0b', suggestions: ['Выпить стакан воды', 'Заправить кровать', 'Сделать глубокий вдох', 'Умыться'], title_en: 'Start of day', suggestions_en: ['Drink a glass of water', 'Make the bed', 'Take one deep breath', 'Wash your face'] },
-    { id: 'body', icon: 'activity', title: 'Для тела', color: '#10b981', suggestions: ['Потянуться 5 минут', 'Короткая прогулка', 'Потанцевать под музыку', 'Размять плечи'], title_en: 'For the body', suggestions_en: ['Stretch for 5 minutes', 'Take a short walk', 'Dance to one song', 'Roll your shoulders'] },
-    { id: 'joy', icon: 'heart', title: 'Для души', color: '#ef4444', suggestions: ['Посмотреть смешное видео', 'Почитать книгу', 'Выпить вкусный чай', 'Послушать музыку'], title_en: 'For the soul', suggestions_en: ['Watch something funny', 'Read a few pages', 'Drink a nice tea', 'Listen to music'] }
+    { id: 'morning', icon: 'sunrise', title: 'Start of day', color: '#f59e0b', suggestions: ['Drink a glass of water', 'Make the bed', 'Take one deep breath', 'Wash your face'], title_en: 'Start of day', suggestions_en: ['Drink a glass of water', 'Make the bed', 'Take one deep breath', 'Wash your face'] },
+    { id: 'body', icon: 'activity', title: 'For the body', color: '#10b981', suggestions: ['Stretch for 5 minutes', 'Take a short walk', 'Dance to one song', 'Roll your shoulders'], title_en: 'For the body', suggestions_en: ['Stretch for 5 minutes', 'Take a short walk', 'Dance to one song', 'Roll your shoulders'] },
+    { id: 'joy', icon: 'heart', title: 'For the soul', color: '#ef4444', suggestions: ['Watch something funny', 'Read a few pages', 'Drink a nice tea', 'Listen to music'], title_en: 'For the soul', suggestions_en: ['Watch something funny', 'Read a few pages', 'Drink a nice tea', 'Listen to music'] }
 ];
 
 function getDateGroup(isoDate) {
@@ -1561,11 +1617,9 @@ function addThoughtRecordFromAI(rec) {
     var div = document.createElement('div');
     div.className = 'msg assistant';
     var isEn = typeof currentChatLanguage === 'function' && currentChatLanguage() === 'en';
-    var label = isEn ? 'Thought Diary' : 'Дневник мыслей';
+    var label = 'Thought Diary';
     var title = rec.thought || rec.situation || '';
-    var text = isEn
-        ? '📝 Added entry to <a href="#" onclick="openThoughtHistoryModal(); return false;" style="color:var(--accent);text-decoration:underline;">' + label + '</a>: <b>"' + title + '"</b>'
-        : '📝 Запись добавлена в <a href="#" onclick="openThoughtHistoryModal(); return false;" style="color:var(--accent);text-decoration:underline;">' + label + '</a>: <b>«' + title + '»</b>';
+    var text = '📝 Added entry to <a href="#" onclick="openThoughtHistoryModal(); return false;" style="color:var(--accent);text-decoration:underline;">' + label + '</a>: <b>"' + title + '"</b>';
     div.innerHTML = '<div class="msg-avatar"><i data-lucide="book-open" style="width:18px;"></i></div><div class="msg-content"><p>' + text + '</p></div>';
     if (btnMessage) {
         btnMessage.appendChild(div);
@@ -1598,7 +1652,7 @@ function addSleepLogFromAI(log) {
         notes: log.notes || '',
         durHrs: log.durHrs ?? calculatedDuration,
         isoDate: isoDate,
-        date: new Date(isoDate + 'T12:00:00').toLocaleDateString(typeof cbtLocale === 'function' ? cbtLocale() : 'ru-RU')
+        date: new Date(isoDate + 'T12:00:00').toLocaleDateString(typeof cbtLocale === 'function' ? cbtLocale() : 'en-US')
     };
     sleepLog = sleepLog.filter(function (existing) {
         return !serverId || String(existing.serverId || '') !== serverId;
@@ -1612,10 +1666,8 @@ function addSleepLogFromAI(log) {
     var div = document.createElement('div');
     div.className = 'msg assistant';
     var isEn = typeof currentChatLanguage === 'function' && currentChatLanguage() === 'en';
-    var label = isEn ? 'Sleep Diary' : 'Дневник сна';
-    var text = isEn
-        ? '🌙 Saved entry to <a href="#" onclick="openSleepHistoryModal(); return false;" style="color:var(--accent);text-decoration:underline;">' + label + '</a> (' + log.bed + ' – ' + log.wake + ', quality: ' + (log.qual ?? 7) + '/10)'
-        : '🌙 Запись сохранена в <a href="#" onclick="openSleepHistoryModal(); return false;" style="color:var(--accent);text-decoration:underline;">' + label + '</a> (' + log.bed + ' – ' + log.wake + ', качество: ' + (log.qual ?? 7) + '/10)';
+    var label = 'Sleep Diary';
+    var text = '🌙 Saved entry to <a href="#" onclick="openSleepHistoryModal(); return false;" style="color:var(--accent);text-decoration:underline;">' + label + '</a> (' + log.bed + ' – ' + log.wake + ', quality: ' + (log.qual ?? 7) + '/10)';
     div.innerHTML = '<div class="msg-avatar"><i data-lucide="moon" style="width:18px;"></i></div><div class="msg-content"><p>' + text + '</p></div>';
     if (btnMessage) {
         btnMessage.appendChild(div);
@@ -1688,7 +1740,12 @@ function editActivity(i) {
     activities[i].text = next;
     persistActivities();
     renderActivities();
-    addMsg('assistant', cbtText('activityUpdated'));
+    const actNotice = cbtText('activityUpdated');
+    if (typeof addMsg === 'function') {
+        addMsg('assistant', actNotice);
+    } else if (window.addMsg) {
+        window.addMsg('assistant', actNotice);
+    }
 }
 window.editActivity = editActivity;
 window.renderActivities = renderActivities;
@@ -1795,7 +1852,7 @@ function renderCalendar() {
     }
     gridEl.innerHTML = cells;
 
-    document.getElementById('calDayTitle').innerText = window.t ? window.t('calendar_pick_day') : 'Выберите день';
+    document.getElementById('calDayTitle').innerText = window.t ? window.t('calendar_pick_day') : 'Pick a day';
     document.getElementById('calDayContent').innerHTML = '';
 }
 
@@ -1978,7 +2035,7 @@ function renderDashboard() {
                     <div class="dash-card-label">${cbtText('avgMood14')}</div>
                 </div>
                 <div class="dash-card" style="border-left: 3px solid #797298;">
-                    <div class="dash-card-val">${avgSleep}${avgSleep !== '—' ? (cbtLang() === 'en' ? 'h' : 'ч') : ''}</div>
+                    <div class="dash-card-val">${avgSleep}${avgSleep !== '—' ? 'h' : ''}</div>
                     <div class="dash-card-label">${cbtText('avgSleep')}</div>
                 </div>
                 <div class="dash-card" style="border-left: 3px solid #7b9cf5;">

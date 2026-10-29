@@ -2,14 +2,14 @@ import asyncio
 from typing import List, Dict
 import logging
 
-from src.llm.ollama_client import OllamaClient
+from src.llm.base import BaseLLMClient
 from src.utils.db import SQLiteSessionManager
 
 logger = logging.getLogger(__name__)
 
 
 class MemorySummarizer:
-    def __init__(self, db: SQLiteSessionManager, llm_client: OllamaClient):
+    def __init__(self, db: SQLiteSessionManager, llm_client: BaseLLMClient):
         self.db = db
         self.llm_client = llm_client
         self.trigger_threshold = 15  # Summarize every 15 new messages
@@ -20,30 +20,30 @@ class MemorySummarizer:
         self, old_summary: str, recent_messages: List[Dict]
     ) -> str:
         prompt = """
-        Ты - эксперт-психолог, который ведет подробные клинические записи о пациенте.
-        Твоя задача — обновить текущее резюме (саммари) пациента на основе новых сообщений из чата.
+        You are an expert clinical psychologist keeping concise, durable clinical notes about a client.
+        Your task is to update the current client summary based on new chat messages.
 
-        ПРАВИЛА:
-        1. Извлекай только ВАЖНЫЕ факты: имя пользователя, имена близких и питомцев, предпочтения, триггеры, проблемы, применяемые методики и договоренности.
-        2. Пиши кратко, емко, профессиональным языком.
-        3. Сохраняй контекст из старого саммари, дополняя его новыми деталями. Не удаляй имена и устойчивые личные факты без явного исправления пользователя. Убирай только то, что явно стало неактуальным.
-        4. Если старого саммари нет, просто создай новое.
-        5. Не используй общие фразы вроде "пациент пишет" или "я ответил".
+        RULES:
+        1. Extract only ESSENTIAL facts: user's name, loved ones and pet names, preferences, triggers, core concerns, coping techniques used, and agreements.
+        2. Write concisely, clearly, and in a professional tone.
+        3. Preserve context from the old summary, integrating new details. Do not delete names or established personal facts unless explicitly corrected by the user. Only remove what has clearly become obsolete.
+        4. If there is no previous summary, create a new one directly.
+        5. Do not use filler phrases like "the patient states" or "I responded".
 
-        --- СТАРОЕ РЕЗЮМЕ ---
+        --- PREVIOUS SUMMARY ---
         {old}
         
-        --- НОВЫЕ СООБЩЕНИЯ ---
+        --- NEW MESSAGES ---
         {new}
         
-        ОБНОВЛЕННОЕ РЕЗЮМЕ ПАЦИЕНТА:
+        UPDATED CLIENT SUMMARY:
         """
 
         formatted_msgs = "\n".join(
             [f"{m['role']}: {m['content']}" for m in recent_messages]
         )
         final_prompt = prompt.format(
-            old=old_summary or "Нет данных", new=formatted_msgs
+            old=old_summary or "None", new=formatted_msgs
         )
 
         try:

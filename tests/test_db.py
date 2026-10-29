@@ -87,7 +87,7 @@ def test_update_thought_record(db_manager):
         "updated thought",
         "relief",
         4,
-        "Не знаю",
+        "Unknown",
         "updated response",
     )
 
@@ -123,7 +123,7 @@ def test_sync_and_get_sleep_logs(db_manager):
 
 def test_sync_and_get_test_results(db_manager):
     session_id = "test_sess_6"
-    tests = [{"name": "PHQ-9", "score": 10, "level": "Умеренная", "date": "2026"}]
+    tests = [{"name": "PHQ-9", "score": 10, "level": "Moderate", "date": "2026"}]
     db_manager.sync_test_results(session_id, tests)
 
     fetched = db_manager.get_tests(session_id)
@@ -141,3 +141,25 @@ def test_sync_and_get_activities(db_manager):
     assert len(fetched) == 1
     assert fetched[0]["activity_text"] == "Walk the dog"
     assert fetched[0]["done"] == 1
+
+
+def test_delete_thought_record(db_manager):
+    session_id = "test_sess_delete_thought"
+    tid = db_manager.add_thought_record(
+        session_id, "situ", "thought", "emotion", 5, "distort", "rational"
+    )
+    assert len(db_manager.get_or_create(session_id)["thought_records"]) == 1
+
+    deleted = db_manager.delete_thought_record(tid, session_id)
+    assert deleted is True
+    assert len(db_manager.get_or_create(session_id)["thought_records"]) == 0
+
+
+def test_delete_sleep_log(db_manager):
+    session_id = "test_sess_delete_sleep"
+    sid = db_manager.add_sleep_log(session_id, "23:00", "07:00", 1, 8, "good")
+    assert len(db_manager.get_sleep_logs(session_id)) == 1
+
+    deleted = db_manager.delete_sleep_log(sid, session_id)
+    assert deleted is True
+    assert len(db_manager.get_sleep_logs(session_id)) == 0

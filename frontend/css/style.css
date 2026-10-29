@@ -714,6 +714,26 @@ body {
     font-size: 12px;
 }
 
+details.rag-sources summary {
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+}
+
+details.rag-sources summary::-webkit-details-marker {
+    display: none;
+}
+
+details.rag-sources[open] summary span:last-child {
+    display: inline-block;
+    transform: rotate(180deg);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
 .rag-sources-title {
     margin-bottom: 7px;
     font-weight: 700;

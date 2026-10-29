@@ -15,6 +15,7 @@ venv/
 .bootstrap/
 
 # Local tooling
+.agents/
 .zencoder/
 .zenflow/
 .playwright-cli/

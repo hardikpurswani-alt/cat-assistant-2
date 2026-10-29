@@ -22,7 +22,15 @@ from fastapi.responses import PlainTextResponse, Response  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from pydantic import BaseModel  # noqa: E402
 
-from src.llm.ollama_client import OllamaClient, ContentCleaner  # noqa: E402
+try:
+    from dotenv import load_dotenv
+    env_path = PROJECT_ROOT / ".env"
+    if env_path.exists():
+        load_dotenv(env_path, override=False)
+except ImportError:
+    pass
+
+from src.llm.gateway_client import GatewayClient, ContentCleaner  # noqa: E402
 from src.utils.db import SQLiteSessionManager  # noqa: E402
 from src.rag.knowledge_base import SemanticRAG  # noqa: E402
 from src.prompts.templates import PromptManager  # noqa: E402
@@ -35,26 +43,27 @@ from src.memory.profile import (  # noqa: E402
 from src import __version__  # noqa: E402
 
 # ─── Configuration ───────────────────────────────────────────────
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+GATEWAY_BASE_URL = os.getenv("OPENAI_BASE_URL", "http://103.73.181.90:4000/v1").rstrip("/")
+OLLAMA_BASE_URL = GATEWAY_BASE_URL  # backward compatibility alias
 
 # Load configs
 CONFIG_DIR = Path(__file__).parent.parent / "config"
 with open(CONFIG_DIR / "model_config.yaml", "r", encoding="utf-8") as f:
     model_config = yaml.safe_load(f)["models"]
 
-DEFAULT_OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", model_config["qwen"]["model_name"])
+DEFAULT_MODEL = os.getenv("LLM_MODEL", model_config["qwen"]["model_name"])
+DEFAULT_OLLAMA_MODEL = DEFAULT_MODEL
 EMBED_CONFIG = model_config.get("embeddings", {})
 EMBED_MODEL = os.getenv(
-    "RAG_EMBED_MODEL",
-    EMBED_CONFIG.get(
-        "model_name", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-    ),
+    "EMBEDDING_MODEL",
+    EMBED_CONFIG.get("model_name", "embed"),
 )
-DEFAULT_SCORE_THRESHOLD = float(EMBED_CONFIG.get("score_threshold", 0.45))
+DEFAULT_SCORE_THRESHOLD = float(EMBED_CONFIG.get("score_threshold", 0.48))
 SCORE_THRESHOLD = float(os.getenv("RAG_SCORE_THRESHOLD", str(DEFAULT_SCORE_THRESHOLD)))
 LLM_OPTIONS = {
     "temperature": model_config["qwen"]["temperature"],
     "top_p": model_config["qwen"]["top_p"],
+    "max_tokens": model_config["qwen"]["max_tokens"],
     "num_predict": model_config["qwen"]["max_tokens"],
 }
 
@@ -74,7 +83,7 @@ def load_selected_model() -> str:
             return model.strip()
     except (OSError, ValueError, TypeError):
         pass
-    return DEFAULT_OLLAMA_MODEL
+    return DEFAULT_MODEL
 
 
 def persist_selected_model(model: str) -> None:
@@ -87,13 +96,14 @@ def persist_selected_model(model: str) -> None:
     temporary_path.replace(MODEL_SETTINGS_PATH)
 
 
-OLLAMA_MODEL = load_selected_model()
+SELECTED_MODEL = load_selected_model()
+OLLAMA_MODEL = SELECTED_MODEL
 
 # ─── Component Initialization ─────────────────────────────────────
-llm_client = OllamaClient(OLLAMA_BASE_URL, OLLAMA_MODEL)
+llm_client = GatewayClient(base_url=GATEWAY_BASE_URL, model=SELECTED_MODEL)
 kb = SemanticRAG(
     KNOWLEDGE_BASE_DIR,
-    ollama_url=OLLAMA_BASE_URL,
+    gateway_url=GATEWAY_BASE_URL,
     embed_model=EMBED_MODEL,
     cache_path=DATA_DIR / "rag_index.npz",
     trace_path=DATA_DIR / "rag_traces.jsonl",
@@ -180,13 +190,13 @@ def get_user_data_tools():
             "type": "function",
             "function": {
                 "name": "get_user_sleep_history",
-                "description": "Получить последние записи дневника сна пользователя.",
+                "description": "Retrieve the user's recent sleep log entries.",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "days": {
                             "type": "integer",
-                            "description": "Количество дней для получения истории сна (по умолчанию 14).",
+                            "description": "Number of days of sleep history to retrieve (default 14).",
                         }
                     },
                 },
@@ -196,7 +206,7 @@ def get_user_data_tools():
             "type": "function",
             "function": {
                 "name": "get_user_test_results",
-                "description": "Получить последние результаты психологических тестов (PHQ-9 депрессия, GAD-7 тревога).",
+                "description": "Retrieve the user's latest psychological assessment scores (PHQ-9 depression, GAD-7 anxiety).",
                 "parameters": {"type": "object", "properties": {}},
             },
         },
@@ -204,7 +214,7 @@ def get_user_data_tools():
             "type": "function",
             "function": {
                 "name": "get_user_activities",
-                "description": "Получить данные о планировании активности пользователя (что сделано, а что нет).",
+                "description": "Retrieve the user's scheduled behavioral activation activities.",
                 "parameters": {"type": "object", "properties": {}},
             },
         },
@@ -212,13 +222,13 @@ def get_user_data_tools():
             "type": "function",
             "function": {
                 "name": "add_user_activity",
-                "description": "Добавить новую активность или задачу в планировщик пользователя (например, после рекомендации).",
+                "description": "Add a new activity or behavioral activation task to the user's schedule.",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "activity_text": {
                             "type": "string",
-                            "description": "Текст активности, которую нужно добавить. Максимум 50 символов.",
+                            "description": "Text of the activity to add. Maximum 50 characters.",
                         }
                     },
                     "required": ["activity_text"],
@@ -230,9 +240,9 @@ def get_user_data_tools():
             "function": {
                 "name": "start_sos_exercise",
                 "description": (
-                    "Сразу открыть на клиенте подходящую полноэкранную SOS-практику "
-                    "с визуальной сценой, фоновым звуком и таймером. Используй только "
-                    "когда пользователь согласен начать практику или прямо просит её запустить."
+                    "Immediately open an interactive fullscreen SOS grounding exercise "
+                    "with visual scene animation, ambient audio, and timer. Use only "
+                    "when the user agrees to or asks for a practice."
                 ),
                 "parameters": {
                     "type": "object",
@@ -240,18 +250,18 @@ def get_user_data_tools():
                         "technique": {
                             "type": "string",
                             "enum": ["breathing", "grounding", "pmr", "stop"],
-                            "description": "Практика: дыхание, заземление 5-4-3-2-1, мышечная релаксация или СТОП.",
+                            "description": "Exercise type: breathing, 5-4-3-2-1 grounding, progressive muscle relaxation, or STOP.",
                         },
                         "scene": {
                             "type": "string",
                             "enum": ["air", "field", "sea", "night_forest"],
-                            "description": "Атмосфера портала: воздух, поле, море или ночной лес.",
+                            "description": "Portal visual theme: air, field, sea, or night_forest.",
                         },
                         "duration": {
                             "type": "integer",
                             "minimum": 1,
                             "maximum": 10,
-                            "description": "Продолжительность состояния в минутах, от 1 до 10.",
+                            "description": "Duration in minutes, from 1 to 10.",
                         },
                     },
                     "required": ["technique", "scene", "duration"],
@@ -262,14 +272,14 @@ def get_user_data_tools():
             "type": "function",
             "function": {
                 "name": "recommend_test",
-                "description": "Порекомендовать и открыть диалог прохождения психологического теста (PHQ-9 при признаках депрессии или GAD-7 при симптомах тревоги).",
+                "description": "Recommend and open a clinical screening questionnaire (PHQ-9 for depressive symptoms, GAD-7 for anxiety symptoms).",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "test_type": {
                             "type": "string",
                             "enum": ["PHQ-9", "GAD-7"],
-                            "description": "Тип теста для прохождения.",
+                            "description": "Type of questionnaire to open.",
                         }
                     },
                     "required": ["test_type"],
@@ -281,38 +291,38 @@ def get_user_data_tools():
             "function": {
                 "name": "add_thought_record",
                 "description": (
-                    "Добавить новую запись в Дневник мыслей (Thought Diary) пользователя, "
-                    "когда разобрали автоматическую мысль, эмоцию, искажение и сформулировали "
-                    "рациональный ответ, либо по прямой просьбе пользователя."
+                    "Add a new record to the user's Thought Diary after exploring "
+                    "an automatic thought, emotion, cognitive distortion, and rational response, "
+                    "or upon direct user request."
                 ),
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "situation": {
                             "type": "string",
-                            "description": "Ситуация или триггер, вызвавший переживание (например, 'Разговор с коллегами').",
+                            "description": "Situation or trigger (e.g., 'Work presentation').",
                         },
                         "thought": {
                             "type": "string",
-                            "description": "Автоматическая негативная мысль (например, 'Я точно всё испорчу').",
+                            "description": "Automatic negative thought (e.g., 'I will fail completely').",
                         },
                         "emotion": {
                             "type": "string",
-                            "description": "Основная эмоция (например, 'Тревога', 'Грусть', 'Стыд').",
+                            "description": "Primary emotion (e.g., 'Anxiety', 'Sadness', 'Guilt').",
                         },
                         "intensity": {
                             "type": "integer",
                             "minimum": 1,
                             "maximum": 10,
-                            "description": "Интенсивность эмоции от 1 до 10 (по умолчанию 7).",
+                            "description": "Emotion intensity from 1 to 10 (default 7).",
                         },
                         "distortion": {
                             "type": "string",
-                            "description": "Когнитивное искажение (например, 'Катастрофизация', 'Черно-белое мышление', 'Чтение мыслей').",
+                            "description": "Cognitive distortion (e.g., 'Catastrophizing', 'All-or-Nothing', 'Mind Reading').",
                         },
                         "rational_response": {
                             "type": "string",
-                            "description": "Рациональный ответ / адаптивная поддерживающая мысль.",
+                            "description": "Balanced, adaptive rational response.",
                         },
                     },
                     "required": [
@@ -329,40 +339,39 @@ def get_user_data_tools():
             "function": {
                 "name": "add_sleep_diary_record",
                 "description": (
-                    "Отдельно от Дневника мыслей добавить запись именно в Дневник сна "
-                    "пользователя: время отхода ко сну, подъем, качество, пробуждения и "
-                    "заметки. Используй этот инструмент, а не add_thought_record, когда "
-                    "пользователь просит записать сон или сообщает данные для дневника сна."
+                    "Add an entry directly to the user's Sleep Diary: bedtime, wake time, "
+                    "sleep quality, night awakenings, and notes. "
+                    "Use this tool instead of add_thought_record when recording sleep."
                 ),
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "bed": {
                             "type": "string",
-                            "description": "Время отхода ко сну в формате ЧЧ:ММ (например, '23:30').",
+                            "description": "Bedtime in HH:MM format (e.g., '23:30').",
                         },
                         "wake": {
                             "type": "string",
-                            "description": "Время подъема в формате ЧЧ:ММ (например, '07:30').",
+                            "description": "Wake time in HH:MM format (e.g., '07:30').",
                         },
                         "quality": {
                             "type": "integer",
                             "minimum": 1,
                             "maximum": 10,
-                            "description": "Субъективное качество сна от 1 до 10 (по умолчанию 7).",
+                            "description": "Subjective sleep quality from 1 to 10 (default 7).",
                         },
                         "awakenings": {
                             "type": "integer",
                             "minimum": 0,
-                            "description": "Количество ночных пробуждений (по умолчанию 0).",
+                            "description": "Number of nighttime awakenings (default 0).",
                         },
                         "notes": {
                             "type": "string",
-                            "description": "Краткие заметки о сне или утреннем самочувствии.",
+                            "description": "Brief notes on sleep or morning feeling.",
                         },
                         "date": {
                             "type": "string",
-                            "description": "Дата сна в формате ГГГГ-ММ-ДД (опционально, по умолчанию текущий день).",
+                            "description": "Sleep date in YYYY-MM-DD format (optional, default today).",
                         },
                     },
                     "required": ["bed", "wake"],
@@ -373,23 +382,13 @@ def get_user_data_tools():
 
 
 def build_language_instruction(language: str) -> str:
-    if language == "en":
-        return (
-            "IMPORTANT: Reply in English only. "
-            "Even if the user writes in Russian, keep your response in English "
-            "because the interface language is English."
-        )
     return (
-        "ВАЖНО: Отвечай только на русском языке. "
-        "Даже если пользователь вставляет английские слова, основной ответ должен быть на русском."
+        "IMPORTANT: Reply in English only. "
+        "Keep your response empathetic, natural, and helpful in English."
     )
 
 
 TTS_VOICES = {
-    "ru": {
-        "ru-RU-SvetlanaNeural",
-        "ru-RU-DmitryNeural",
-    },
     "en": {
         "en-US-JennyNeural",
         "en-US-GuyNeural",
@@ -398,12 +397,9 @@ TTS_VOICES = {
 
 
 def get_tts_voice(language: str, voice: str | None = None) -> str:
-    lang = "en" if language == "en" else "ru"
-    if voice and voice in TTS_VOICES[lang]:
+    if voice and voice in TTS_VOICES.get("en", set()):
         return voice
-    if lang == "en":
-        return "en-US-JennyNeural"
-    return "ru-RU-SvetlanaNeural"
+    return "en-US-JennyNeural"
 
 
 def serialize_rag_context(results: list[dict], trace: dict) -> list[dict]:
@@ -424,44 +420,35 @@ def serialize_rag_context(results: list[dict], trace: dict) -> list[dict]:
 def requires_grounded_clinical_answer(message: str) -> bool:
     normalized = message.casefold()
     clinical_terms = (
-        "тревог",
-        "депресс",
-        "бессон",
-        "сон",
-        "паник",
-        "эмоц",
-        "псих",
-        "самоповреж",
-        "суицид",
-        "терап",
-        "кпт",
-        "cbt",
         "anxiety",
-        "depression",
+        "depress",
         "insomnia",
         "sleep",
         "panic",
-        "mental health",
+        "emotion",
+        "psych",
         "self-harm",
         "suicid",
+        "therapy",
+        "cbt",
+        "trauma",
+        "stress",
+        "worry",
+        "phq",
+        "gad",
     )
     advice_terms = (
-        "что делать",
-        "как ",
-        "техника",
-        "упражнен",
-        "протокол",
-        "совет",
-        "леч",
-        "поможет",
+        "what to do",
         "should i",
         "what should",
         "how ",
+        "technique",
         "exercise",
         "protocol",
         "treat",
         "therapy",
         "help with",
+        "advice",
     )
     return any(term in normalized for term in clinical_terms) and any(
         term in normalized for term in advice_terms
@@ -469,16 +456,10 @@ def requires_grounded_clinical_answer(message: str) -> bool:
 
 
 def grounded_abstention(language: str) -> str:
-    if language == "en":
-        return (
-            "I couldn't find sufficiently relevant support for a specific answer in the local "
-            "CBT knowledge base, so I won't invent a technique or clinical recommendation. "
-            "You can rephrase the question, or discuss it with a qualified professional."
-        )
     return (
-        "В локальной базе КПТ не нашлось достаточно релевантной опоры для конкретного ответа, "
-        "поэтому я не буду придумывать технику или клиническую рекомендацию. Можно уточнить "
-        "вопрос или обсудить его с квалифицированным специалистом."
+        "I couldn't find sufficiently relevant support for a specific answer in the local "
+        "CBT knowledge base, so I won't invent a technique or clinical recommendation. "
+        "You can rephrase the question, or discuss it with a qualified professional."
     )
 
 
@@ -488,11 +469,33 @@ def ensure_rag_citations(content: str, context_used: list[dict], language: str) 
         f"[KB:{item['chunk_id']}]" in content for item in context_used
     ):
         return content
-    label = "Retrieved evidence" if language == "en" else "Найденная опора"
     citations = ", ".join(
         f"[KB:{item['chunk_id']}] ({item['source']})" for item in context_used
     )
-    return f"{content.rstrip()}\n\n{label}: {citations}"
+    return f"{content.rstrip()}\n\nRetrieved evidence: {citations}"
+
+
+def is_conversational_greeting_or_smalltalk(message: str) -> bool:
+    """Identify simple conversational greetings and pleasantries that do not warrant clinical RAG search."""
+    import re
+    cleaned = re.sub(r"[^\w\s]", "", message.strip().lower())
+    if not cleaned:
+        return True
+    greetings = {
+        "hello", "hi", "hey", "hi there", "hello there", "good morning", "good afternoon",
+        "good evening", "good day", "how are you", "how are you doing", "how do you do",
+        "who are you", "what can you do", "what is your name", "what are your capabilities",
+        "nice to meet you", "thanks", "thank you", "bye", "goodbye"
+    }
+    if cleaned in greetings:
+        return True
+    words = cleaned.split()
+    if len(words) <= 4 and all(w in {
+        "hello", "hi", "hey", "there", "good", "morning", "afternoon", "evening", "day",
+        "how", "are", "you", "doing", "who", "what", "can", "do", "thanks", "thank"
+    } for w in words):
+        return True
+    return False
 
 
 async def prepare_chat_messages(
@@ -505,10 +508,21 @@ async def prepare_chat_messages(
         sessions.save_profile_memory(
             session_id, merge_profiles(current_profile, profile_updates)
         )
-    retrieval = await kb.search_with_trace(message, top_k=3)
-    context = retrieval["results"]
-    trace = retrieval["trace"]
-    trace["must_abstain"] = not context and requires_grounded_clinical_answer(message)
+    if is_conversational_greeting_or_smalltalk(message):
+        context = []
+        trace = {
+            "status": "no_relevant_context",
+            "trace_id": f"trace_smalltalk_{session_id[-6:]}",
+            "index_version": kb.index_version,
+            "latency_ms": 0.0,
+            "selected": [],
+            "must_abstain": False,
+        }
+    else:
+        retrieval = await kb.search_with_trace(message, top_k=3)
+        context = retrieval["results"]
+        trace = retrieval["trace"]
+        trace["must_abstain"] = not context and requires_grounded_clinical_answer(message)
     session = sessions.get_or_create(session_id)
     system_prompt = prompt_manager.build_system_prompt(
         context,
@@ -532,6 +546,11 @@ def execute_app_tool(session_id: str, tool_call: dict) -> tuple[str, dict | None
     function = tool_call.get("function", {})
     name = function.get("name")
     args = function.get("arguments", {})
+    if isinstance(args, str):
+        try:
+            args = json.loads(args)
+        except json.JSONDecodeError:
+            args = {}
     if name == "get_user_sleep_history":
         return (
             json.dumps(
@@ -589,15 +608,15 @@ def execute_app_tool(session_id: str, tool_call: dict) -> tuple[str, dict | None
             "test_type": test_type,
         }
     if name == "add_thought_record":
-        situation = args.get("situation", "Диалог с ассистентом")
+        situation = args.get("situation", "Conversation with assistant")
         thought = args.get("thought", "")
-        emotion = args.get("emotion", "Тревога")
+        emotion = args.get("emotion", "Anxiety")
         try:
             intensity = int(args.get("intensity", 7))
         except (TypeError, ValueError):
             intensity = 7
         intensity = max(1, min(intensity, 10))
-        distortion = args.get("distortion", "Автоматическая мысль")
+        distortion = args.get("distortion", "Automatic thought")
         rational_response = args.get("rational_response", "")
         record_id = sessions.add_thought_record(
             session_id=session_id,
@@ -711,6 +730,7 @@ async def chat(req: ChatRequest):
                     messages.append(
                         {
                             "role": "tool",
+                            "tool_call_id": tc.get("id") or "call_default",
                             "content": tool_content,
                             "name": tc.get("function", {}).get("name"),
                         }
@@ -797,6 +817,7 @@ async def chat_stream(req: ChatRequest):
                                 messages.append(
                                     {
                                         "role": "tool",
+                                        "tool_call_id": tc.get("id") or "call_default",
                                         "content": tool_content,
                                         "name": fn_name,
                                     }
@@ -891,6 +912,7 @@ async def add_thought_record(req: ThoughtRecordRequest):
     }
 
 
+
 @app.get("/api/thoughts/{session_id}")
 async def get_thought_records(session_id: str):
     session = sessions.get_or_create(session_id)
@@ -918,9 +940,44 @@ async def update_thought_record(thought_id: int, req: ThoughtRecordUpdateRequest
     }
 
 
+@app.delete("/api/thoughts/{thought_id}")
+async def delete_thought_record(thought_id: int, session_id: str = "default"):
+    deleted = sessions.delete_thought_record(thought_id, session_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Thought record not found")
+    return {
+        "status": "ok",
+        "thought_records": sessions.get_or_create(session_id)["thought_records"],
+    }
+
+
+@app.delete("/api/sleep/{sleep_id}")
+async def delete_sleep_entry(sleep_id: int, session_id: str = "default"):
+    deleted = sessions.delete_sleep_log(sleep_id, session_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Sleep entry not found")
+    return {
+        "status": "ok",
+        "sleep_logs": sessions.get_sleep_logs(session_id),
+    }
+
+
 @app.get("/api/session/{session_id}")
 async def get_session(session_id: str):
     return sessions.get_or_create(session_id)
+
+
+@app.post("/api/session/{session_id}/clear")
+async def clear_session(session_id: str):
+    sessions.clear_messages(session_id)
+    sessions.clear_memory(session_id)
+    return {"status": "ok", "message": "Chat history and memory cleared"}
+
+
+@app.delete("/api/session/{session_id}/messages")
+async def delete_session_messages(session_id: str):
+    sessions.clear_messages(session_id)
+    return {"status": "ok", "message": "Messages deleted"}
 
 
 @app.post("/api/session/{session_id}/save")
@@ -951,6 +1008,11 @@ async def clear_memory(session_id: str):
 async def sync_sleep(req: SyncRequest):
     sessions.sync_sleep_logs(req.session_id, req.items)
     return {"status": "ok"}
+
+
+@app.get("/api/sync/sleep/{session_id}")
+async def get_sleep_logs_endpoint(session_id: str):
+    return {"sleep_logs": sessions.get_sleep_logs(session_id)}
 
 
 @app.post("/api/sync/tests")
@@ -994,16 +1056,10 @@ def _build_insights_prompt(req: InsightsRequest) -> str:
         scores = [e.get("score") for e in recent if e.get("score") is not None]
         if scores:
             avg = round(sum(scores) / len(scores), 1)
-            if en:
-                sections.append(
-                    f"MOOD (from mood journal — {len(scores)} entries over recent days):\n"
-                    f"  Average score: {avg}/10. Scores: {scores[:10]}"
-                )
-            else:
-                sections.append(
-                    f"НАСТРОЕНИЕ (из записей дневника настроения — {len(scores)} оценок за последние дни):\n"
-                    f"  Средняя оценка: {avg}/10. Оценки: {scores[:10]}"
-                )
+            sections.append(
+                f"MOOD (from mood journal — {len(scores)} entries over recent days):\n"
+                f"  Average score: {avg}/10. Scores: {scores[:10]}"
+            )
 
     if req.sleep_log:
         recent_sleep = sorted(
@@ -1014,33 +1070,19 @@ def _build_insights_prompt(req: InsightsRequest) -> str:
             hours = s.get("hours") or s.get("duration")
             quality = s.get("quality")
             if hours or quality:
-                if en:
-                    sleep_info.append(f"hours slept: {hours}, quality: {quality}")
-                else:
-                    sleep_info.append(f"часов сна: {hours}, качество: {quality}")
+                sleep_info.append(f"hours slept: {hours}, quality: {quality}")
         if sleep_info:
-            if en:
-                sections.append(
-                    f"SLEEP (sleep journal — {len(sleep_info)} days):\n  "
-                    + "\n  ".join(sleep_info)
-                )
-            else:
-                sections.append(
-                    f"СОН (записи дневника сна — {len(sleep_info)} дней):\n  "
-                    + "\n  ".join(sleep_info)
-                )
+            sections.append(
+                f"SLEEP (sleep journal — {len(sleep_info)} days):\n  "
+                + "\n  ".join(sleep_info)
+            )
 
     if req.activities:
         done = [a for a in req.activities if a.get("done")]
         pending = [a for a in req.activities if not a.get("done")]
-        if en:
-            sections.append(
-                f"ACTIVITIES (planner): completed {len(done)}, pending/planned {len(pending)}"
-            )
-        else:
-            sections.append(
-                f"АКТИВНОСТИ (планировщик): выполнено {len(done)}, не выполнено/в плане {len(pending)}"
-            )
+        sections.append(
+            f"ACTIVITIES (planner): completed {len(done)}, pending/planned {len(pending)}"
+        )
 
     if req.phq_history:
         recent_phq = sorted(
@@ -1049,10 +1091,7 @@ def _build_insights_prompt(req: InsightsRequest) -> str:
         phq_info = [
             f"PHQ-9: {e.get('score')} ({e.get('date', '')[:10]})" for e in recent_phq
         ]
-        if en:
-            sections.append("PHQ-9 TESTS (depression):\n  " + "\n  ".join(phq_info))
-        else:
-            sections.append("ТЕСТЫ PHQ-9 (депрессия):\n  " + "\n  ".join(phq_info))
+        sections.append("PHQ-9 TESTS (depression):\n  " + "\n  ".join(phq_info))
 
     if req.gad_history:
         recent_gad = sorted(
@@ -1061,10 +1100,7 @@ def _build_insights_prompt(req: InsightsRequest) -> str:
         gad_info = [
             f"GAD-7: {e.get('score')} ({e.get('date', '')[:10]})" for e in recent_gad
         ]
-        if en:
-            sections.append("GAD-7 TESTS (anxiety):\n  " + "\n  ".join(gad_info))
-        else:
-            sections.append("ТЕСТЫ GAD-7 (тревога):\n  " + "\n  ".join(gad_info))
+        sections.append("GAD-7 TESTS (anxiety):\n  " + "\n  ".join(gad_info))
 
     if req.thought_records:
         emotions = [
@@ -1073,26 +1109,18 @@ def _build_insights_prompt(req: InsightsRequest) -> str:
         distortions = [
             t.get("distortion", "") for t in req.thought_records if t.get("distortion")
         ]
-        if en:
-            sections.append(
-                f"CBT THOUGHT JOURNAL ({len(req.thought_records)} entries):\n"
-                f"  Emotions mentioned: {', '.join(emotions[:8])}\n"
-                f"  Cognitive distortions: {', '.join(set(distortions[:6]))}"
-            )
-        else:
-            sections.append(
-                f"КПТ-ДНЕВНИК МЫСЛЕЙ ({len(req.thought_records)} записей):\n"
-                f"  Упомянутые эмоции: {', '.join(emotions[:8])}\n"
-                f"  Когнитивные искажения: {', '.join(set(distortions[:6]))}"
-            )
+        sections.append(
+            f"CBT THOUGHT JOURNAL ({len(req.thought_records)} entries):\n"
+            f"  Emotions mentioned: {', '.join(emotions[:8])}\n"
+            f"  Cognitive distortions: {', '.join(set(distortions[:6]))}"
+        )
 
     if not sections:
         return None  # No data at all
 
     data_block = "\n\n".join(sections)
 
-    if en:
-        return f"""You are a caring assistant helping a person better understand themselves.
+    return f"""You are a caring assistant helping a person better understand themselves.
 Below is data from their personal journal over recent days. This is only what they have filled in themselves.
 
 CRITICAL RULE: The absence of data in any section means only that the person did not fill in that section — it does NOT mean they slept poorly, were inactive, or were in a bad mood. Never draw conclusions from missing data.
@@ -1110,47 +1138,21 @@ Rules:
 - Reply only in English, no headings, no bullet lists — just paragraphs
 
 If there is too little data for meaningful observations, write one gentle sentence about that."""
-    else:
-        return f"""Ты — заботливый ассистент, который помогает человеку лучше понять себя.
-Ниже — данные из его личного дневника за последнее время. Это только то, что он сам заполнял.
-
-ВАЖНЕЙШЕЕ ПРАВИЛО: Отсутствие данных в каком-либо разделе означает только то, что человек не заполнял этот раздел — это НЕ значит, что он плохо спал, не двигался или был в плохом настроении. Никогда не делай выводов об отсутствующих данных.
-
-Данные:
-{data_block}
-
-Задача: Напиши 2–3 мягких наблюдения на русском языке, основанных ТОЛЬКО на том, что есть в данных выше.
-Правила:
-- Используй слова: «кажется», «возможно», «похоже», «интересно что», «заметно», «судя по записям»
-- НЕ ставь диагнозов, НЕ делай однозначных выводов
-- Можно задать мягкий вопрос в конце наблюдения
-- Каждое наблюдение — отдельный абзац, 1–2 предложения
-- Тон: тёплый, не как врач, а как внимательный друг
-- Ответ только на русском, без заголовков, без списков с тире — просто абзацы
-
-Если данных слишком мало для осмысленных наблюдений — напиши одну мягкую фразу об этом."""
 
 
 @app.post("/api/insights")
 async def generate_insights(req: InsightsRequest):
     """Generate soft AI observations based only on available user data."""
-    en = req.lang == "en"
     prompt = _build_insights_prompt(req)
 
     if prompt is None:
-        if en:
-            no_data_msg = (
-                "Not enough data for observations yet — "
-                "the more you fill in your journal, the better I can notice patterns."
-            )
-        else:
-            no_data_msg = (
-                "Пока данных для наблюдений немного — чем больше ты заполняешь дневник, "
-                "тем точнее я смогу замечать паттерны."
-            )
+        no_data_msg = (
+            "Not enough data for observations yet — "
+            "the more you fill in your journal, the better I can notice patterns."
+        )
         return {"insights": no_data_msg, "has_data": False}
 
-    user_prompt = "Write the observations." if en else "Напиши наблюдения."
+    user_prompt = "Write the observations."
     messages = [
         {"role": "system", "content": prompt},
         {"role": "user", "content": user_prompt},
@@ -1167,18 +1169,10 @@ async def generate_insights(req: InsightsRequest):
         )
         text = resp.get("content", "").strip()
         if not text:
-            text = (
-                "Nothing definitive to notice yet — keep filling in your journal."
-                if en
-                else "Пока сложно заметить что-то определённое — продолжай вести записи."
-            )
+            text = "Nothing definitive to notice yet — keep filling in your journal."
         return {"insights": text, "has_data": True}
     except Exception as e:
-        err_msg = (
-            "Could not fetch insights right now."
-            if en
-            else "Не удалось получить наблюдения прямо сейчас."
-        )
+        err_msg = "Could not fetch insights right now."
         return {"insights": err_msg, "has_data": False, "error": str(e)}
 
 
@@ -1219,32 +1213,51 @@ async def knowledge_status():
     return kb.get_status()
 
 
-async def fetch_ollama_models() -> list[dict]:
-    """Return the models currently installed on the configured Ollama server."""
+async def fetch_gateway_models() -> list[dict]:
+    """Return the models currently available on the configured AI Gateway or Ollama."""
     import httpx
 
+    headers = {}
+    api_key = os.getenv("OPENAI_API_KEY") or ""
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            response = await client.get(f"{OLLAMA_BASE_URL}/api/tags")
+        async with httpx.AsyncClient(timeout=8.0) as client:
+            response = await client.get(f"{GATEWAY_BASE_URL}/models", headers=headers)
             response.raise_for_status()
     except httpx.HTTPError as exc:
-        raise HTTPException(503, f"Ollama is unavailable: {exc}") from exc
+        raise HTTPException(503, f"AI Gateway is unavailable: {exc}") from exc
 
-    models = response.json().get("models", [])
-    return sorted(
-        [
-            model
-            for model in models
-            if isinstance(model, dict) and isinstance(model.get("name"), str)
-        ],
-        key=lambda model: model["name"].lower(),
-    )
+    data = response.json()
+    raw_models = data.get("data") if isinstance(data, dict) and "data" in data else data.get("models", [])
+    if not isinstance(raw_models, list):
+        raw_models = []
+    formatted = []
+    for m in raw_models:
+        if isinstance(m, dict):
+            model_id = m.get("id") or m.get("name") or m.get("model")
+            if isinstance(model_id, str):
+                formatted.append({
+                    "name": model_id,
+                    "id": model_id,
+                    "created": m.get("created"),
+                    "owned_by": m.get("owned_by", "gateway"),
+                    "capabilities": m.get("capabilities", []),
+                })
+    return sorted(formatted, key=lambda model: model["name"].lower())
+
+
+fetch_ollama_models = fetch_gateway_models  # backward compatibility alias
 
 
 def is_chat_model(model: dict) -> bool:
-    """Treat legacy Ollama entries as chat-capable unless capabilities say otherwise."""
-    capabilities = model.get("capabilities")
-    return not isinstance(capabilities, list) or "completion" in capabilities
+    """Filter out known non-chat models like embedding models."""
+    caps = model.get("capabilities") or []
+    if "embedding" in caps and "completion" not in caps and "chat" not in caps:
+        return False
+    name = (model.get("name") or model.get("id") or "").lower()
+    return name not in {"embed", "embed:latest", "text-embedding-ada-002", "text-embedding-3-small"}
 
 
 @app.get("/api/models")
@@ -1253,7 +1266,8 @@ async def get_ollama_models():
     return {
         "models": models,
         "selected_model": llm_client.model,
-        "ollama_url": OLLAMA_BASE_URL,
+        "gateway_url": GATEWAY_BASE_URL,
+        "ollama_url": GATEWAY_BASE_URL,
     }
 
 
@@ -1269,10 +1283,10 @@ async def select_ollama_model(request: ModelSelectionRequest):
     )
     if selected_model is None:
         raise HTTPException(
-            400, "The selected model is not installed on this Ollama server"
+            400, "The selected model is not installed on this AI Gateway"
         )
     if not is_chat_model(selected_model):
-        raise HTTPException(400, "The selected Ollama model does not support chat")
+        raise HTTPException(400, "The selected model does not support chat")
 
     try:
         persist_selected_model(model_name)
@@ -1287,19 +1301,26 @@ async def select_ollama_model(request: ModelSelectionRequest):
 async def health():
     import httpx
 
-    ollama_ok = False
+    gateway_ok = False
+    headers = {}
+    api_key = os.getenv("OPENAI_API_KEY") or ""
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+
     try:
         async with httpx.AsyncClient(timeout=5.0) as client:
-            r = await client.get(f"{OLLAMA_BASE_URL}/api/tags")
-            ollama_ok = r.status_code == 200
+            r = await client.get(f"{GATEWAY_BASE_URL}/models", headers=headers)
+            gateway_ok = r.status_code == 200
     except Exception:
         pass
 
     return {
-        "status": "ok" if ollama_ok and kb.state == "ready" else "degraded",
+        "status": "ok" if gateway_ok and kb.state == "ready" else "degraded",
         "version": __version__,
-        "ollama_connected": ollama_ok,
-        "ollama_url": OLLAMA_BASE_URL,
+        "gateway_connected": gateway_ok,
+        "ollama_connected": gateway_ok,
+        "gateway_url": GATEWAY_BASE_URL,
+        "ollama_url": GATEWAY_BASE_URL,
         "model": llm_client.model,
         "knowledge_chunks": len(kb.chunks),
         "rag": kb.get_status(),
@@ -1311,54 +1332,54 @@ async def get_session_report(session_id: str):
     import datetime
 
     session = sessions.get_or_create(session_id)
-    summary = session.get("summary", "Нет данных о сессии.")
+    summary = session.get("summary", "No session summary available.")
     mood_log = session.get("mood_log", [])
     thought_records = session.get("thought_records", [])
 
     report_lines = []
-    report_lines.append("КЛИНИЧЕСКАЯ ВЫПИСКА ПАЦИЕНТА")
+    report_lines.append("CLINICAL DISCHARGE SUMMARY")
     report_lines.append("=" * 40)
     report_lines.append(
-        f"Дата выписки: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
+        f"Discharge Date: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}"
     )
-    report_lines.append(f"Идентификатор сессии: {session_id}")
+    report_lines.append(f"Session ID: {session_id}")
     report_lines.append("")
-    report_lines.append("--- РЕЗЮМЕ ТЕРАПИИ (ДОЛГОСРОЧНАЯ ПАМЯТЬ) ---")
-    report_lines.append(summary if summary else "Резюме еще не сформировано.")
+    report_lines.append("--- THERAPY SUMMARY (LONG-TERM MEMORY) ---")
+    report_lines.append(summary if summary else "Summary not generated yet.")
     report_lines.append("")
 
-    report_lines.append("--- ПОСЛЕДНИЕ ОЦЕНКИ НАСТРОЕНИЯ ---")
+    report_lines.append("--- RECENT MOOD RATINGS ---")
     if not mood_log:
-        report_lines.append("Нет данных.")
+        report_lines.append("No data.")
     for m in mood_log[-10:]:
         report_lines.append(
             f"{m.get('timestamp')[:19]}: {m.get('score')}/10 - {m.get('note', '')}"
         )
     report_lines.append("")
 
-    report_lines.append("--- ДНЕВНИК МЫСЛЕЙ (ПОСЛЕДНИЕ ЗАПИСИ) ---")
+    report_lines.append("--- THOUGHT DIARY (RECENT ENTRIES) ---")
     if not thought_records:
-        report_lines.append("Нет данных.")
+        report_lines.append("No data.")
     for tr in thought_records[-5:]:
         report_lines.append(f"[{tr.get('timestamp')[:19]}]")
-        report_lines.append(f"Ситуация: {tr.get('situation', '')}")
-        report_lines.append(f"Мысль: {tr.get('thought', '')}")
+        report_lines.append(f"Situation: {tr.get('situation', '')}")
+        report_lines.append(f"Thought: {tr.get('thought', '')}")
         report_lines.append(
-            f"Эмоция: {tr.get('emotion', '')} ({tr.get('intensity', '')}/10)"
+            f"Emotion: {tr.get('emotion', '')} ({tr.get('intensity', '')}/10)"
         )
-        report_lines.append(f"Искажения: {tr.get('distortion', '')}")
-        report_lines.append(f"Рациональный ответ: {tr.get('rational_response', '')}")
+        report_lines.append(f"Distortion: {tr.get('distortion', '')}")
+        report_lines.append(f"Rational Response: {tr.get('rational_response', '')}")
         report_lines.append("-" * 20)
 
     # Also grab recent psychological tests
     tests = sessions.get_tests(session_id)
     report_lines.append("")
-    report_lines.append("--- ПСИХОЛОГИЧЕСКИЕ ТЕСТЫ ---")
+    report_lines.append("--- PSYCHOLOGICAL ASSESSMENTS ---")
     if not tests:
-        report_lines.append("Нет данных.")
+        report_lines.append("No data.")
     for t in tests[:5]:
         report_lines.append(
-            f"[{t.get('iso_date')[:10]}] {t.get('test_name')}: {t.get('score')} баллов ({t.get('level')})"
+            f"[{t.get('iso_date')[:10]}] {t.get('test_name')}: {t.get('score')} points ({t.get('level')})"
         )
 
     report_content = "\n".join(report_lines)
@@ -1473,7 +1494,24 @@ if FRONTEND_DIR.exists():
 
 if __name__ == "__main__":
     import uvicorn
+    import socket
 
-    host = os.getenv("HOST", os.getenv("CBT_HOST", "127.0.0.1"))
+    host = os.getenv("HOST", os.getenv("CBT_HOST", "0.0.0.0"))
     port = int(os.getenv("PORT", os.getenv("CBT_PORT", "8000")))
+
+    local_ip = "127.0.0.1"
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 1))
+        local_ip = s.getsockname()[0]
+        s.close()
+    except Exception:
+        pass
+
+    print(f"\n=======================================================")
+    print(f"  CBT Assistant is running:")
+    print(f"  - Local:   http://localhost:{port}")
+    print(f"  - Network: http://{local_ip}:{port}")
+    print(f"=======================================================\n")
+
     uvicorn.run(app, host=host, port=port)

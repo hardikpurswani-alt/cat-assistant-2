@@ -185,12 +185,19 @@ class SQLiteSessionManager:
             profile_row = cursor.fetchone()
             profile = json.loads(profile_row["profile_json"]) if profile_row else {}
 
+            cursor.execute(
+                "SELECT * FROM sleep_logs WHERE session_id = ? ORDER BY iso_date DESC",
+                (session_id,),
+            )
+            sleep_log = [dict(row) for row in cursor.fetchall()]
+
             return {
                 "id": session_id,
                 "created_at": session["created_at"] if session else now,
                 "messages": messages,
                 "mood_log": mood_log,
                 "thought_records": thought_records,
+                "sleep_log": sleep_log,
                 "summary": summary,
                 "profile_memory": profile,
             }
@@ -290,6 +297,26 @@ class SQLiteSessionManager:
                     thought_id,
                     session_id,
                 ),
+            )
+            conn.commit()
+            return cursor.rowcount > 0
+
+    def delete_thought_record(self, thought_id: int, session_id: str) -> bool:
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "DELETE FROM thought_records WHERE id = ? AND session_id = ?",
+                (thought_id, session_id),
+            )
+            conn.commit()
+            return cursor.rowcount > 0
+
+    def delete_sleep_log(self, sleep_id: int, session_id: str) -> bool:
+        with self._get_conn() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "DELETE FROM sleep_logs WHERE id = ? AND session_id = ?",
+                (sleep_id, session_id),
             )
             conn.commit()
             return cursor.rowcount > 0
@@ -518,6 +545,12 @@ class SQLiteSessionManager:
                 """,
                 (session_id, serialized, now),
             )
+            conn.commit()
+
+    def clear_messages(self, session_id: str) -> None:
+        """Remove all chat transcript messages for a session."""
+        with self._get_conn() as conn:
+            conn.execute("DELETE FROM messages WHERE session_id = ?", (session_id,))
             conn.commit()
 
     def clear_memory(self, session_id: str) -> None:
