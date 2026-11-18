@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cbt_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cbt_assistant
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cbt_assistant"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  cbt-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cbt_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      DEBUG: "false"
+      HOST: "0.0.0.0"
+      PORT: "8000"
+      DATABASE_URL: "postgresql+asyncpg://postgres:postgrespassword@postgres:5432/cbt_assistant"
+      SECRET_KEY: "change-this-to-a-cryptographically-secure-random-key-in-production"
+      ACCESS_TOKEN_EXPIRE_MINUTES: "60"
+      REFRESH_TOKEN_EXPIRE_DAYS: "30"
+      AI_PROVIDER: "gateway"
+      OPENAI_BASE_URL: "http://103.73.181.90:4000/v1"
+      OPENAI_API_KEY: "your_gateway_api_key"
+      LLM_MODEL: "qwen-7b"
+      EMBEDDING_MODEL: "embed"
+      RAG_SCORE_THRESHOLD: "0.48"
+    ports:
+      - "8000:8000"
+    volumes:
+      - app_data:/app/data
+
+volumes:
+  postgres_data:
+  app_data:

@@ -14,14 +14,32 @@ __pycache__/
 venv/
 .bootstrap/
 
+# Node & Frontend build artifacts
+node_modules/
+.next/
+dist/
+build/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.sublime-*
+
 # Local tooling
 .agents/
 .zencoder/
 .zenflow/
 .playwright-cli/
+
+# Environment & Secrets
 .env
+.env.local
 .env.*
 !.env.example
+*.pem
+*.key
+*.p12
+*.crt
 
 # Local app data
 data/*

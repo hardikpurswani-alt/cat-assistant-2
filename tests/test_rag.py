@@ -150,6 +150,10 @@ def test_content_cleaner():
 
 @pytest.mark.asyncio
 async def test_real_fastembed_retrieval_and_small_talk_rejection(tmp_path):
+    import os
+    api_key = os.getenv("OPENAI_API_KEY", "")
+    if not api_key or api_key == "your_gateway_api_key":
+        pytest.skip("No valid gateway API key configured for live embedding test")
     kb_path = tmp_path / "cbt_kb"
     kb_path.mkdir()
     (kb_path / "cbt.md").write_text(

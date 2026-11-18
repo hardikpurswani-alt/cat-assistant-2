@@ -549,16 +549,9 @@ async function startNewChat() {
     if (messages) {
         messages.innerHTML = '';
 
-        // Inject initial greeting welcome block
-        const welcome = document.createElement('div');
-        welcome.id = 'welcome';
-        welcome.style.cssText = 'display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding: 60px 0 32px; text-align:center;';
-        welcome.innerHTML = `
-            <div style="display:flex; align-items:center; gap:12px;">
-                <i data-lucide="sparkle" id="welcomeIcon" style="width:32px; height:32px; color:var(--accent);"></i>
-                <h1 id="welcomeText" style="font-family: Georgia, 'Times New Roman', serif; font-size:30px; font-weight:normal; color:var(--text); letter-spacing:-0.5px;">Good afternoon</h1>
-            </div>`;
-        messages.appendChild(welcome);
+        if (typeof window.renderEditorialWelcome === 'function') {
+            window.renderEditorialWelcome();
+        }
     }
 
     // Reset container to empty-state layout

@@ -18,7 +18,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
-from fastapi.responses import PlainTextResponse, Response  # noqa: E402
+from fastapi.responses import PlainTextResponse, Response, FileResponse  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from pydantic import BaseModel  # noqa: E402
 
@@ -114,9 +114,22 @@ prompt_manager = PromptManager(CONFIG_DIR / "prompts.yaml")
 summarizer = MemorySummarizer(sessions, llm_client)
 
 
+from backend.app.core.database import init_db
+from backend.app.api.v1.router import api_router
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await kb.load_and_embed()
+    # Initialize modern async SQLAlchemy database schema
+    try:
+        await init_db()
+    except Exception as exc:
+        print(f"[Warning] Database initialization error: {exc}")
+
+    try:
+        await kb.load_and_embed()
+    except Exception as exc:
+        print(f"[Warning] RAG knowledge base could not be embedded at startup: {exc}. Running in degraded mode.")
     try:
         yield
     finally:
@@ -133,6 +146,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Mount modern modular v1 API router
+app.include_router(api_router)
 
 # ─── REST Endpoints ─────────────────────────────────────────────
 
@@ -519,10 +535,22 @@ async def prepare_chat_messages(
             "must_abstain": False,
         }
     else:
-        retrieval = await kb.search_with_trace(message, top_k=3)
-        context = retrieval["results"]
-        trace = retrieval["trace"]
-        trace["must_abstain"] = not context and requires_grounded_clinical_answer(message)
+        try:
+            retrieval = await kb.search_with_trace(message, top_k=3)
+            context = retrieval["results"]
+            trace = retrieval["trace"]
+            trace["must_abstain"] = not context and requires_grounded_clinical_answer(message)
+        except Exception as exc:
+            context = []
+            trace = {
+                "status": "no_relevant_context",
+                "trace_id": f"trace_fallback_{session_id[-6:]}",
+                "index_version": getattr(kb, "index_version", "unindexed"),
+                "latency_ms": 0.0,
+                "selected": [],
+                "must_abstain": False,
+                "error": str(exc),
+            }
     session = sessions.get_or_create(session_id)
     system_prompt = prompt_manager.build_system_prompt(
         context,
@@ -1485,6 +1513,39 @@ async def websocket_chat(websocket: WebSocket, session_id: str):
                 )
     except WebSocketDisconnect:
         sessions.save_session(session_id)
+
+
+@app.exception_handler(404)
+async def spa_not_found_handler(request, exc):
+    path = request.url.path
+    if path.startswith("/api/") or path.startswith("/ws/") or ("." in path.split("/")[-1] and not path.endswith(".html")):
+        return PlainTextResponse("Not Found", status_code=404)
+    index_file = FRONTEND_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file)
+    return PlainTextResponse("Not Found", status_code=404)
+
+
+@app.get("/dashboard")
+@app.get("/thoughts")
+@app.get("/thoughts/new")
+@app.get("/sleep")
+@app.get("/sleep/new")
+@app.get("/assessment")
+@app.get("/assessment/phq9")
+@app.get("/assessment/gad7")
+@app.get("/assessment/esteem")
+@app.get("/calendar")
+@app.get("/articles")
+@app.get("/videos")
+@app.get("/sos")
+@app.get("/settings")
+@app.get("/download")
+@app.get("/mood")
+@app.get("/chat")
+async def spa_page_route():
+    index_file = FRONTEND_DIR / "index.html"
+    return FileResponse(index_file)
 
 
 # Serve static frontend at the very end to catch all non-API paths

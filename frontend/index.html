@@ -3,63 +3,81 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CBT Assistant</title>
     <link rel="icon" href="favicon.svg?v=3" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="vendor/fonts/inter.css">
     <script src="vendor/lucide.min.js"></script>
     <script src="vendor/chart.min.js"></script>
-    <link rel="stylesheet" href="css/style.css?v=24">
+    <link rel="stylesheet" href="css/style.css?v=26">
+    <link rel="stylesheet" href="css/premium_theme.css?v=3">
 </head>
 
 <body>
+    <!-- Mobile Drawer Backdrop -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
+
     <aside class="sidebar">
-        <button class="sidebar-btn" onclick="startNewChat()" title="New Chat" data-i18n-title="new_chat" style="color: var(--accent); margin-bottom: 6px;">
+        <button class="sidebar-btn" onclick="startNewChat()" title="New Chat" data-label="New Chat" data-i18n-title="new_chat" style="color: var(--accent); margin-bottom: 6px;">
             <i data-lucide="message-square-plus" style="width:20px"></i>
         </button>
-        <button class="sidebar-btn" onclick="openThoughtHistoryModal()" title="Thought Diary" data-i18n-title="sidebar_thoughts"><i
+        <button class="sidebar-btn" onclick="openThoughtHistoryModal()" title="Thought Diary" data-label="Thought Diary" data-i18n-title="sidebar_thoughts"><i
                 data-lucide="notebook-pen" style="width:20px"></i></button>
-        <button class="sidebar-btn" onclick="openSleepHistoryModal()" title="Sleep Journal" data-i18n-title="sidebar_sleep"><i data-lucide="moon"
+        <button class="sidebar-btn" onclick="openSleepHistoryModal()" title="Sleep Journal" data-label="Sleep Journal" data-i18n-title="sidebar_sleep"><i data-lucide="moon"
                 style="width:20px"></i></button>
-        <button class="sidebar-btn" onclick="openModal('testsMenuModal')" title="Self-Assessment" data-i18n-title="sidebar_assessment"><i
+        <button class="sidebar-btn" onclick="openModal('testsMenuModal')" title="Self-Assessment" data-label="Self-Assessment" data-i18n-title="sidebar_assessment"><i
                 data-lucide="clipboard-list" style="width:20px"></i></button>
-        <button class="sidebar-btn" onclick="openCalendar()" title="Records Calendar" data-i18n-title="sidebar_calendar"><i data-lucide="calendar"
+        <button class="sidebar-btn" onclick="openCalendar()" title="Records Calendar" data-label="Records Calendar" data-i18n-title="sidebar_calendar"><i data-lucide="calendar"
                 style="width:20px"></i></button>
-        <button class="sidebar-btn" onclick="openDashboard()" title="Progress Dashboard" data-i18n-title="sidebar_dashboard"><i data-lucide="bar-chart-2"
+        <button class="sidebar-btn" onclick="openDashboard()" title="Progress Dashboard" data-label="Progress Dashboard" data-i18n-title="sidebar_dashboard"><i data-lucide="bar-chart-2"
                 style="width:20px"></i></button>
-        <button class="sidebar-btn" onclick="openArticleLibrary()" title="Article Library" data-i18n-title="sidebar_articles"><i data-lucide="book-open"
+        <button class="sidebar-btn" onclick="openArticleLibrary()" title="Article Library" data-label="Article Library" data-i18n-title="sidebar_articles"><i data-lucide="book-open"
                 style="width:20px"></i></button>
-        <button class="sidebar-btn" onclick="openVideoLibrary()" title="Video Library" data-i18n-title="sidebar_videos"><i data-lucide="play-circle"
+        <button class="sidebar-btn" onclick="openVideoLibrary()" title="Video Library" data-label="Video Library" data-i18n-title="sidebar_videos"><i data-lucide="play-circle"
                 style="width:20px"></i></button>
 
-        <!-- Download button pinned to bottom -->
-        <div
-            style="margin-top:auto; width:100%; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; display:flex; flex-direction:column; align-items:center; gap:4px;">
-            <button class="sidebar-btn" onclick="openNotifModal()" title="Settings" data-i18n-title="sidebar_settings" id="notifSidebarBtn"><i
+        <!-- Pinned bottom controls -->
+        <div class="sidebar-bottom-group"
+            style="margin-top:auto; width:100%; border-top: 1px solid rgba(221,212,242,0.4); padding-top: 12px; display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <button class="sidebar-btn" onclick="openNotifModal()" title="Settings" data-label="Settings" data-i18n-title="sidebar_settings" id="notifSidebarBtn"><i
                     data-lucide="settings-2" style="width:20px"></i></button>
-            <button class="sidebar-btn" onclick="openModal('downloadModal')" title="Download Summary" data-i18n-title="sidebar_download"><i
+            <button class="sidebar-btn" onclick="openModal('downloadModal')" title="Download Summary" data-label="Download Summary" data-i18n-title="sidebar_download"><i
                     data-lucide="download" style="width:20px"></i></button>
         </div>
     </aside>
 
     <div class="container empty-state" id="mainContainer">
         <div class="header">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <img src="img/logo.png" alt="Logo" style="width:44px; height:44px; object-fit:contain; border-radius:8px;">
-                <span style="font-weight: 500; color: var(--text);" data-i18n="app_title">CBT Assistant</span>
+            <div class="app-logo-wrap" style="display:flex; align-items:center; gap:10px;">
+                <button class="mobile-menu-toggle" id="mobileMenuBtn" onclick="toggleMobileSidebar()" aria-label="Open Navigation" title="Menu">
+                    <i data-lucide="menu" style="width:20px; height:20px;"></i>
+                </button>
+                <img src="img/logo.png" alt="Logo" class="app-logo-img" style="width:40px; height:40px; object-fit:contain; border-radius:12px;">
+                <div>
+                    <span class="header-title" data-i18n="app_title" style="font-weight:700; font-size:15px; display:block;">CBT Assistant</span>
+                    <span class="header-badge" style="font-size:11px; color:var(--text-secondary); font-weight:500; display:block; margin-top:-2px;">Mental Wellness & AI</span>
+                </div>
             </div>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <button onclick="startNewChat()" class="btn-new-chat" title="Start a fresh chat" data-i18n-title="new_chat"
-                    style="background:transparent; color:var(--text); border:1px solid var(--border); border-radius:10px; padding:5px 12px; font-size:12px; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:6px; letter-spacing:0.3px; transition:all 0.2s;"
-                    onmouseover="this.style.borderColor='var(--accent)'; this.style.color='var(--accent)';"
-                    onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--text)';">
+            <div class="header-actions" style="display:flex; align-items:center; gap:8px;">
+                <button onclick="startNewChat()" class="btn-new-chat new-chat-btn" title="Start a fresh chat" data-i18n-title="new_chat"
+                    style="background:rgba(255,255,255,0.85); color:var(--text); border:1px solid rgba(221,212,242,0.7); border-radius:12px; padding:6px 14px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; letter-spacing:0.3px; transition:all 0.2s;">
                     <i data-lucide="plus" style="width:14px; color:var(--accent);"></i>
                     <span data-i18n="new_chat">New Chat</span>
                 </button>
-                <button onclick="openModal('sosModal')"
-                    style="background:#797298 !important; color:#ffffff !important; border:none; border-radius:10px; padding:5px 12px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; letter-spacing:0.3px;"><i
+                <button onclick="openModal('sosModal')" class="sos-header-btn"
+                    style="background:linear-gradient(135deg, #7E739D 0%, #5B4F77 100%) !important; color:#ffffff !important; border:none; border-radius:12px; padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; letter-spacing:0.4px; box-shadow:0 4px 12px rgba(108,95,136,0.25);"><i
                         data-lucide="life-buoy" style="width:14px; color:#ffffff;"></i> <span data-i18n="sos_button">SOS</span></button>
-                <div style="display:flex; align-items:center; gap:8px;">
+                <button id="authHeaderBtn" class="auth-header-btn" onclick="openAuthModal()" title="Account & Sign In"
+                    style="background:rgba(255,255,255,0.85); color:var(--text); border:1px solid rgba(221,212,242,0.7); border-radius:12px; padding:6px 12px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; letter-spacing:0.3px; transition:all 0.2s;">
+                    <span id="authHeaderAvatar" class="auth-header-avatar" style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; border-radius:50%; background:var(--lavender-light); color:var(--accent); font-size:11px; font-weight:700;">
+                        <i data-lucide="user" style="width:13px; height:13px;"></i>
+                    </span>
+                    <span id="authHeaderText">Sign In</span>
+                </button>
+                <div class="status-pill">
                     <span class="status-dot online" id="dotStatus"></span>
                     <span id="txtStatus">qwen-7b</span>
                 </div>
@@ -95,9 +113,8 @@
             </p>
 
             <div id="quickSuggestions"
-                style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; padding-top:16px; align-items:center;"></div>
-        </div> <!-- /quickSuggestions -->
-    </div> <!-- /input-dock -->
+                style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; padding-top:14px; align-items:center;"></div>
+        </div> <!-- /input-dock -->
     </div> <!-- /container -->
 
     <!-- Mood Modal -->
@@ -849,11 +866,101 @@
         </div>
     </div>
 
+    <!-- Authentication Modal (Sign In / Register / Account) -->
+    <div class="modal-overlay" id="authModal" onclick="if(event.target===this)closeAuthModal()">
+        <div class="modal auth-modal" style="max-width:440px; padding:28px 24px;">
+            <div class="auth-modal-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px;">
+                <div>
+                    <h2 id="authModalTitle" style="font-size:20px; font-weight:700; color:var(--text-primary); margin:0 0 4px 0; letter-spacing:-0.3px;">Welcome to CBT Assistant</h2>
+                    <p style="font-size:13px; color:var(--text-secondary); margin:0;">Access your private thought diary, moods, and records.</p>
+                </div>
+                <button class="close" onclick="closeAuthModal()" title="Close" aria-label="Close" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; padding:4px;">
+                    <i data-lucide="x" style="width:20px; height:20px;"></i>
+                </button>
+            </div>
+
+            <!-- Tab Switcher (Visible when not logged in) -->
+            <div class="auth-tab-bar" id="authTabBar" style="display:flex; gap:6px; background:var(--lavender-light); padding:4px; border-radius:14px; margin-bottom:18px;">
+                <button type="button" class="auth-tab active" id="tabAuthLogin" onclick="switchAuthTab('login')" style="flex:1; padding:8px 12px; border:none; border-radius:10px; background:var(--panel); font-size:13px; font-weight:600; color:var(--accent); cursor:pointer; transition:all 0.2s; box-shadow:0 2px 6px rgba(0,0,0,0.04);">Sign In</button>
+                <button type="button" class="auth-tab" id="tabAuthRegister" onclick="switchAuthTab('register')" style="flex:1; padding:8px 12px; border:none; border-radius:10px; background:transparent; font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all 0.2s;">Create Account</button>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="authErrorBanner" style="display:none; padding:10px 14px; border-radius:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); color:#b91c1c; font-size:12px; margin-bottom:16px; font-weight:500;"></div>
+
+            <!-- Sign In Form -->
+            <form id="authLoginForm" onsubmit="handleLoginSubmit(event)" style="display:block;">
+                <div style="margin-bottom:14px;">
+                    <label for="loginEmail" style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:6px;">Email Address</label>
+                    <input type="email" id="loginEmail" required placeholder="you@example.com" autocomplete="email"
+                        style="width:100%; box-sizing:border-box; padding:10px 14px; border:1px solid rgba(221,212,242,0.8); border-radius:12px; font-size:14px; background:rgba(255,255,255,0.9); outline:none; transition:border-color 0.2s;">
+                </div>
+                <div style="margin-bottom:18px;">
+                    <label for="loginPassword" style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:6px;">Password</label>
+                    <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="current-password"
+                        style="width:100%; box-sizing:border-box; padding:10px 14px; border:1px solid rgba(221,212,242,0.8); border-radius:12px; font-size:14px; background:rgba(255,255,255,0.9); outline:none; transition:border-color 0.2s;">
+                </div>
+                <button type="submit" id="btnLoginSubmit" class="btn-primary static-accent"
+                    style="width:100%; padding:11px 16px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i data-lucide="log-in" style="width:16px; height:16px;"></i> Sign In
+                </button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="authRegisterForm" onsubmit="handleRegisterSubmit(event)" style="display:none;">
+                <div style="margin-bottom:14px;">
+                    <label for="regName" style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:6px;">Full Name (Optional)</label>
+                    <input type="text" id="regName" placeholder="Alex Taylor" autocomplete="name"
+                        style="width:100%; box-sizing:border-box; padding:10px 14px; border:1px solid rgba(221,212,242,0.8); border-radius:12px; font-size:14px; background:rgba(255,255,255,0.9); outline:none; transition:border-color 0.2s;">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label for="regEmail" style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:6px;">Email Address</label>
+                    <input type="email" id="regEmail" required placeholder="you@example.com" autocomplete="email"
+                        style="width:100%; box-sizing:border-box; padding:10px 14px; border:1px solid rgba(221,212,242,0.8); border-radius:12px; font-size:14px; background:rgba(255,255,255,0.9); outline:none; transition:border-color 0.2s;">
+                </div>
+                <div style="margin-bottom:18px;">
+                    <label for="regPassword" style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:6px;">Password (Min. 8 characters)</label>
+                    <input type="password" id="regPassword" required minlength="8" placeholder="••••••••" autocomplete="new-password"
+                        style="width:100%; box-sizing:border-box; padding:10px 14px; border:1px solid rgba(221,212,242,0.8); border-radius:12px; font-size:14px; background:rgba(255,255,255,0.9); outline:none; transition:border-color 0.2s;">
+                </div>
+                <button type="submit" id="btnRegSubmit" class="btn-primary static-accent"
+                    style="width:100%; padding:11px 16px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i data-lucide="user-plus" style="width:16px; height:16px;"></i> Create Account
+                </button>
+            </form>
+
+            <!-- Account View (When Logged In) -->
+            <div id="authAccountView" style="display:none; text-align:center; padding:10px 0;">
+                <div style="width:56px; height:56px; border-radius:50%; background:var(--lavender-light); color:var(--accent); font-size:24px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;" id="accountAvatarBadge">U</div>
+                <h3 id="accountNameLabel" style="font-size:17px; font-weight:700; margin:0 0 4px 0; color:var(--text-primary);">User</h3>
+                <p id="accountEmailLabel" style="font-size:13px; color:var(--text-secondary); margin:0 0 20px 0;">user@example.com</p>
+                <div style="background:rgba(255,255,255,0.7); border:1px solid rgba(221,212,242,0.6); border-radius:14px; padding:12px; text-align:left; margin-bottom:20px; font-size:12px; color:var(--text-secondary);">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span>Data Storage:</span>
+                        <strong style="color:var(--text-primary);">Encrypted Private Cloud</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span>Status:</span>
+                        <span style="color:#059669; font-weight:600;">● Active & Synced</span>
+                    </div>
+                </div>
+                <button type="button" onclick="handleUserLogout()" class="btn-secondary"
+                    style="width:100%; padding:10px 16px; border-radius:12px; border:1px solid rgba(221,212,242,0.8); background:rgba(255,255,255,0.85); color:#b91c1c; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i data-lucide="log-out" style="width:15px; height:15px;"></i> Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/ui.js?v=28"></script>
     <script src="js/report.js?v=4"></script>
     <script src="js/chat_manager.js?v=8"></script>
     <script src="js/cbt_tools.js?v=15"></script>
-    <script src="js/main.js?v=7"></script>
+    <script src="js/auth.js?v=1"></script>
+    <script src="js/router.js?v=1"></script>
+    <script src="js/doodle_system.js"></script>
+    <script src="js/editorial_experience.js"></script>
+    <script src="js/main.js?v=8"></script>
 
     <!-- Fullscreen PMR Overlay -->
     <div id="pmrOverlay" class="pmr-overlay" style="display:none;">

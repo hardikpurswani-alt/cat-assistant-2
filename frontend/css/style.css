@@ -43,35 +43,25 @@ body {
 }
 
 .container.empty-state {
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .container.empty-state .header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    position: static;
 }
 
 .container.empty-state .chat-box {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
 }
 
-/* In empty-state, input-dock is just inline below welcome heading */
-.container.empty-state .input-dock {
-    position: static;
-    background: transparent;
+/* In both empty-state and active-chat, input-dock stays anchored at bottom */
+.input-dock {
     flex-shrink: 0;
-    padding-top: 8px;
-}
-
-/* In chat-state, input-dock sticks to bottom */
-.container:not(.empty-state) .input-dock {
-    position: sticky;
+    position: relative;
     bottom: 0;
-    background: var(--bg);
-    flex-shrink: 0;
-    z-index: 5;
+    z-index: 20;
 }
 
 .container:not(.empty-state) #quickSuggestions {
@@ -115,7 +105,7 @@ body {
 }
 
 .container:not(.empty-state) .chat-box {
-    padding-bottom: 148px;
+    padding-bottom: 16px;
 }
 
 .msg {

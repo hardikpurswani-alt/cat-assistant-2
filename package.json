@@ -1,0 +1,11 @@
+{
+  "name": "cbt-assistant-ai",
+  "version": "1.1.0",
+  "description": "CBT Assistant — AI Mental Health & Cognitive Behavioral Therapy Platform",
+  "private": true,
+  "scripts": {
+    "dev": ".venv/bin/python backend/server.py",
+    "start": ".venv/bin/python backend/server.py",
+    "test": ".venv/bin/pytest tests/ --ignore=tests/test_real_memory.py -k \"not test_real_fastembed_retrieval_and_small_talk_rejection\""
+  }
+}
